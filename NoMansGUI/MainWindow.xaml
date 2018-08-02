@@ -12,7 +12,7 @@
                 <Setter Property="Orientation" Value="Horizontal"/>
             </Style>
         </DockPanel.Resources>
-        <StackPanel Orientation="Vertical" CanVerticallyScroll="True" CanHorizontallyScroll="True">
+        <StackPanel Orientation="Vertical">
             <Menu VerticalAlignment="Top" Height="20">
                 <!-- Main Menu -->
                 <Menu.ItemsPanel>
@@ -36,9 +36,9 @@
                     <MenuItem Header="Dont Ever Click This" x:Name="dontClick" Click="dontClick_Click"/>
                 </MenuItem>
             </Menu>
-            <StackPanel Orientation="Vertical" Name="ControlEditor" Margin="10,30,10,10" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" CanHorizontallyScroll="True" CanVerticallyScroll="True">
-                <StackPanel/>
-             </StackPanel>
+            <StackPanel Orientation="Vertical" Name="ControlEditor" Margin="10,30,10,10">
+                <TreeView Name="mainTree"/>
+            </StackPanel>
         </StackPanel>
-    </DockPanel>       
+    </DockPanel>
 </Window>

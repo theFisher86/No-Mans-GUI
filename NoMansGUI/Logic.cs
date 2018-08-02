@@ -149,6 +149,7 @@ namespace NoMansGUI
 
         public void createControl(string label, Control control, TreeViewItem treeViewItem)
         {
+            Debug.WriteLine("Creating Control " + control.ToString() + " in " + treeViewItem.ToString());
             Label labelName = new Label();
             labelName.Content = label;
 
@@ -210,10 +211,10 @@ namespace NoMansGUI
 
             TreeViewItem structroot = new TreeViewItem();
             structroot.Header = fieldInfo.GetValue(mbinData).ToString();
-            IOrderedEnumerable<System.Reflection.FieldInfo> fields = mbinType.GetFields().OrderBy(field => field.MetadataToken);
-            iterateFields(fieldInfo, structroot);       //Error CS1503  Argument 1: cannot convert from 'System.Reflection.FieldInfo' to 'System.Linq.IOrderedEnumerable<System.Reflection.FieldInfo>'
-
-            treeViewItem.Items.Add(structroot);
+            IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
+            iterateFields(fields, structroot);
+            //treeViewItem.Items.Add(structroot);
+            createControl(fieldInfo.Name, structroot, treeViewItem);
         }
     }
 }

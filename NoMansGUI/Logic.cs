@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using libMBIN;
+using libMBIN.Models;
+using libMBIN.Models.Structs;
 
 namespace NoMansGUI
 {
@@ -16,7 +18,7 @@ namespace NoMansGUI
         // = Public Var Declarations =
         // ===========================
 
-        public libMBIN.Models.NMSTemplate mbinData = null;                                      // set mbinData as public and null
+        public NMSTemplate mbinData = null;                                      // set mbinData as public and null
         public Type mbinType = null;
         public String mbinPath = null;
         public StackPanel ControlEditor = NoMansGUI.MainWindow.AppWindow.ControlEditor;         // Set ControlEditor as default Stack Panel (can be changed when calling TypeHandler
@@ -47,15 +49,16 @@ namespace NoMansGUI
                 { typeof( UInt64 ), HandleInt },
                 { typeof( Byte ), HandleByte },
                 { typeof( String), HandleString },
-                { typeof( libMBIN.Models.Structs.Vector4f), HandleStruct },
-                { typeof( libMBIN.Models.Structs.Vector2f), HandleStruct },
-                { typeof( libMBIN.Models.Structs.Colour), HandleStruct },
-                { typeof( libMBIN.Models.Structs.GcSeed), HandleStruct },
-                { typeof( libMBIN.Models.Structs.VariableSizeString), HandleStruct },
+                { typeof( Vector4f), HandleStruct },
+                { typeof( Vector2f), HandleStruct },
+                { typeof( Colour), HandleStruct },
+                { typeof( GcSeed), HandleStruct },
+                { typeof( VariableSizeString), HandleStruct },
                 { typeof( System.Collections.Generic.List<System.Single>), HandleString },
                 { typeof( Single), HandleString },
                 { typeof( Single[]), HandleString },
                 { typeof( Double), HandleString },
+                { typeof( NMSTemplate), HandleStruct }
             };
 
         }
@@ -73,7 +76,7 @@ namespace NoMansGUI
         {
             Type mbinType = loadMbin(mbinPath);
 
-            IOrderedEnumerable<System.Reflection.FieldInfo> fields = mbinType.GetFields().OrderBy(field => field.MetadataToken);
+            //IOrderedEnumerable<System.Reflection.FieldInfo> fields = mbinType.GetFields().OrderBy(field => field.MetadataToken);
 
             if (mbinData == null)
             {
@@ -83,7 +86,8 @@ namespace NoMansGUI
             {
                 TreeViewItem treeRoot = new TreeViewItem();
                 mainTree.Items.Add(treeRoot);
-                iterateFields(fields, treeRoot);
+                //iterateFields(fields, treeRoot);
+                iterateFields(mbinType, treeRoot);
             }
         }
 
@@ -102,13 +106,15 @@ namespace NoMansGUI
             }
         }
 
-        public void iterateFields(IOrderedEnumerable<System.Reflection.FieldInfo> fields, TreeViewItem treeViewItem)
+        //public void iterateFields(IOrderedEnumerable<System.Reflection.FieldInfo> fields, TreeViewItem treeViewItem)
+        public void iterateFields(Type type, TreeViewItem treeViewItem)
         {
-            foreach (System.Reflection.FieldInfo fieldinfo in fields)
+            IOrderedEnumerable<System.Reflection.FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
+            foreach (FieldInfo fieldinfo in fields)
             {
                 Debug.WriteLine($"type = {fieldinfo.FieldType}, name = {fieldinfo.Name}, value = {fieldinfo.GetValue(mbinData)}");    //write all fields to debug
                                                                                                                                       //Check for NMSAttribute ignore -code by @GaticusHax
-                var attributes = (libMBIN.Models.NMSAttribute[])fieldinfo.GetCustomAttributes(typeof(libMBIN.Models.NMSAttribute), false);
+                var attributes = (NMSAttribute[])fieldinfo.GetCustomAttributes(typeof(NMSAttribute), false);
                 libMBIN.Models.NMSAttribute attrib = null;
                 if (attributes.Length > 0) attrib = attributes[0];
                 bool ignore = false;
@@ -208,11 +214,11 @@ namespace NoMansGUI
         public void HandleStruct(FieldInfo fieldInfo, TreeViewItem treeViewItem)
         {
             Debug.WriteLine("Struct " + fieldInfo.Name.ToString() + " Detected");
-
             TreeViewItem structroot = new TreeViewItem();
             structroot.Header = fieldInfo.GetValue(mbinData).ToString();
-            IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
-            iterateFields(fields, structroot);
+            //IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
+            Debug.WriteLine("fieldInfo Type:" + fieldInfo.GetType());
+            iterateFields(fieldInfo.GetType(), structroot);
             //treeViewItem.Items.Add(structroot);
             createControl(fieldInfo.Name, structroot, treeViewItem);
         }

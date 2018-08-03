@@ -59,7 +59,7 @@ namespace NoMansGUI
                 { typeof( UInt64 ), HandleInt },
                 { typeof( Byte ), HandleByte },
                 { typeof( String), HandleString },
-                { typeof( Vector4f), HandleStruct },
+                { typeof( Vector4f), HandleVector4f },
                 { typeof( Vector2f), HandleStruct },
                 { typeof( Colour), HandleStruct },
                 { typeof( GcSeed), HandleStruct },
@@ -160,6 +160,10 @@ namespace NoMansGUI
             TypeHandlerCallback handler;                                                                // This stuff allows exceptions
             TypeHandlerTable.TryGetValue(fieldinfo.FieldType, out handler);
             if ( handler != null ) {
+                if( data.GetType() is NMSTemplate)                                              // Gat's Code, put it here?
+                {
+                    handler = GetTypeHandler(typeof(NMSTemplate));
+                }
                 handler( data, fieldinfo, destinationControl );
             } else {                                                                                    // And this handles the exception as a string
                 Debug.WriteLine( "<!!!!BIG ERROR YOU WANT TO SEE!!!!>" );
@@ -170,12 +174,12 @@ namespace NoMansGUI
                 TextBox stringText = new TextBox();
                 stringText.Text = fieldinfo.GetValue( data ).ToString();
 
-                createControl( fieldinfo.Name, stringText, destinationControl );
+                CreateControl( fieldinfo.Name, stringText, destinationControl );
 
             }
         }
 
-        public void createControl(string label, Control control, Control destinationControl)
+        public void CreateControl(string label, Control control, Control destinationControl)
         {
             Debug.WriteLine("Creating Control " + control.ToString() + " in " + destinationControl.ToString());
             Label labelName = new Label();
@@ -190,6 +194,15 @@ namespace NoMansGUI
             {
                 TreeViewItem treeViewItem = (TreeViewItem)Convert.ChangeType(destinationControl, typeof(TreeViewItem));
                 treeViewItem.Items.Add(stackPanel);
+            }
+            else if(destinationControl.GetType() == typeof(StackPanel)){
+                StackPanel sp = (StackPanel)Convert.ChangeType(destinationControl, typeof(StackPanel));
+                sp.Children.Add(stackPanel);
+            }
+            else
+            {
+                Debug.WriteLine("Control Type Definition not added to CreateControl Method.  Add a definition for :" + destinationControl.GetType().ToString());
+                MessageBoxResult messageBoxResult = MessageBox.Show("This control type hasn't been added to CreateControl yet.  It needs to be! \n Control Type :" + destinationControl.GetType().ToString());
             }
             
         }
@@ -206,7 +219,7 @@ namespace NoMansGUI
             Boolean checkValue = Convert.ToBoolean(fieldInfo.GetValue(data));
             checkBox.IsChecked = checkValue;
 
-            createControl(fieldInfo.Name, checkBox, destinationControl);
+            CreateControl(fieldInfo.Name, checkBox, destinationControl);
         }
 
         public void HandleInt( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
@@ -216,7 +229,7 @@ namespace NoMansGUI
             TextBox intText = new TextBox();
             intText.Text = fieldInfo.GetValue(data).ToString();
 
-            createControl(fieldInfo.Name, intText, destinationControl);
+            CreateControl(fieldInfo.Name, intText, destinationControl);
         }
 
         public void HandleByte( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
@@ -226,7 +239,7 @@ namespace NoMansGUI
             TextBox byteText = new TextBox();
             byteText.Text = fieldInfo.GetValue(data).ToString();
 
-            createControl(fieldInfo.Name, byteText, destinationControl);
+            CreateControl(fieldInfo.Name, byteText, destinationControl);
         }
 
         public void HandleString( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
@@ -236,7 +249,7 @@ namespace NoMansGUI
             TextBox stringText = new TextBox();
             stringText.Text = fieldInfo.GetValue(data).ToString();
 
-            createControl(fieldInfo.Name, stringText, destinationControl);
+            CreateControl(fieldInfo.Name, stringText, destinationControl);
         }
 
         public void HandleStruct( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
@@ -251,32 +264,56 @@ namespace NoMansGUI
             Debug.WriteLine("fieldInfo Type:" + data.GetType());
             iterateFields( data, data.GetType(), structroot );
             //treeViewItem.Items.Add(structroot);
-            createControl(fieldInfo.Name, structroot, destinationControl);
+            CreateControl(fieldInfo.Name, structroot, destinationControl);
+        }
+
+        public void HandleVector4f(NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
+        {
+            Debug.WriteLine($"Vector4f {fieldInfo.Name} Detected");
+            Debug.WriteLine("Field Attributes :" + fieldInfo.Attributes.ToString());
+            Type type = data.GetType();
+
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Orientation = Orientation.Horizontal;
+            stackPanel.Name = fieldInfo.Name;
+            
+            
+            IOrderedEnumerable<System.Reflection.FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
+            foreach (FieldInfo fieldinfo in fields)
+            {
+                Debug.WriteLine($"type = {fieldinfo.FieldType}, name = {fieldinfo.Name}, value = {fieldinfo.GetValue(data)}");    //write all fields to debug
+
+                TextBox textBox = new TextBox();
+                textBox.Name = fieldInfo.Name;
+                textBox.Text = fieldInfo.GetValue(data).ToString();
+                CreateControl(fieldInfo.Name, textBox, (Control)Convert.ChangeType(stackPanel, typeof(Control)));           //This throws an "Object must implement IConvertible." Error
+
+            }
         }
 
 
-        //monkeymans code
-        //public void HandleStruct(FieldInfo fieldInfo, TreeViewItem treeViewItem)
-        //{
-        //    Debug.WriteLine("Struct " + fieldInfo.Name.ToString() + " Detected");
-        //    TreeViewItem structroot = new TreeViewItem();
-        //    structroot.Header = fieldInfo.GetValue(mbinData).ToString();
-        //    IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
-        //    foreach (FieldInfo field in fields)
-        //    {
-        //        TypeHandlerCallback handler;                                                                // This stuff allows exceptions
-        //        TypeHandlerTable.TryGetValue(field.FieldType, out handler);
-        //        if (handler != null) handler(field, treeViewItem);
-        //        else
-        //        {                                                                                           // And this handles the exception as a string
-        //            Debug.WriteLine("<!!!!BIG ERROR YOU WANT TO SEE!!!!>");
-        //            // etc
-        //        }
-        //    }
-        //    //Debug.WriteLine("fieldInfo Type:" + fieldInfo.GetType());
-        //    //iterateFields(fieldInfo.GetType(), structroot);
-        //    //treeViewItem.Items.Add(structroot);
-        //    createControl(fieldInfo.Name, structroot, treeViewItem);
-        //}
+            //monkeymans code
+            //public void HandleStruct(FieldInfo fieldInfo, TreeViewItem treeViewItem)
+            //{
+            //    Debug.WriteLine("Struct " + fieldInfo.Name.ToString() + " Detected");
+            //    TreeViewItem structroot = new TreeViewItem();
+            //    structroot.Header = fieldInfo.GetValue(mbinData).ToString();
+            //    IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
+            //    foreach (FieldInfo field in fields)
+            //    {
+            //        TypeHandlerCallback handler;                                                                // This stuff allows exceptions
+            //        TypeHandlerTable.TryGetValue(field.FieldType, out handler);
+            //        if (handler != null) handler(field, treeViewItem);
+            //        else
+            //        {                                                                                           // And this handles the exception as a string
+            //            Debug.WriteLine("<!!!!BIG ERROR YOU WANT TO SEE!!!!>");
+            //            // etc
+            //        }
+            //    }
+            //    //Debug.WriteLine("fieldInfo Type:" + fieldInfo.GetType());
+            //    //iterateFields(fieldInfo.GetType(), structroot);
+            //    //treeViewItem.Items.Add(structroot);
+            //    CreateControl(fieldInfo.Name, structroot, treeViewItem);
+            //}
     }
 }

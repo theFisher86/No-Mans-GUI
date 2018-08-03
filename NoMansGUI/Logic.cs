@@ -6,9 +6,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows;
 using libMBIN;
 using libMBIN.Models;
 using libMBIN.Models.Structs;
+using System.Windows.Documents;
 
 namespace NoMansGUI
 {
@@ -20,7 +22,7 @@ namespace NoMansGUI
 
         public NMSTemplate mbinData = null;                                      // set mbinData as public and null
         public Type mbinType = null;
-        public String mbinPath = null;
+        public String mbinPath;
         public StackPanel ControlEditor = NoMansGUI.MainWindow.AppWindow.ControlEditor;         // Set ControlEditor as default Stack Panel (can be changed when calling TypeHandler
         public TreeView mainTree = NoMansGUI.MainWindow.AppWindow.mainTree;                     // Set mainTree as public to be used everywhere.
         public TreeViewItem treeRoot;
@@ -35,6 +37,14 @@ namespace NoMansGUI
         {
             CreateTypeHandlerTable();
         }
+
+        //private Type[] GetTypesInNamespace(string nameSpace)                    // Ignore this for now.
+        //{
+        //    return
+        //      Assembly.GetExecutingAssembly().GetTypes()
+        //              .Where(t => String.Equals(t.Namespace, nameSpace, StringComparison.Ordinal))
+        //              .ToArray();
+        //}
 
         public void CreateTypeHandlerTable()
         {
@@ -58,10 +68,22 @@ namespace NoMansGUI
                 { typeof( Single), HandleString },
                 { typeof( Single[]), HandleString },
                 { typeof( Double), HandleString },
-                { typeof( NMSTemplate), HandleStruct }
+                { typeof( NMSTemplate), HandleStruct },
+                { typeof( List<NMSTemplate> ), HandleStruct },
+                { typeof( List<NMSAttribute>), HandleStruct },
+                //{ typeof( List<libMBIN.Models.Structs>), HandleStruct },
+                { typeof( NMSAttribute), HandleStruct }
             };
+            //Debug.WriteLine("Trying to get all the classes");
+            //Debug.WriteLine("Should use this assembly :" + Assembly.GetAssembly(typeof(GcActionTrigger)));
+            //foreach (Type aClass in GetTypesInNamespace("libMbin"))
+            //{
+            //    Debug.WriteLine("Adding :" + aClass.ToString());
+            //    TypeHandlerTable.Add(aClass, HandleStruct);
+            //}
 
         }
+
 
         public TypeHandlerCallback GetTypeHandler(Type type)
         {
@@ -143,7 +165,7 @@ namespace NoMansGUI
                 Debug.WriteLine("<!!!!BIG ERROR YOU WANT TO SEE!!!!>");
                 Debug.WriteLine("Field Type not found in dictionary :" + fieldinfo.FieldType.ToString());
                 Debug.WriteLine("Going to default it as STRING type");
-                System.Windows.MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("The " + fieldinfo.FieldType.ToString() + " Field Type was not found in the dictionary.  Please send a message to @theFisher86 on the NMS Modding Discord and let him know you received this error.  Please mention the Field Type from this error message and what MBIN you were opening.  Or just hit Alt+PrtScrn and send him a screenshot of this error box. \n" + "\n Field Type: " + fieldinfo.FieldType.ToString() + "\n MBIN :" + mbinPath.ToString());
+                MessageBoxResult messageBoxResult = MessageBox.Show("The " + fieldinfo.FieldType.ToString() + " Field Type was not found in the dictionary.  Please send a message to @theFisher86 on the NMS Modding Discord and let him know you received this error.  Please mention the Field Type from this error message and what MBIN you were opening.  Or just hit Alt+PrtScrn and send him a screenshot of this error box. \n" + "\n Field Type: " + fieldinfo.FieldType.ToString() + "\n MBIN :");
                 // Need to implement OctoKit here to send an issue to the GitHub.  Include error message, user Discord name and everything contained in the MessageBox above.
                 TextBox stringText = new TextBox();
                 stringText.Text = fieldinfo.GetValue(mbinData).ToString();

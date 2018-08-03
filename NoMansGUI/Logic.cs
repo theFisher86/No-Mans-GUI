@@ -216,11 +216,38 @@ namespace NoMansGUI
             Debug.WriteLine("Struct " + fieldInfo.Name.ToString() + " Detected");
             TreeViewItem structroot = new TreeViewItem();
             structroot.Header = fieldInfo.GetValue(mbinData).ToString();
-            //IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
+            Debug.WriteLine("Field Attributes :" + fieldInfo.Attributes.ToString());
+            
+            IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
             Debug.WriteLine("fieldInfo Type:" + fieldInfo.GetType());
             iterateFields(fieldInfo.GetType(), structroot);
             //treeViewItem.Items.Add(structroot);
             createControl(fieldInfo.Name, structroot, treeViewItem);
         }
+
+
+        //monkeymans code
+        //public void HandleStruct(FieldInfo fieldInfo, TreeViewItem treeViewItem)
+        //{
+        //    Debug.WriteLine("Struct " + fieldInfo.Name.ToString() + " Detected");
+        //    TreeViewItem structroot = new TreeViewItem();
+        //    structroot.Header = fieldInfo.GetValue(mbinData).ToString();
+        //    IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
+        //    foreach (FieldInfo field in fields)
+        //    {
+        //        TypeHandlerCallback handler;                                                                // This stuff allows exceptions
+        //        TypeHandlerTable.TryGetValue(field.FieldType, out handler);
+        //        if (handler != null) handler(field, treeViewItem);
+        //        else
+        //        {                                                                                           // And this handles the exception as a string
+        //            Debug.WriteLine("<!!!!BIG ERROR YOU WANT TO SEE!!!!>");
+        //            // etc
+        //        }
+        //    }
+        //    //Debug.WriteLine("fieldInfo Type:" + fieldInfo.GetType());
+        //    //iterateFields(fieldInfo.GetType(), structroot);
+        //    //treeViewItem.Items.Add(structroot);
+        //    createControl(fieldInfo.Name, structroot, treeViewItem);
+        //}
     }
 }

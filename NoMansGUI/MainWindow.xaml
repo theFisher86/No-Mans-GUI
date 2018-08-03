@@ -37,7 +37,9 @@
                 </MenuItem>
             </Menu>
             <StackPanel Orientation="Vertical" Name="ControlEditor" Margin="10,30,10,10">
-                <TreeView Name="mainTree"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="400" MaxHeight="800">
+                    <TreeView Name="mainTree" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                </ScrollViewer>
             </StackPanel>
         </StackPanel>
     </DockPanel>

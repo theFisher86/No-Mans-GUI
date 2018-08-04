@@ -26,7 +26,7 @@ namespace NoMansGUI
         public StackPanel ControlEditor = NoMansGUI.MainWindow.AppWindow.ControlEditor;         // Set ControlEditor as default Stack Panel (can be changed when calling TypeHandler
         public TreeView mainTree = NoMansGUI.MainWindow.AppWindow.mainTree;                     // Set mainTree as public to be used everywhere.
         public TreeViewItem treeRoot;
-        public delegate void TypeHandlerCallback( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl );
+        public delegate void TypeHandlerCallback(FieldInfo fieldInfo, TreeViewItem treeViewItem);
         public Dictionary<Type, TypeHandlerCallback> TypeHandlerTable { get; set; }
 
 
@@ -59,7 +59,7 @@ namespace NoMansGUI
                 { typeof( UInt64 ), HandleInt },
                 { typeof( Byte ), HandleByte },
                 { typeof( String), HandleString },
-                { typeof( Vector4f), HandleVector4f },
+                { typeof( Vector4f), HandleStruct },
                 { typeof( Vector2f), HandleStruct },
                 { typeof( Colour), HandleStruct },
                 { typeof( GcSeed), HandleStruct },
@@ -97,7 +97,7 @@ namespace NoMansGUI
         public void parseMbin(string mbinPath)                // going to use the type from the Tuple created in loadMbin
         {
             Type mbinType = loadMbin(mbinPath);
-
+            mbinPath = mbinPath;                                // Assign the public var mbinPath to the mbinPath passed here from elsewhere.
             //IOrderedEnumerable<System.Reflection.FieldInfo> fields = mbinType.GetFields().OrderBy(field => field.MetadataToken);
 
             if (mbinData == null)
@@ -109,7 +109,7 @@ namespace NoMansGUI
                 TreeViewItem treeRoot = new TreeViewItem();
                 mainTree.Items.Add(treeRoot);
                 //iterateFields(fields, treeRoot);
-                iterateFields( mbinData, mbinType, treeRoot );
+                iterateFields(mbinType, treeRoot);
             }
         }
 
@@ -129,12 +129,12 @@ namespace NoMansGUI
         }
 
         //public void iterateFields(IOrderedEnumerable<System.Reflection.FieldInfo> fields, TreeViewItem treeViewItem)
-        public void iterateFields(NMSTemplate data, Type type, Control destinationControl)
+        public void iterateFields(Type type, TreeViewItem treeViewItem)
         {
             IOrderedEnumerable<System.Reflection.FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
             foreach (FieldInfo fieldinfo in fields)
             {
-                Debug.WriteLine($"type = {fieldinfo.FieldType}, name = {fieldinfo.Name}, value = {fieldinfo.GetValue(data)}");    //write all fields to debug
+                Debug.WriteLine($"type = {fieldinfo.FieldType}, name = {fieldinfo.Name}, value = {fieldinfo.GetValue(mbinData)}");    //write all fields to debug
                                                                                                                                       //Check for NMSAttribute ignore -code by @GaticusHax
                 var attributes = (NMSAttribute[])fieldinfo.GetCustomAttributes(typeof(NMSAttribute), false);
                 libMBIN.Models.NMSAttribute attrib = null;
@@ -148,40 +148,36 @@ namespace NoMansGUI
                 }
                 else
                 {
-                    doHandlerStuff(data, fieldinfo, destinationControl);
+                    doHandlerStuff(fieldinfo, treeViewItem);
                 }
             }
         }
 
-        public void doHandlerStuff(NMSTemplate data, FieldInfo fieldinfo, Control destinationControl)
+        public void doHandlerStuff(FieldInfo fieldinfo, TreeViewItem treeViewItem)
         {
             //TypeHandlerTable[fieldinfo.FieldType](fieldinfo, NoMansGUI.MainWindow.AppWindow.ControlEditor);
 
             TypeHandlerCallback handler;                                                                // This stuff allows exceptions
             TypeHandlerTable.TryGetValue(fieldinfo.FieldType, out handler);
-            if ( handler != null ) {
-                if( data.GetType() is NMSTemplate)                                              // Gat's Code, put it here?
-                {
-                    handler = GetTypeHandler(typeof(NMSTemplate));
-                }
-                handler( data, fieldinfo, destinationControl );
-            } else {                                                                                    // And this handles the exception as a string
-                Debug.WriteLine( "<!!!!BIG ERROR YOU WANT TO SEE!!!!>" );
-                Debug.WriteLine( "Field Type not found in dictionary :" + fieldinfo.FieldType.ToString() );
-                Debug.WriteLine( "Going to default it as STRING type" );
-                MessageBoxResult messageBoxResult = MessageBox.Show( "The " + fieldinfo.FieldType.ToString() + " Field Type was not found in the dictionary.  Please send a message to @theFisher86 on the NMS Modding Discord and let him know you received this error.  Please mention the Field Type from this error message and what MBIN you were opening.  Or just hit Alt+PrtScrn and send him a screenshot of this error box. \n" + "\n Field Type: " + fieldinfo.FieldType.ToString() + "\n MBIN :" );
+            if (handler != null) handler(fieldinfo, treeViewItem);
+            else
+            {                                                                                           // And this handles the exception as a string
+                Debug.WriteLine("<!!!!BIG ERROR YOU WANT TO SEE!!!!>");
+                Debug.WriteLine("Field Type not found in dictionary :" + fieldinfo.FieldType.ToString());
+                Debug.WriteLine("Going to default it as STRING type");
+                MessageBoxResult messageBoxResult = MessageBox.Show("The " + fieldinfo.FieldType.ToString() + " Field Type was not found in the dictionary.  Please send a message to @theFisher86 on the NMS Modding Discord and let him know you received this error.  Please mention the Field Type from this error message and what MBIN you were opening.  Or just hit Alt+PrtScrn and send him a screenshot of this error box. \n" + "\n Field Type: " + fieldinfo.FieldType.ToString() + "\n MBIN :");
                 // Need to implement OctoKit here to send an issue to the GitHub.  Include error message, user Discord name and everything contained in the MessageBox above.
                 TextBox stringText = new TextBox();
-                stringText.Text = fieldinfo.GetValue( data ).ToString();
+                stringText.Text = fieldinfo.GetValue(mbinData).ToString();
 
-                CreateControl( fieldinfo.Name, stringText, destinationControl );
+                createControl(fieldinfo.Name, stringText, treeViewItem);
 
             }
         }
 
-        public void CreateControl(string label, Control control, Control destinationControl)
+        public void createControl(string label, Control control, TreeViewItem treeViewItem)
         {
-            Debug.WriteLine("Creating Control " + control.ToString() + " in " + destinationControl.ToString());
+            Debug.WriteLine("Creating Control " + control.ToString() + " in " + treeViewItem.ToString());
             Label labelName = new Label();
             labelName.Content = label;
 
@@ -189,131 +185,91 @@ namespace NoMansGUI
             stackPanel.Children.Add(labelName);
             stackPanel.Children.Add(control);
 
-            // New logic so that any control can be created instead of just a TreeViewItem
-            if(destinationControl.GetType() == typeof(TreeViewItem))
-            {
-                TreeViewItem treeViewItem = (TreeViewItem)Convert.ChangeType(destinationControl, typeof(TreeViewItem));
-                treeViewItem.Items.Add(stackPanel);
-            }
-            else if(destinationControl.GetType() == typeof(StackPanel)){
-                StackPanel sp = (StackPanel)Convert.ChangeType(destinationControl, typeof(StackPanel));
-                sp.Children.Add(stackPanel);
-            }
-            else
-            {
-                Debug.WriteLine("Control Type Definition not added to CreateControl Method.  Add a definition for :" + destinationControl.GetType().ToString());
-                MessageBoxResult messageBoxResult = MessageBox.Show("This control type hasn't been added to CreateControl yet.  It needs to be! \n Control Type :" + destinationControl.GetType().ToString());
-            }
-            
+            treeViewItem.Items.Add(stackPanel);
         }
 
         // =================
         // = Type Handlers =
         // =================
 
-        public void HandleBool( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
+        public void HandleBool(FieldInfo fieldInfo, TreeViewItem treeViewItem)
         {
             Debug.WriteLine("Boolean Detected");
 
             CheckBox checkBox = new CheckBox();
-            Boolean checkValue = Convert.ToBoolean(fieldInfo.GetValue(data));
+            Boolean checkValue = Convert.ToBoolean(fieldInfo.GetValue(mbinData));
             checkBox.IsChecked = checkValue;
 
-            CreateControl(fieldInfo.Name, checkBox, destinationControl);
+            createControl(fieldInfo.Name, checkBox, treeViewItem);
         }
 
-        public void HandleInt( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
+        public void HandleInt(FieldInfo fieldInfo, TreeViewItem treeViewItem)
         {
             Debug.WriteLine("Int Detected");
 
             TextBox intText = new TextBox();
-            intText.Text = fieldInfo.GetValue(data).ToString();
+            intText.Text = fieldInfo.GetValue(mbinData).ToString();
 
-            CreateControl(fieldInfo.Name, intText, destinationControl);
+            createControl(fieldInfo.Name, intText, treeViewItem);
         }
 
-        public void HandleByte( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
+        public void HandleByte(FieldInfo fieldInfo, TreeViewItem treeViewItem)
         {
             Debug.WriteLine("Byte Detected");
 
             TextBox byteText = new TextBox();
-            byteText.Text = fieldInfo.GetValue(data).ToString();
+            byteText.Text = fieldInfo.GetValue(mbinData).ToString();
 
-            CreateControl(fieldInfo.Name, byteText, destinationControl);
+            createControl(fieldInfo.Name, byteText, treeViewItem);
         }
 
-        public void HandleString( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
+        public void HandleString(FieldInfo fieldInfo, TreeViewItem treeViewItem)
         {
             Debug.WriteLine("String Detected");
 
             TextBox stringText = new TextBox();
-            stringText.Text = fieldInfo.GetValue(data).ToString();
+            stringText.Text = fieldInfo.GetValue(mbinData).ToString();
 
-            CreateControl(fieldInfo.Name, stringText, destinationControl);
+            createControl(fieldInfo.Name, stringText, treeViewItem);
         }
 
-        public void HandleStruct( NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
+        public void HandleStruct(FieldInfo fieldInfo, TreeViewItem treeViewItem)
         {
-            Debug.WriteLine( $"Struct {fieldInfo.Name} Detected");
+            Debug.WriteLine("Struct " + fieldInfo.Name.ToString() + " Detected");
             TreeViewItem structroot = new TreeViewItem();
-            data = (NMSTemplate) fieldInfo.GetValue( data );
-            structroot.Header = data.ToString();
+            structroot.Header = fieldInfo.GetValue(mbinData).ToString();
             Debug.WriteLine("Field Attributes :" + fieldInfo.Attributes.ToString());
             
-            //IOrderedEnumerable<System.Reflection.FieldInfo> fields = data.GetType().GetFields().OrderBy(field => field.MetadataToken);
-            Debug.WriteLine("fieldInfo Type:" + data.GetType());
-            iterateFields( data, data.GetType(), structroot );
+            IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
+            Debug.WriteLine("fieldInfo Type:" + fieldInfo.GetType());
+            iterateFields(fieldInfo.GetType(), structroot);
             //treeViewItem.Items.Add(structroot);
-            CreateControl(fieldInfo.Name, structroot, destinationControl);
-        }
-
-        public void HandleVector4f(NMSTemplate data, FieldInfo fieldInfo, Control destinationControl)
-        {
-            Debug.WriteLine($"Vector4f {fieldInfo.Name} Detected");
-            Debug.WriteLine("Field Attributes :" + fieldInfo.Attributes.ToString());
-            Type type = data.GetType();
-
-            StackPanel stackPanel = new StackPanel();
-            stackPanel.Orientation = Orientation.Horizontal;
-            stackPanel.Name = fieldInfo.Name;
-            
-            
-            IOrderedEnumerable<System.Reflection.FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
-            foreach (FieldInfo fieldinfo in fields)
-            {
-                Debug.WriteLine($"type = {fieldinfo.FieldType}, name = {fieldinfo.Name}, value = {fieldinfo.GetValue(data)}");    //write all fields to debug
-
-                TextBox textBox = new TextBox();
-                textBox.Name = fieldInfo.Name;
-                textBox.Text = fieldInfo.GetValue(data).ToString();
-                CreateControl(fieldInfo.Name, textBox, (Control)Convert.ChangeType(stackPanel, typeof(Control)));           //This throws an "Object must implement IConvertible." Error
-
-            }
+            createControl(fieldInfo.Name, structroot, treeViewItem);
         }
 
 
-            //monkeymans code
-            //public void HandleStruct(FieldInfo fieldInfo, TreeViewItem treeViewItem)
-            //{
-            //    Debug.WriteLine("Struct " + fieldInfo.Name.ToString() + " Detected");
-            //    TreeViewItem structroot = new TreeViewItem();
-            //    structroot.Header = fieldInfo.GetValue(mbinData).ToString();
-            //    IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
-            //    foreach (FieldInfo field in fields)
-            //    {
-            //        TypeHandlerCallback handler;                                                                // This stuff allows exceptions
-            //        TypeHandlerTable.TryGetValue(field.FieldType, out handler);
-            //        if (handler != null) handler(field, treeViewItem);
-            //        else
-            //        {                                                                                           // And this handles the exception as a string
-            //            Debug.WriteLine("<!!!!BIG ERROR YOU WANT TO SEE!!!!>");
-            //            // etc
-            //        }
-            //    }
-            //    //Debug.WriteLine("fieldInfo Type:" + fieldInfo.GetType());
-            //    //iterateFields(fieldInfo.GetType(), structroot);
-            //    //treeViewItem.Items.Add(structroot);
-            //    CreateControl(fieldInfo.Name, structroot, treeViewItem);
-            //}
+        //monkeymans code
+        //public void HandleStruct(FieldInfo fieldInfo, TreeViewItem treeViewItem)
+        //{
+        //    Debug.WriteLine("Struct " + fieldInfo.Name.ToString() + " Detected");
+        //    TreeViewItem structroot = new TreeViewItem();
+        //    structroot.Header = fieldInfo.GetValue(mbinData).ToString();
+        //    IOrderedEnumerable<System.Reflection.FieldInfo> fields = fieldInfo.GetType().GetFields().OrderBy(field => field.MetadataToken);
+        //    foreach (FieldInfo field in fields)
+        //    {
+        //        TypeHandlerCallback handler;                                                                // This stuff allows exceptions
+        //        TypeHandlerTable.TryGetValue(field.FieldType, out handler);
+        //        if (handler != null) handler(field, treeViewItem);
+        //        else
+        //        {                                                                                           // And this handles the exception as a string
+        //            Debug.WriteLine("<!!!!BIG ERROR YOU WANT TO SEE!!!!>");
+        //            // etc
+        //        }
+        //    }
+        //    //Debug.WriteLine("fieldInfo Type:" + fieldInfo.GetType());
+        //    //iterateFields(fieldInfo.GetType(), structroot);
+        //    //treeViewItem.Items.Add(structroot);
+        //    createControl(fieldInfo.Name, structroot, treeViewItem);
+        //}
     }
 }

@@ -17,6 +17,7 @@ using System.Deployment.Application;
 using System.Diagnostics;           // Will want to comment this out in production
 using libMBIN;
 
+
 namespace NoMansGUI
 {
     /// <summary>
@@ -46,7 +47,15 @@ namespace NoMansGUI
 
             // Make this window public so it can be accessed elsewhere (logic.cs)
             AppWindow = this;
+
+            if (App.Args.Length != 0)
+            {
+                Logic logic = new Logic();
+                logic.ParseMbin(App.Args[0]);
+            }
         }
+
+
 
         public void checkForUpdates()
         {
@@ -57,7 +66,7 @@ namespace NoMansGUI
             string onlineVersion = "1.0";
             //Need to add code to check GitHub version here
             Debug.WriteLine("Current Version as Double: " + Double.TryParse(appVersionString, out appVersion) + "Current Version as String: " + appVersionString);
-            
+
             MessageBoxResult updateCheckBox = MessageBox.Show("You currently have version " + appVersion + " of this app.  The latest version is " + onlineVersion + ".  Would you like to update?", "Update Available", MessageBoxButton.YesNo);
             if (updateCheckBox == MessageBoxResult.Yes)
             {
@@ -105,7 +114,7 @@ namespace NoMansGUI
                 Debug.WriteLine(mbinPath.ToString());
 
                 Logic logic = new Logic();
-                logic.parseMbin(mbinPath.ToString());
+                logic.ParseMbin(mbinPath.ToString());
 
                 //Main MBIN Parsing Code -Disable
                 //using (libMBIN.MBINFile mbin = new libMBIN.MBINFile(mbinPath))
@@ -239,11 +248,11 @@ namespace NoMansGUI
         private void about_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult aboutResult = MessageBox.Show("This GUI was made by Aaron Fisher aka theFisher86 on the NMS Modding Discord.  Would you like to visit us?", "About", MessageBoxButton.YesNo);
-            if(aboutResult == MessageBoxResult.Yes)
+            if (aboutResult == MessageBoxResult.Yes)
             {
                 System.Diagnostics.Process.Start("https://discord.gg/9QBKg6Z");
             }
-            
+
         }
 
         private void dontClick_Click(object sender, RoutedEventArgs e)
@@ -251,6 +260,5 @@ namespace NoMansGUI
             System.Diagnostics.Process.Start("https://www.google.com/search?q=horse+sex&rlz=1C1GCEA_enUS801US801&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiE1quLtcXcAhXEm-AKHeTEDnkQ_AUICygC&biw=1680&bih=868");
             MessageBoxResult toldYou = MessageBox.Show("I warned you", "Told You Not To Click That", MessageBoxButton.OK);
         }
-
     }
 }

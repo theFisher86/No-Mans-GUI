@@ -32,11 +32,12 @@ namespace NoMansGUI
         public TreeView mainTree = NoMansGUI.MainWindow.AppWindow.mainTree;                     // Set mainTree as public to be used everywhere.
         public TreeViewItem treeRoot;
 
-        public delegate void TypeHandlerCallback( object owner, FieldInfo field
-                                                , string name, object value
-                                                , UIElement destinationControl );
 
-        private TypeHandlerTable TypeHandlers  { get; set; }
+        public delegate void TypeHandlerCallback(object owner, FieldInfo field
+                                                , string name, object value
+                                                , UIElement destinationControl);
+
+        private TypeHandlerTable TypeHandlers { get; set; }
 
         // ==============================
         // = Logic Class Initialization =
@@ -61,7 +62,7 @@ namespace NoMansGUI
                 { typeof( UInt64      ), HandleInt    },
                 { typeof( Single      ), HandleString },
                 { typeof( Double      ), HandleString },
-                                      
+
                 { typeof( String      ), HandleString },
 
                 { typeof( Array       ), HandleArray  },
@@ -105,16 +106,18 @@ namespace NoMansGUI
 
         }
 
-        public TypeHandlerCallback GetTypeHandler( Type type ) {
+        public TypeHandlerCallback GetTypeHandler(Type type)
+        {
             TypeHandlerCallback handler = null;
 
             // try to get an explicit type handler
-            TypeHandlers.TryGetValue( type, out handler );
+            TypeHandlers.TryGetValue(type, out handler);
             if (handler != null)
             {
                 return handler;
             }
-            else {                                                          // Only look for BaseType if explicit type not found
+            else
+            {                                                          // Only look for BaseType if explicit type not found
                 // derived types use a generic handler, so we lookup the BaseType
                 TypeHandlers.TryGetValue(type.BaseType, out handler);
                 return handler;
@@ -125,9 +128,9 @@ namespace NoMansGUI
         // = Main Program Loop =
         // =====================
 
-        public void parseMbin(string mbinPath)                // going to use the type from the Tuple created in loadMbin
+        public void ParseMbin(string mbinPath)                // going to use the type from the Tuple created in loadMbin
         {
-            Type mbinType = loadMbin(mbinPath);
+            Type mbinType = LoadMbin(mbinPath);
 
             //IOrderedEnumerable<System.Reflection.FieldInfo> fields = mbinType.GetFields().OrderBy(field => field.MetadataToken);
 
@@ -140,14 +143,16 @@ namespace NoMansGUI
                 TreeViewItem treeRoot = new TreeViewItem();
                 mainTree.Items.Add(treeRoot);
                 //iterateFields(fields, treeRoot);
-                iterateFields( mbinData, mbinType, treeRoot );
+                IterateFields(mbinData, mbinType, treeRoot);
+                treeRoot.IsExpanded = true;
             }
         }
 
-        public Type loadMbin(string mbinPath)               // sets public var mbinData to data and returns the type
+        public Type LoadMbin(string mbinPath)               // sets public var mbinData to data and returns the type
         {
             using (libMBIN.MBINFile mbin = new libMBIN.MBINFile(mbinPath))
             {
+                mainTree.Items.Clear();
                 mbin.Load(); // load the header information from the file
                              // The type of the actual data is the actual structure type, eg. GcColour
                 libMBIN.Models.NMSTemplate data = mbin.GetData(); // populate the data struct.
@@ -160,13 +165,13 @@ namespace NoMansGUI
         }
 
         //public void iterateFields(IOrderedEnumerable<System.Reflection.FieldInfo> fields, TreeViewItem treeViewItem)
-        public void iterateFields(NMSTemplate data, Type type, UIElement destinationControl)
+        public void IterateFields(NMSTemplate data, Type type, UIElement destinationControl)
         {
             IOrderedEnumerable<System.Reflection.FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
             foreach (FieldInfo fieldinfo in fields)
             {
                 Debug.WriteLine($"type = {fieldinfo.FieldType}, name = {fieldinfo.Name}, value = {fieldinfo.GetValue(data)}");    //write all fields to debug
-                                                                                                                                      //Check for NMSAttribute ignore -code by @GaticusHax
+                                                                                                                                  //Check for NMSAttribute ignore -code by @GaticusHax
                 var attributes = (NMSAttribute[])fieldinfo.GetCustomAttributes(typeof(NMSAttribute), false);
                 libMBIN.Models.NMSAttribute attrib = null;
                 if (attributes.Length > 0) attrib = attributes[0];
@@ -179,17 +184,17 @@ namespace NoMansGUI
                 }
                 else
                 {
-                    doHandlerStuff(data, fieldinfo, destinationControl);
+                    DoHandlerStuff(data, fieldinfo, destinationControl);
                 }
             }
         }
 
-        public void doHandlerStuff(NMSTemplate data, FieldInfo fieldInfo, UIElement destinationControl)
+        public void DoHandlerStuff(NMSTemplate data, FieldInfo fieldInfo, UIElement destinationControl)
         {
             //TypeHandlerTable[fieldinfo.FieldType](fieldinfo, NoMansGUI.MainWindow.AppWindow.ControlEditor);
 
             Type type = fieldInfo.FieldType;
-            TypeHandlerCallback handler = GetTypeHandler( type );
+            TypeHandlerCallback handler = GetTypeHandler(type);
             //if ( handler == null )                                                            //Gaticus way to handle a missingType (throw error and break)
             //{
             //    throw new System.NotImplementedException($"{type}");
@@ -207,7 +212,7 @@ namespace NoMansGUI
 
                 CreateControl(fieldInfo.Name, stringText, destinationControl);
             }
-                                                                                                // When everything's working do this stuff
+            // When everything's working do this stuff
             else
             {
                 string name = fieldInfo.Name;
@@ -220,21 +225,23 @@ namespace NoMansGUI
         // = Misc Functions =
         // ==================
 
-        public void CreateControl( string label, Control control, UIElement destinationControl ) {
-            Debug.WriteLine( "Creating Control " + control.ToString() + " in " + destinationControl.ToString() );
+        public void CreateControl(string label, Control control, UIElement destinationControl)
+        {
+            Debug.WriteLine("Creating Control " + control.ToString() + " in " + destinationControl.ToString());
             Label labelName = new Label();
             labelName.Content = label;
 
             StackPanel stackPanel = new StackPanel();
-            stackPanel.Children.Add( labelName );
-            stackPanel.Children.Add( control );
+            stackPanel.Children.Add(labelName);
+            stackPanel.Children.Add(control);
 
             // New logic so that any control can be created instead of just a TreeViewItem
-            if ( destinationControl.GetType() == typeof( TreeViewItem ) ) {
-                TreeViewItem treeViewItem = (TreeViewItem) Convert.ChangeType( destinationControl, typeof( TreeViewItem ) );
-                treeViewItem.Items.Add( stackPanel );
+            if (destinationControl.GetType() == typeof(TreeViewItem))
+            {
+                TreeViewItem treeViewItem = (TreeViewItem)Convert.ChangeType(destinationControl, typeof(TreeViewItem));
+                treeViewItem.Items.Add(stackPanel);
             }
-            else if(destinationControl.GetType() == typeof(StackPanel))
+            else if (destinationControl.GetType() == typeof(StackPanel))
             {
                 StackPanel sp = (StackPanel)Convert.ChangeType(destinationControl, typeof(StackPanel));
                 sp.Children.Add(stackPanel);
@@ -267,26 +274,29 @@ namespace NoMansGUI
         // = Type Handlers =
         // =================
 
-        public void HandleArray( object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl ) {
+        public void HandleArray(object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl)
+        {
             Type type = value.GetType();
-            TypeHandlerCallback handler = GetTypeHandler( type.GetElementType() );
+            TypeHandlerCallback handler = GetTypeHandler(type.GetElementType());
 
             TreeViewItem root = new TreeViewItem();
             root.Header = type.ToString();
-            CreateControl( $"{name}", root, destinationControl );
+            CreateControl($"{name}", root, destinationControl);
 
             int i = 0;
-            foreach (var element in (Array) value) {
-                handler( value, null, $"{fieldInfo.Name}[{i++}]", element, root );
+            foreach (var element in (Array)value)
+            {
+                handler(value, null, $"{fieldInfo.Name}[{i++}]", element, root);
             }
         }
 
-        public void HandleTemplate( object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl ) {
-            Debug.WriteLine( $"Struct {name} Detected" );
+        public void HandleTemplate(object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl)
+        {
+            Debug.WriteLine($"Struct {name} Detected");
 
             TreeViewItem structroot = new TreeViewItem();
             structroot.Header = value.ToString();
-            CreateControl( name, structroot, destinationControl );
+            CreateControl(name, structroot, destinationControl);
 
             StackPanel SpecialCaseFound()
             {
@@ -300,7 +310,8 @@ namespace NoMansGUI
 
             // Vectors
             Debug.WriteLine("checking for special cases...  Type is :" + value.GetType());
-            if (value.GetType().ToString().Contains("Vector")){
+            if (value.GetType().ToString().Contains("Vector"))
+            {
 
                 StackPanel headerPanel = SpecialCaseFound();
 
@@ -322,76 +333,94 @@ namespace NoMansGUI
                 }
 
             }
-            
+
             // Color Picker
-            else if(value.GetType() == typeof(Colour))
+            else if (value.GetType() == typeof(Colour))
             {
                 StackPanel headerPanel = SpecialCaseFound();
 
-                                    //You have to watch it here as ColoUr is the NMS Colour Type and Color is the Regular one.
+                //You have to watch it here as ColoUr is the NMS Colour Type and Color is the Regular one.
                 Colour color = (Colour)value;
 
-                                    // Create a WinForms ColorDialog b/c WPF is stupid and doesn't have it's own.
+                // Create Color Picker Dialog
                 System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
 
                 //Debug.WriteLine("Red is: " + Color.Red.A.ToString() + ", " + Color.Red.R.ToString() + ", " + Color.Red.G.ToString() + ", " + Color.Red.B.ToString());
                 Debug.WriteLine("NMS Color is: " + ConvertNMSColorToColor((Colour)value).ToString());
 
-                                    // Actually Convert the NMS Style RGBA to a System.Drawing.Color type that is compatible with the winForms dialog
+                // Actually Convert the NMS Style RGBA to a System.Drawing.Color type that is compatible with the winForms dialog
                 colorDialog.Color = (System.Drawing.Color)ConvertNMSColorToColor((Colour)value, true);
 
-                                    // Now convert it to the System.Windows.Media.Color type and then convert that into a Brush
+                // Now convert it to the System.Windows.Media.Color type and then convert that into a Brush
                 SolidColorBrush brush = new SolidColorBrush();
                 brush.Color = (Color)ConvertNMSColorToColor((Colour)value);
-                                    
-                                    // Make headerPanel Background color the selected color, throw on a label that displays the RGBA values in NMS Style
+
+                // Make headerPanel Background color the selected color, throw on a label that displays the RGBA values in NMS Style
                 headerPanel.Background = brush;
                 Label label = new Label();
                 label.Content = "(R:" + color.R.ToString() + " G:" + color.G.ToString() + "B: " + color.B.ToString() + "A: " + color.A.ToString() + ")";
-                headerPanel.Children.Add(label);                
+                headerPanel.Children.Add(label);
+
+                // Show Color Picker when Label is double clicked
+                label.MouseDoubleClick += loadMbin_Click;
             }
-            
+
             // Standard "Build a Tree Branch 
-            Debug.WriteLine( "Data Type:" + value.GetType() );
-            iterateFields( (NMSTemplate) value, value.GetType(), structroot );
+            Debug.WriteLine("Data Type:" + value.GetType());
+            IterateFields((NMSTemplate)value, value.GetType(), structroot);
         }
 
-        public void HandleBool( object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl ) {
-            Debug.WriteLine( "Boolean Detected" );
+        public void HandleBool(object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl)
+        {
+            Debug.WriteLine("Boolean Detected");
 
             CheckBox checkBox = new CheckBox();
-            Boolean checkValue = Convert.ToBoolean( value );
+            Boolean checkValue = Convert.ToBoolean(value);
             checkBox.IsChecked = checkValue;
 
-            CreateControl( name, checkBox, destinationControl );
+            CreateControl(name, checkBox, destinationControl);
         }
 
-        public void HandleByte( object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl ) {
-            Debug.WriteLine( "Byte Detected" );
+        public void HandleByte(object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl)
+        {
+            Debug.WriteLine("Byte Detected");
 
             TextBox byteText = new TextBox();
             byteText.Text = value.ToString();
 
-            CreateControl( name, byteText, destinationControl );
+            CreateControl(name, byteText, destinationControl);
         }
 
-        public void HandleInt( object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl ) {
-            Debug.WriteLine( "Int Detected" );
+        public void HandleInt(object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl)
+        {
+            Debug.WriteLine("Int Detected");
 
             TextBox intText = new TextBox();
             intText.Text = value.ToString();
 
-            CreateControl( name, intText, destinationControl );
+            CreateControl(name, intText, destinationControl);
         }
 
-        public void HandleString( object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl ) {
-            Debug.WriteLine( "String Detected" );
+        public void HandleString(object owner, FieldInfo fieldInfo, string name, object value, UIElement destinationControl)
+        {
+            Debug.WriteLine("String Detected");
 
             TextBox stringText = new TextBox();
             stringText.Text = value.ToString();
 
-            CreateControl( name, stringText, destinationControl );
+            CreateControl(name, stringText, destinationControl);
         }
 
+        // =========================
+        // = Routed Event Handlers = 
+        // =========================
+
+        private void loadMbin_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Sender :" + sender.ToString());
+            Debug.WriteLine("RoutedEventArgs :" + e.ToString());
+
+            //System.Windows.Forms.DialogResult dialogResult = colorDialog.ShowDialog();
+        }
     }
 }

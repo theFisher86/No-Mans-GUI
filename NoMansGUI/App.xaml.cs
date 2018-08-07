@@ -13,5 +13,13 @@ namespace NoMansGUI
     /// </summary>
     public partial class App : Application
     {
+
+        public static string[] Args;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            Args = e.Args;
+        }
     }
 }

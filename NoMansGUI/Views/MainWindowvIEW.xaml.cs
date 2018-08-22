@@ -16,14 +16,15 @@ using System.Deployment.Application;
 //using Octokit;                      // For checking GitHub version
 using System.Diagnostics;           // Will want to comment this out in production
 using libMBIN;
-
+using Caliburn.Micro;
+using NoMansGUI.Utils.Events;
 
 namespace NoMansGUI.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindowView : Window
+    public partial class MainWindowView : Window, IHandle<TreeCreatedEvent>
     {
         //
         //  Stopping Point Notes:
@@ -35,6 +36,7 @@ namespace NoMansGUI.Views
         public MainWindowView()
         {
             InitializeComponent();
+            IoC.Get<IEventAggregator>().Subscribe(this);
             // This stuff is for update checking, I don't think it works in Debug mode though so it's currently disabled.
             //string appVersionString = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             //string appVersionString = "0.1";
@@ -43,5 +45,9 @@ namespace NoMansGUI.Views
 
         }
 
+        public void Handle(TreeCreatedEvent message)
+        {
+            ControlEditor.Children.Add(message.TreeView);
+        }
     }
 }

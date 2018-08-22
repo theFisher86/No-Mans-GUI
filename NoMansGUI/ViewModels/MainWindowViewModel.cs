@@ -1,12 +1,16 @@
 ﻿using Caliburn.Micro;
+using libMBIN.Models;
+using NoMansGUI.Utils.Events;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace NoMansGUI.ViewModels
 {
@@ -23,6 +27,8 @@ namespace NoMansGUI.ViewModels
         private double _appVersion;
         private string _appVersionString;
         private string _mbinPath;
+
+        private TreeView _root;
         #endregion
 
         #region Properties
@@ -45,8 +51,6 @@ namespace NoMansGUI.ViewModels
                 NotifyOfPropertyChange(() => AppVersionString);
             }
         }
-
-
         #endregion
 
         #region Constructor
@@ -81,7 +85,7 @@ namespace NoMansGUI.ViewModels
                 // Open update webpage
             }
 
-            string mbinVersion = libMBIN.Version.GetVersionString();
+            string mbinVersion = libMBIN.Version.GetString();
             MessageBoxResult mbinVersionBox = MessageBox.Show("MBINCompiler DLL is currently using version " + mbinVersion + ".", "libMBIN.dll Version", MessageBoxButton.OK);
         }
 
@@ -103,8 +107,11 @@ namespace NoMansGUI.ViewModels
                 _mbinPath = openFileDialog.FileName;
                 Debug.WriteLine(_mbinPath.ToString());
 
-                //Logic logic = new Logic();
-                //logic.ParseMbin(_mbinPath.ToString());
+                Logic logic = new Logic();
+                _root = logic.ParseMbin(_mbinPath.ToString());
+                //Hacky as shit, if i've left this in shout at me.
+                IoC.Get<IEventAggregator>().PublishOnUIThread(new TreeCreatedEvent(_root));
+
 
                 //Main MBIN Parsing Code -Disable
                 //using (libMBIN.MBINFile mbin = new libMBIN.MBINFile(mbinPath))

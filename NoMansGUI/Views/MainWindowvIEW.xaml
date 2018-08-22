@@ -36,9 +36,11 @@
                 </MenuItem>
             </Menu>
             <StackPanel Orientation="Vertical" Name="ControlEditor" Margin="10,30,10,10">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="400" MaxHeight="800">
-                    <TreeView Name="mainTree" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-                </ScrollViewer>
+                <!--<ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="400" MaxHeight="800">
+                    <TreeView Name="Root" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    
+                    </TreeView>
+                </ScrollViewer>-->
             </StackPanel>
         </StackPanel>
     </DockPanel>

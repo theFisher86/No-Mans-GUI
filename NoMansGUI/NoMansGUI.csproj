@@ -104,6 +104,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Logic\Logic.cs" />
     <Compile Include="Utils\Events\LoadingEvents.cs" />
+    <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SplashWindowViewModel.cs" />
     <Compile Include="Views\SettingsView.xaml.cs">

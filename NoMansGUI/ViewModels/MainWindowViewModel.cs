@@ -1,63 +1,71 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Deployment.Application;
-//using Octokit;                      // For checking GitHub version
-using System.Diagnostics;           // Will want to comment this out in production
-using libMBIN;
 
-
-namespace NoMansGUI
+namespace NoMansGUI.ViewModels
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// ViewModel for the main window, needs to be exported so the MEF container can find it.
     /// </summary>
-    public partial class MainWindow : Window
+    [Export(typeof(MainWindowViewModel))]
+    public class MainWindowViewModel : Screen
     {
-        public double appVersion;
-        public string appVersionString;
-        public string mbinPath;
-        public static MainWindow AppWindow;
-        //
-        //  Stopping Point Notes:
-        //      Need to figure out how to share the DataContext for WPF stuff between MainWindow and Settings.
-        //      Not sure how to share a data context between classes but that's what needs a figuring.
-        //
-        //
+        /* Wannabeuk : Please note i'm doing this following my standard coding styles. I'm aware this might not be ideal
+         * everyone, so perhaps we should knock out some guidelines for coding styles? */
 
-        public MainWindow()
+        #region Fields
+        private double _appVersion;
+        private string _appVersionString;
+        private string _mbinPath;
+        #endregion
+
+        #region Properties
+        public Double AppVersion
         {
-            InitializeComponent();
-            // This stuff is for update checking, I don't think it works in Debug mode though so it's currently disabled.
-            string appVersionString = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            //string appVersionString = "0.1";
-            //appVersion = Convert.ToDouble(appVersionString);
-            //checkFilePaths();
-
-            // Make this window public so it can be accessed elsewhere (logic.cs)
-            AppWindow = this;
-
-            if (App.Args.Length != 0)
+            get { return _appVersion; }
+            set
             {
-                Logic logic = new Logic();
-                logic.ParseMbin(App.Args[0]);
+                _appVersion = value;
+                NotifyOfPropertyChange(() => AppVersion);
+            }
+        }
+
+        public string AppVersionString
+        {
+            get { return _appVersionString; }
+            set
+            {
+                _appVersionString = value;
+                NotifyOfPropertyChange(() => AppVersionString);
             }
         }
 
 
+        #endregion
 
-        public void checkForUpdates()
+        #region Constructor
+        public MainWindowViewModel()
+        {
+            //Get the app version
+            _appVersionString = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            //We need to move this elsewhere, prolly into the bootstrapper and handle from there.
+            if (App.Args.Length != 0)
+            {
+                //Logic logic = new Logic();
+                //logic.ParseMbin(App.Args[0]);
+            }
+        }
+        #endregion
+
+        #region Methods
+        public void CheckForUpdates()
         {
             // This uses Octokit to get the newest release from GitHub.  It doesn't work yet.
             // Here's the documentation: http://octokitnet.readthedocs.io/en/latest/releases/
@@ -65,9 +73,9 @@ namespace NoMansGUI
 
             string onlineVersion = "1.0";
             //Need to add code to check GitHub version here
-            Debug.WriteLine("Current Version as Double: " + Double.TryParse(appVersionString, out appVersion) + "Current Version as String: " + appVersionString);
+            Debug.WriteLine("Current Version as Double: " + Double.TryParse(AppVersionString, out _appVersion) + "Current Version as String: " + AppVersionString);
 
-            MessageBoxResult updateCheckBox = MessageBox.Show("You currently have version " + appVersion + " of this app.  The latest version is " + onlineVersion + ".  Would you like to update?", "Update Available", MessageBoxButton.YesNo);
+            MessageBoxResult updateCheckBox = MessageBox.Show("You currently have version " + AppVersion + " of this app.  The latest version is " + onlineVersion + ".  Would you like to update?", "Update Available", MessageBoxButton.YesNo);
             if (updateCheckBox == MessageBoxResult.Yes)
             {
                 // Open update webpage
@@ -77,19 +85,7 @@ namespace NoMansGUI
             MessageBoxResult mbinVersionBox = MessageBox.Show("MBINCompiler DLL is currently using version " + mbinVersion + ".", "libMBIN.dll Version", MessageBoxButton.OK);
         }
 
-        //public void checkFilePaths()
-        //{
-        //   if(pathUnpakdFiles == null)
-        //    {
-        //        pathUnpakdFiles = getFolder();
-        //    }
-        //   if(pathPcbanks == null)
-        //    {
-        //        pathPcbanks = getFolder();
-        //    }
-        //}
-
-        public string getFolder()
+        public string GetFolder()
         {
             System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
             fileDialog.Title = "Select Folder";
@@ -97,24 +93,18 @@ namespace NoMansGUI
             return fileDialog.ToString();
         }
 
-        //public void createInputLine(string label, Control control)
-        //{
-        //    Label theLabel = new Label();
-        //    theLabel.Content = label;
-
-        //}
-
-        private void loadMbin_Click(object sender, RoutedEventArgs e)
+        //This is the function called when we click the loadMBIN button.
+        public void LoadMBIN()
         {
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
             openFileDialog.Filter = "MBIN Files | *.mbin; *.MBIN";
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                mbinPath = openFileDialog.FileName;
-                Debug.WriteLine(mbinPath.ToString());
+                _mbinPath = openFileDialog.FileName;
+                Debug.WriteLine(_mbinPath.ToString());
 
-                Logic logic = new Logic();
-                logic.ParseMbin(mbinPath.ToString());
+                //Logic logic = new Logic();
+                //logic.ParseMbin(_mbinPath.ToString());
 
                 //Main MBIN Parsing Code -Disable
                 //using (libMBIN.MBINFile mbin = new libMBIN.MBINFile(mbinPath))
@@ -218,34 +208,33 @@ namespace NoMansGUI
             }
         }
 
-        private void saveMbin_Click(object sender, RoutedEventArgs e)
+        public void SaveMbin()
         {
-
+            Debug.WriteLine("SaveMbin Clicked");
         }
 
-        private void closeMbin_Click(object sender, RoutedEventArgs e)
+        public void CloseMbin()
         {
-
+            Debug.WriteLine("CloseMbin Clicked");
         }
 
-        private void exit_Click(object sender, RoutedEventArgs e)
+        public void Exit()
         {
-
+            Debug.WriteLine("Exit Clicked");
         }
 
-        private void settingsMenu_Click(object sender, RoutedEventArgs e)
+        public void SettingsMenu()
         {
-            Settings settings = new Settings();
-            DataContext = this;
-            settings.Show();
+            //Using the IoC container we get the instance of the window manager to show the dialog.
+            IoC.Get<IWindowManager>().ShowDialog(new SettingsViewModel());
         }
 
-        private void checkUpdates_Click(object sender, RoutedEventArgs e)
+        public void CheckUpdates()
         {
-            checkForUpdates();
+            CheckForUpdates();
         }
 
-        private void about_Click(object sender, RoutedEventArgs e)
+        public void About()
         {
             MessageBoxResult aboutResult = MessageBox.Show("This GUI was made by Aaron Fisher aka theFisher86 on the NMS Modding Discord.  Would you like to visit us?", "About", MessageBoxButton.YesNo);
             if (aboutResult == MessageBoxResult.Yes)
@@ -255,10 +244,12 @@ namespace NoMansGUI
 
         }
 
-        private void dontClick_Click(object sender, RoutedEventArgs e)
+        public void DontClickk()
         {
-            System.Diagnostics.Process.Start("https://www.google.com/search?q=horse+sex&rlz=1C1GCEA_enUS801US801&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiE1quLtcXcAhXEm-AKHeTEDnkQ_AUICygC&biw=1680&bih=868");
+            //I... I'm just going to leave this commented out for now i think :/
+            //System.Diagnostics.Process.Start("https://www.google.com/search?q=horse+sex&rlz=1C1GCEA_enUS801US801&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiE1quLtcXcAhXEm-AKHeTEDnkQ_AUICygC&biw=1680&bih=868");
             MessageBoxResult toldYou = MessageBox.Show("I warned you", "Told You Not To Click That", MessageBoxButton.OK);
         }
+        #endregion
     }
 }

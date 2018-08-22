@@ -1,4 +1,4 @@
-﻿<Window x:Name="MainWindow1" x:Class="NoMansGUI.MainWindow"
+﻿<Window x:Class="NoMansGUI.Views.MainWindowView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -20,19 +20,19 @@
                     </ItemsPanelTemplate>
                 </Menu.ItemsPanel>
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Load MBIN" x:Name="loadMbin" Click="loadMbin_Click"/>
+                    <MenuItem Header="_Load MBIN" x:Name="LoadMbin" />
                     <Separator/>
-                    <MenuItem Header="_Save MBIN" x:Name="saveMbin" Click="saveMbin_Click"/>
-                    <MenuItem Header="_Close MBIN" x:Name="closeMbin" Click="closeMbin_Click"/>
-                    <MenuItem Header="E_xit" x:Name="exit" Click="exit_Click"/>
+                    <MenuItem Header="_Save MBIN" x:Name="SaveMbin" />
+                    <MenuItem Header="_Close MBIN" x:Name="CloseMbin" />
+                    <MenuItem Header="E_xit" x:Name="Exit"/>
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem Header="_Settings" x:Name="settingsMenu" Click="settingsMenu_Click"/>
+                    <MenuItem Header="_Settings" x:Name="SettingsMenu"/>
                 </MenuItem>
                 <MenuItem Header="_Help" HorizontalAlignment="Right">
-                    <MenuItem Header="Check for _Updates" x:Name="checkUpdates" Click="checkUpdates_Click"/>
-                    <MenuItem Header="About" x:Name="about" Click="about_Click"/>
-                    <MenuItem Header="Dont Ever Click This" x:Name="dontClick" Click="dontClick_Click"/>
+                    <MenuItem Header="Check for _Updates" x:Name="CheckUpdates"/>
+                    <MenuItem Header="About" x:Name="about"/>
+                    <MenuItem Header="Dont Ever Click This" x:Name="DontClick" />
                 </MenuItem>
             </Menu>
             <StackPanel Orientation="Vertical" Name="ControlEditor" Margin="10,30,10,10">

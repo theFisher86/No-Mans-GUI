@@ -53,3 +53,5 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion(version: "1.2.*")]
 [assembly: AssemblyFileVersion(version: "1.2.*")]
+//We add this here to ensure we watch the log4net.config file and setup logging.
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]

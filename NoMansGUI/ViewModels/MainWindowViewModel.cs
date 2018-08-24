@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
+using libMBIN;
 using libMBIN.Models;
+using NoMansGUI.Models;
 using NoMansGUI.Utils.Events;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,8 +30,7 @@ namespace NoMansGUI.ViewModels
         private double _appVersion;
         private string _appVersionString;
         private string _mbinPath;
-
-        private TreeView _root;
+        private MBinViewModel _mbinViewer;
         #endregion
 
         #region Properties
@@ -49,6 +51,16 @@ namespace NoMansGUI.ViewModels
             {
                 _appVersionString = value;
                 NotifyOfPropertyChange(() => AppVersionString);
+            }
+        }
+
+        public MBinViewModel MBinViewer
+        {
+            get { return _mbinViewer; }
+            set
+            {
+                _mbinViewer = value;
+                NotifyOfPropertyChange(() => MBinViewer);
             }
         }
         #endregion
@@ -107,113 +119,60 @@ namespace NoMansGUI.ViewModels
                 _mbinPath = openFileDialog.FileName;
                 Debug.WriteLine(_mbinPath.ToString());
 
-                Logic logic = new Logic();
-                _root = logic.ParseMbin(_mbinPath.ToString());
-                //Hacky as shit, if i've left this in shout at me.
-                IoC.Get<IEventAggregator>().PublishOnUIThread(new TreeCreatedEvent(_root));
+                NMSTemplate template = null;
+                using (MBINFile mbin = new MBINFile(_mbinPath))
+                {
+                    mbin.Load();
+                    template = mbin.GetData();
+                }
 
-
-                //Main MBIN Parsing Code -Disable
-                //using (libMBIN.MBINFile mbin = new libMBIN.MBINFile(mbinPath))
-                //{
-                //    mbin.Load(); // load the header information from the file
-                //                 // The type of the actual data is the actual structure type, eg. GcColour
-                //    Object data = mbin.GetData(); // populate the data struct.
-                //    var type = data.GetType(); //
-                //    Debug.WriteLine("Data :" + data);
-                //    Debug.WriteLine("Type :" + type);
-
-                //    IOrderedEnumerable<System.Reflection.FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
-
-                //    //Would rather do this as a Dictionary I think
-                //    //IDictionary<string, Array> fieldDict = new Dictionary<string, Array>();
-                //    //foreach (var fieldInfo in fields)
-                //    //{
-                //    //    // Create array of value and type
-                //    //    string[] valueType = { fieldInfo.GetValue(data).ToString(), fieldInfo.FieldType.ToString() };
-
-                //    //    // Add stuff as dictionary entry
-                //    //    fieldDict.Add(new KeyValuePair<string, Array>(fieldInfo.Name, valueType));
-                //    //}
-
-
-                //    foreach (System.Reflection.FieldInfo fieldinfo in fields)
-                //    {
-                //        Debug.WriteLine($"type = {fieldinfo.FieldType}, name = {fieldinfo.Name}, value = {fieldinfo.GetValue(data)}");    //write all fields to debug
-                //        //Check for NMSAttribute ignore -code by @GaticusHax
-                //        var attributes = (libMBIN.Models.NMSAttribute[])fieldinfo.GetCustomAttributes(typeof(libMBIN.Models.NMSAttribute), false);
-                //        libMBIN.Models.NMSAttribute attrib = null;
-                //        if (attributes.Length > 0) attrib = attributes[0];
-                //        bool ignore = false;
-                //        if (attrib != null) ignore = attrib.Ignore;
-
-                //        if (ignore == true)                                         // Skip if ignore is set otherwise do stuff
-                //        {
-                //            Debug.WriteLine("Ignore found... skipping");
-                //        }
-                //        else
-                //        {
-                //            Logic.TypeHandlerCallback typeHandlerCallback = new Logic.TypeHandlerCallback(
-                //            //if (fieldinfo.FieldType == typeof(Boolean))             //Boolean Type
-                //            //{
-                //            //    Debug.WriteLine("boolean detected");
-                //            //    Label labelname = new Label();
-                //            //    labelname.Content = fieldinfo.Name;
-
-                //            //    CheckBox checkbox = new CheckBox();
-                //            //    Boolean checkvalue = Convert.ToBoolean(fieldinfo.GetValue(data));
-                //            //    checkbox.IsChecked = checkvalue;
-
-                //            //    ControlEditor.Children.Add(labelname);
-                //            //    ControlEditor.Children.Add(checkbox);
-
-                //            //}
-                //            //else if (fieldinfo.FieldType == typeof(System.Int64))             //int Type
-                //            //{
-                //            //    Debug.WriteLine("int detected");
-                //            //    Label labelname = new Label();
-                //            //    labelname.Content = fieldinfo.Name;
-
-                //            //    TextBox intText = new TextBox();
-                //            //    intText.Text = fieldinfo.GetValue(data).ToString();
-
-                //            //    ControlEditor.Children.Add(labelname);
-                //            //    ControlEditor.Children.Add(intText);
-
-                //            //}
-                //            //else if (fieldinfo.FieldType == typeof(System.Byte))                   // byte handling
-                //            //{
-                //            //    Debug.WriteLine("byte detected");
-                //            //    Label labelname = new Label();
-                //            //    labelname.Content = fieldinfo.Name;
-
-                //            //    TextBox byteText = new TextBox();
-                //            //    byteText.Text = fieldinfo.GetValue(data).ToString();
-                //            //}
-                //            //else if (fieldinfo.FieldType == typeof(System.String))                // string handling
-                //            //{
-                //            //    Debug.WriteLine("string detected");
-                //            //    Label labelname = new Label();
-                //            //    labelname.Content = fieldinfo.Name;
-
-                //            //    TextBox stringText = new TextBox();
-                //            //    stringText.Text = fieldinfo.GetValue(data).ToString();
-                //            //}
-                //            //else if (fieldinfo.Name == nameof(libMBIN.Models.Structs.Colour))       // this can be used to name gcstructs (or color)
-                //            //{
-
-                //            //}
-                //        }
-                //    }
-                //} // mbin file is properly disposed/closed automatically
-
-
+                if (template != null)
+                {
+                    //We now handle the formatting in this custom control, which is loaded into the MainWindowView when done.
+                    MBinViewer = new MBinViewModel(template);
+                }
             }
             else
             {
                 Debug.WriteLine("No MBIN Selected");
             }
         }
+
+        public static List<MBINField> IterateFields(NMSTemplate data, Type type)
+        {
+            List<MBINField> mbinContents = new List<MBINField>();
+
+            IOrderedEnumerable<FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
+            if (fields != null)
+            {
+                foreach (FieldInfo fieldInfo in fields)
+                {
+                    Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");      //write all fields to debug
+                                                                                                                                        //Check for NMSAttribute ignore -code by @GaticusHax
+                    var attributes = (NMSAttribute[])fieldInfo.GetCustomAttributes(typeof(NMSAttribute), false);                        //
+                    libMBIN.Models.NMSAttribute attrib = null;                                                                          //
+                    if (attributes.Length > 0) attrib = attributes[0];                                                                  //
+                    bool ignore = false;                                                                                                //
+                    if (attrib != null) ignore = attrib.Ignore;                                                                         //
+
+                    if (!ignore)                                                                                                        // Add the field to the mbinContents list
+                    {                                                                                                                   //
+                        mbinContents.Add(new MBINField                                                                                  //
+                        {                                                                                                               //
+                            Name = fieldInfo.Name,                                                                                      //
+                            Value = fieldInfo.GetValue(data).ToString(),                                                                //
+                            NMSType = fieldInfo.FieldType.ToString()                                                                    //
+                        });                                                                                                             //
+                    }                                                                                                                   //
+                }
+            }
+            else
+            {
+                // Helpers.BasicDialogBox("Error Getting Fields...", "Couldn't get the fields for some reason.\n Data: " + data.ToString() + "\n Will return blank List");
+                mbinContents = null;
+            }
+            return mbinContents;
+        } 
 
         public void SaveMbin()
         {

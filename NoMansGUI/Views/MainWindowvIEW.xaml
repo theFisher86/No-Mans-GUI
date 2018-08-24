@@ -41,6 +41,7 @@
                     
                     </TreeView>
                 </ScrollViewer>-->
+                <ContentControl x:Name="MBinViewer" />
             </StackPanel>
         </StackPanel>
     </DockPanel>

@@ -103,10 +103,16 @@
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Logic\Logic.cs" />
+    <Compile Include="Models\MBin.cs" />
     <Compile Include="Utils\Events\LoadingEvents.cs" />
     <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
+    <Compile Include="Utils\TemplateSelectors\MBINTemplateSelector.cs" />
+    <Compile Include="ViewModels\MBinViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SplashWindowViewModel.cs" />
+    <Compile Include="Views\MBinView.xaml.cs">
+      <DependentUpon>MBinView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -126,6 +132,10 @@
       <DependentUpon>MainWindowView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\MBinView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

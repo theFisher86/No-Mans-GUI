@@ -29,6 +29,9 @@
                 <MenuItem Header="_Edit">
                     <MenuItem Header="_Settings" x:Name="SettingsMenu"/>
                 </MenuItem>
+                <MenuItem Header="_Admin">
+                    <MenuItem Header="_Show Missing Templates" x:Name="ShowMissingTemplates"/>
+                </MenuItem>
                 <MenuItem Header="_Help" HorizontalAlignment="Right">
                     <MenuItem Header="Check for _Updates" x:Name="CheckUpdates"/>
                     <MenuItem Header="About" x:Name="about"/>

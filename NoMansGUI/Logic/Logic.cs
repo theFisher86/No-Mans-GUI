@@ -120,7 +120,7 @@ namespace NoMansGUI
             IOrderedEnumerable<System.Reflection.FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
             foreach (FieldInfo fieldInfo in fields)
             {
-                Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");    //write all fields to debug
+                //Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");    //write all fields to debug
                                                                                                                                   //Check for NMSAttribute ignore -code by @GaticusHax
                 var attributes = (NMSAttribute[])fieldInfo.GetCustomAttributes(typeof(NMSAttribute), false);
                 libMBIN.Models.NMSAttribute attrib = null;
@@ -199,7 +199,7 @@ namespace NoMansGUI
 
                     foreach (FieldInfo f in fields)
                     {
-                        Debug.WriteLine($"type = {f.FieldType}, name = {f.Name}, value = {f.GetValue(value)}");    //write all fields to debug
+                        //Debug.WriteLine($"type = {f.FieldType}, name = {f.Name}, value = {f.GetValue(value)}");    //write all fields to debug
 
                         TextBox txtBox = new TextBox();
                         txtBox.Text = f.GetValue(value).ToString();

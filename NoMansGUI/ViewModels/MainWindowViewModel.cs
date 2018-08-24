@@ -174,6 +174,11 @@ namespace NoMansGUI.ViewModels
             return mbinContents;
         } 
 
+        public void ShowMissingTemplates()
+        {
+            IoC.Get<IWindowManager>().ShowDialog(new MissingTemplatesViewModel());
+        }
+
         public void SaveMbin()
         {
             Debug.WriteLine("SaveMbin Clicked");

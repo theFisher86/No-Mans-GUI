@@ -1,32 +1,54 @@
 ﻿<UserControl x:Class="NoMansGUI.Views.MBinView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NoMansGUI.Views"
+             xmlns:converters="clr-namespace:NoMansGUI.Utils.Converters"
              xmlns:templateselector="clr-namespace:NoMansGUI.Utils.TemplateSelectors">
     <UserControl.Resources>
         <templateselector:MBINTemplateSelector x:Key="MbinTemplateSelector"/>
+        <converters:DebugDataBindingConverter x:Key="DebugBinding"/>
         <DataTemplate x:Key="ListDataTemplate">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding Name}"/>
-                <ListView ItemTemplateSelector="{StaticResource MbinTemplateSelector}" ItemsSource="{Binding Value}" />
-            </StackPanel>
+            <Expander Header="{Binding Name}" Template="{StaticResource SimpleExpanderTemp}" >
+                <ListView ItemTemplateSelector="{StaticResource MbinTemplateSelector}" ItemsSource="{Binding Value}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Expander>
+        </DataTemplate>
+        <DataTemplate x:Key="NMSString0x10DataTemplate">
+            <TextBlock Text="{Binding Value.Value, Converter={StaticResource DebugBinding}}" MouseDown="Stringx10_MouseDown"/>
         </DataTemplate>
         <DataTemplate x:Key="StringDataTemplate">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Name}"/>
-                <TextBox Text="{Binding Value}" />
-            </StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Padding="0" Grid.Column="0" Height="25" Text="{Binding Name}"/>
+                <TextBox Grid.Row="1" Padding="0" Grid.Column="0" Height="20" Text="{Binding Value}" />
+                <!--Not Yet Implemented-->
+                <Button Grid.Row="1" Grid.Column="2" Width="50" Height="25" Content="Reset" x:Name="Reset"/>
+            </Grid>
         </DataTemplate>
         <DataTemplate x:Key="IntDataTemplate">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Name}"/>
                 <TextBox Text="{Binding Value}" />
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="BoolDataTemplate">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Name}"/>
                 <CheckBox IsChecked="{Binding Value}"/>
             </StackPanel>
@@ -34,8 +56,12 @@
     </UserControl.Resources>
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="400" MaxHeight="800">
-            <ListView ItemsSource="{Binding Fields}" ItemTemplateSelector="{StaticResource MbinTemplateSelector}" >
-
+            <ListView HorizontalAlignment="Stretch" ItemsSource="{Binding Fields}" ItemTemplateSelector="{StaticResource MbinTemplateSelector}" >
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </ListView>
         </ScrollViewer>
     </Grid>

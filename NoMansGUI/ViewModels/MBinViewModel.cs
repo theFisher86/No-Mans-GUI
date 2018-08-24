@@ -42,7 +42,7 @@ namespace NoMansGUI.ViewModels
         /// <param name="data">the NMSTemplate</param>
         /// <param name="type">the MNSTemplate type</param>
         /// <returns></returns>
-        public static List<MBINField> IterateFields(NMSTemplate data, Type type)
+        public List<MBINField> IterateFields(NMSTemplate data, Type type)
         {
             List<MBINField> mbinContents = new List<MBINField>();
 
@@ -66,7 +66,7 @@ namespace NoMansGUI.ViewModels
                         //This is where things get fun, we need to check if this is a generic type. AFAIK only the collections are.
                         //so we should be ok with this.
                         var isGeneric = fieldInfo.FieldType.IsGenericType;
-
+                        var isArray = fieldInfo.FieldType.IsArray;
                         if (isGeneric)
                         {
                             //We've found a generic field, we assume it's a collection and get to work.
@@ -109,6 +109,48 @@ namespace NoMansGUI.ViewModels
                             //And finally we all the parent.
                             mbinContents.Add(mBINField);
                         }
+                        else if(isArray)
+                        {
+                            //We've found a generic field, we assume it's a collection and get to work.
+                            //We grab the value from the field
+                            var value = fieldInfo.GetValue(data);
+                            //We then create a dynamic variable to hold our list, Dynamic allow us to avoid typing and let .net work out
+                            //what the object is, as at compile time we have no realistic way of know what the type actually is.
+                            dynamic array = value;
+
+                            // build the basic MBINField to hold the list, we use NMSType because otherwise NMSType becomes something like
+                            // System.Collections.Generic.List`1[[libMBIN.Models.Structs.GcDiscoveryRewardLookup, libMBIN, Version=1.57.0.0, Culture=neutral, PublicKeyToken=null]]
+                            // which is just a little annoying to work with.
+                            MBINField mBINField = new MBINField()
+                            {
+                                Name = fieldInfo.Name,
+                                NMSType = "array"
+                            };
+                            //We build a list of MBINFields, which will hold the elements of this list.
+                            List<MBINField> v = new List<MBINField>();
+
+                            //The type of objects in the array
+                            Type aType; 
+                            GetArrayElementType(fieldInfo, out aType);
+
+                            //Loop all the elements in the original list.
+                            foreach (dynamic arrayentry in array)
+                            {
+                                MBINField f = new MBINField()
+                                {
+                                    Name = arrayentry.GetType().ToString(),
+                                    Value = Convert.ChangeType(arrayentry, aType),
+                                    NMSType = arrayentry.GetType().ToString() //Once again we use list to avoid the stupidly long string.
+                                };
+                                //Obviously we need to add it to the list we created
+                                v.Add(f);
+                            }
+                            //And then we set the value of the orignal MBINField to the list.
+                            mBINField.Value = v;
+
+                            //And finally we all the parent.
+                            mbinContents.Add(mBINField);
+                        }
                         else
                         {
                             //We have a nice simple normal object, no fuss
@@ -128,6 +170,18 @@ namespace NoMansGUI.ViewModels
                 mbinContents = null;
             }
             return mbinContents;
+        }
+
+        private bool GetArrayElementType(FieldInfo field, out Type elementType)
+        {
+            if (field.FieldType.IsArray && field.FieldType.FullName.EndsWith("[]"))
+            {
+                string fullName = field.FieldType.FullName.Substring(0, field.FieldType.FullName.Length - 2);
+                elementType = Type.GetType(string.Format("{0},{1}", fullName, field.FieldType.Assembly.GetName().Name));
+                return true;
+            }
+            elementType = null;
+            return false;
         }
     }
 }

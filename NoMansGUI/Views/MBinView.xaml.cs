@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NoMansGUI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,19 @@ namespace NoMansGUI.Views
         public MBinView()
         {
             InitializeComponent();
+        }
+
+        private void Stringx10_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock tb = (sender as TextBlock);
+            MBINField field = (tb.DataContext as MBINField);
+            libMBIN.Models.Structs.NMSString0x10 c = field.Value as libMBIN.Models.Structs.NMSString0x10;
+            tb.Text = c.Value;
+        }
+
+        private void TextBlock_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+           
         }
     }
 }

@@ -29,17 +29,23 @@ namespace NoMansGUI.Utils.TemplateSelectors
                 string switchCase = field.NMSType.Split('.').Last();
                 switch(switchCase.ToLower())
                 {
-                    case "list":                       
+                    case "list":
+                    case "array":
                         return element.FindResource("ListDataTemplate") as DataTemplate;
                     case "string":
                         return element.FindResource("StringDataTemplate") as DataTemplate;
+                    case "nmsstring0x10":
+                        return element.FindResource("NMSString0x10DataTemplate") as DataTemplate;
                     case "int":
+                    case "int32":
+                    case "int64":
                         return element.FindResource("IntDataTemplate") as DataTemplate;
                     case "boolean":
                         return element.FindResource("BoolDataTemplate") as DataTemplate;
                     default:
                         //We don't yet have a match for these, for now we return the standard string template and log it as missing.
                         m_log.Error("No Template found for item of type " + switchCase);
+                        TemplateLogHelper.AddMissingTemplate(switchCase);
                         return element.FindResource("StringDataTemplate") as DataTemplate;
                 }
             }

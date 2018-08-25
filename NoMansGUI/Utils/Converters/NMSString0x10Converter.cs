@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using libMBIN.Models.Structs;
+using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace NoMansGUI.Utils.Converters
 {
-    public class DebugDataBindingConverter : IValueConverter
+    public class NMSString0x10Converter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Debugger.Break();
-            return value;
+            return (value as NMSString0x10).Value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Debugger.Break();
             return value;
         }
     }

@@ -17,7 +17,14 @@ namespace NoMansGUI.Models
     public class MBINField
     {
         public string Name { get; set; }
-        public object Value { get; set; }
+        public dynamic Value { get; set; }
+        public string NMSType { get; set; }
+    }
+
+    public class MBINField<T>
+    {
+        public string Name { get; set; }
+        public T Value { get; set; }
         public string NMSType { get; set; }
     }
 }

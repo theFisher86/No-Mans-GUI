@@ -5,11 +5,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NoMansGUI.Views"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:converters="clr-namespace:NoMansGUI.Utils.Converters"
              xmlns:templateselector="clr-namespace:NoMansGUI.Utils.TemplateSelectors">
     <UserControl.Resources>
         <templateselector:MBINTemplateSelector x:Key="MbinTemplateSelector"/>
-        <converters:DebugDataBindingConverter x:Key="DebugBinding"/>
+        <converters:DebugDataBindingConverter x:Key="DebugConverter" />
+        <converters:NMSColourConverter x:Key="NMSColourConverter"/>
+        <converters:NMSString0x10Converter x:Key="NMSString0x10Converter"/>
         <DataTemplate x:Key="ListDataTemplate">
             <Expander Header="{Binding Name}" Template="{StaticResource SimpleExpanderTemp}" >
                 <ListView ItemTemplateSelector="{StaticResource MbinTemplateSelector}" ItemsSource="{Binding Value}">
@@ -21,8 +24,32 @@
                 </ListView>
             </Expander>
         </DataTemplate>
+        <DataTemplate x:Key="GcBaseBuildingPaletteDataTemplate">
+            <Grid DataContext="{Binding Value}">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBox Grid.Row="0" Text="{Binding Path=Name}"/>
+                <xctk:ColorPicker Grid.Row="1" SelectedColor="{Binding PrimaryColour, Converter={StaticResource NMSColourConverter}}" />
+                <xctk:ColorPicker Grid.Row="2" SelectedColor="{Binding SecondaryColour, Converter={StaticResource NMSColourConverter}}" />
+                    
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="NMSString0x10DataTemplate">
-            <TextBlock Text="{Binding Value.Value, Converter={StaticResource DebugBinding}}" MouseDown="Stringx10_MouseDown"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                <TextBox Grid.Column="2" DataContext="{Binding Value}" Text="{Binding Path=., Mode=TwoWay, Converter={StaticResource NMSString0x10Converter}}"/>
+                <Button Grid.Column="4" Width="50" Height="25" Content="Reset" x:Name="Reset"/>
+            </Grid>
         </DataTemplate>
         <DataTemplate x:Key="StringDataTemplate">
             <Grid>

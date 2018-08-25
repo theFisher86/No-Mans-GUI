@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using NoMansGUI.Utils.TemplateBuilder;
 
 namespace NoMansGUI.Utils.TemplateSelectors
 {
@@ -42,6 +43,10 @@ namespace NoMansGUI.Utils.TemplateSelectors
                         return element.FindResource("IntDataTemplate") as DataTemplate;
                     case "boolean":
                         return element.FindResource("BoolDataTemplate") as DataTemplate;
+                    case "nmstemplate":
+                        return element.FindResource("NMSTemplateDataTemplate") as DataTemplate;
+                    case "gcbasebuildingpalette":
+                        return element.FindResource("GcBaseBuildingPaletteDataTemplate") as DataTemplate;
                     default:
                         //We don't yet have a match for these, for now we return the standard string template and log it as missing.
                         m_log.Error("No Template found for item of type " + switchCase);

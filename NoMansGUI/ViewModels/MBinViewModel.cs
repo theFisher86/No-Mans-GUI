@@ -30,9 +30,14 @@ namespace NoMansGUI.ViewModels
         public MBinViewModel(NMSTemplate template)
         {
             _template = template;
+
+            Type t = template.GetType();
+
+
             //This is where the magic happens
             Fields = new ObservableCollection<MBINField>(IterateFields(_template, _template.GetType()));
         }
+
 
 
         /// <summary>
@@ -53,7 +58,7 @@ namespace NoMansGUI.ViewModels
                 //We then loop over all those fields.
                 foreach (FieldInfo fieldInfo in fields)
                 {
-                    Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");      //write all fields to debug
+                    //Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");      //write all fields to debug
                                                                                                                                         //Check for NMSAttribute ignore -code by @GaticusHax
                     var attributes = (NMSAttribute[])fieldInfo.GetCustomAttributes(typeof(NMSAttribute), false);                        //
                     libMBIN.Models.NMSAttribute attrib = null;                                                                          //
@@ -134,11 +139,19 @@ namespace NoMansGUI.ViewModels
                             GetArrayElementType(fieldInfo, out aType);
 
                             //Loop all the elements in the original list.
+                            int i = 0;
                             foreach (dynamic arrayentry in array)
                             {
+                                string name = "";
+                                if(attrib?.EnumValue != null)
+                                {
+                                    name = attrib.EnumValue[i];
+                                    i++;
+                                }
+
                                 MBINField f = new MBINField()
                                 {
-                                    Name = arrayentry.GetType().ToString(),
+                                    Name = name,
                                     Value = Convert.ChangeType(arrayentry, aType),
                                     NMSType = arrayentry.GetType().ToString() //Once again we use list to avoid the stupidly long string.
                                 };
@@ -150,6 +163,15 @@ namespace NoMansGUI.ViewModels
 
                             //And finally we all the parent.
                             mbinContents.Add(mBINField);
+                        }
+                        else if(fieldInfo.FieldType.BaseType == typeof(NMSTemplate))
+                        {
+                            mbinContents.Add(new MBINField
+                            {
+                                Name = fieldInfo.Name,
+                                Value = IterateFields((NMSTemplate)fieldInfo.GetValue(data), fieldInfo.GetValue(data).GetType()),
+                                NMSType = "list"
+                            });
                         }
                         else
                         {

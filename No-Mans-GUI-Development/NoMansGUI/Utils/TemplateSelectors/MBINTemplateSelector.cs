@@ -28,7 +28,8 @@ namespace NoMansGUI.Utils.TemplateSelectors
             {
                 //Get just the last part of the string
                 string switchCase = field.TemplateType.Split('.').Last();
-                switch(switchCase.ToLower())
+                Console.WriteLine("name: " + field.Name.ToString() + " value: " + field.Value.ToString() + " NMStype: " + field.NMSType.ToString() + " TemplateType: " + field.TemplateType.ToString());
+                switch (switchCase.ToLower())
                 {
                     case "list":
                     case "array":

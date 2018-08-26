@@ -27,7 +27,7 @@ namespace NoMansGUI.Utils.TemplateSelectors
             if (item is MBINField field)
             {
                 //Get just the last part of the string
-                string switchCase = field.NMSType.Split('.').Last();
+                string switchCase = field.TemplateType.Split('.').Last();
                 switch(switchCase.ToLower())
                 {
                     case "list":
@@ -43,10 +43,6 @@ namespace NoMansGUI.Utils.TemplateSelectors
                         return element.FindResource("IntDataTemplate") as DataTemplate;
                     case "boolean":
                         return element.FindResource("BoolDataTemplate") as DataTemplate;
-                    case "nmstemplate":
-                        return element.FindResource("NMSTemplateDataTemplate") as DataTemplate;
-                    case "gcbasebuildingpalette":
-                        return element.FindResource("GcBaseBuildingPaletteDataTemplate") as DataTemplate;
                     default:
                         //We don't yet have a match for these, for now we return the standard string template and log it as missing.
                         m_log.Error("No Template found for item of type " + switchCase);

@@ -14,7 +14,7 @@
         <converters:NMSColourConverter x:Key="NMSColourConverter"/>
         <converters:NMSString0x10Converter x:Key="NMSString0x10Converter"/>
         <DataTemplate x:Key="ListDataTemplate">
-            <Expander Header="{Binding Name}" Template="{StaticResource SimpleExpanderTemp}" >
+            <Expander Header="{Binding Name}" ToolTip="{Binding NMSType}" Template="{StaticResource SimpleExpanderTemp}" >
                 <ListView ItemTemplateSelector="{StaticResource MbinTemplateSelector}" ItemsSource="{Binding Value}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -32,8 +32,8 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBox Grid.Row="0" Text="{Binding Path=Name}"/>
-                <xctk:ColorPicker Grid.Row="1" SelectedColor="{Binding PrimaryColour, Converter={StaticResource NMSColourConverter}}" />
-                <xctk:ColorPicker Grid.Row="2" SelectedColor="{Binding SecondaryColour, Converter={StaticResource NMSColourConverter}}" />
+                <xctk:ColorPicker Grid.Row="1" SelectedColor="{Binding PrimaryColour}" />
+                <xctk:ColorPicker Grid.Row="2" SelectedColor="{Binding SecondaryColour}" />
                     
             </Grid>
         </DataTemplate>

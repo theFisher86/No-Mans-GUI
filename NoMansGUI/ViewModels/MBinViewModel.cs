@@ -33,7 +33,6 @@ namespace NoMansGUI.ViewModels
 
             Type t = template.GetType();
 
-
             //This is where the magic happens
             Fields = new ObservableCollection<MBINField>(IterateFields(_template, _template.GetType()));
         }
@@ -65,7 +64,6 @@ namespace NoMansGUI.ViewModels
                     if (attributes.Length > 0) attrib = attributes[0];                                                                  //
                     bool ignore = false;                                                                                                //
                     if (attrib != null) ignore = attrib.Ignore;                                                                         //
-
                     if (!ignore)                                                                                                        // Add the field to the mbinContents list
                     {
                         //This is where things get fun, we need to check if this is a generic type. AFAIK only the collections are.
@@ -87,23 +85,42 @@ namespace NoMansGUI.ViewModels
                             MBINField mBINField = new MBINField()
                             {
                                 Name = fieldInfo.Name,
-                                NMSType = "list"
+                                NMSType = fieldInfo.FieldType.Name,
+                                TemplateType = "list"
                             };
                             //We build a list of MBINFields, which will hold the elements of this list.
                             List<MBINField> v = new List<MBINField>();
+
+                            //The type of objects in the array
+                            Type aType;
+                            GetListElementType((dynamic)fieldInfo.GetValue(data), out aType);
 
                             //Loop all the elements in the original list.
                             foreach (dynamic listentry in list)
                             {
                                 //We create a new MBINField for each element, as these elements are often Classes we need to recusivly call
-                                //IterateFields so we build up a list of the class fields again.
-                                //There is one big issue with this still, what if this is just a list of strings or something similar, we need a way
-                                //to tell the difference i've not got to that yet.
+                                //IterateFields so we build up a list of the class fields again.                              
+
+                                dynamic innerValue = null;
+                                string t = "";
+                                if (aType.IsClass == true)
+                                {
+                                    innerValue = IterateFields(listentry, aType);
+                                    t = "list";
+                                }
+                                else
+                                {
+                                    innerValue = Convert.ChangeType(listentry, aType);
+                                    t = listentry.GetType().ToString();
+                                }
+
+
                                 MBINField f = new MBINField()
                                 {
-                                    Name = listentry.GetType().ToString(),
-                                    Value = IterateFields(listentry as NMSTemplate, listentry.GetType()),
-                                    NMSType = "list" //Once again we use list to avoid the stupidly long string.
+                                    Name =  fieldInfo.Name, //aType.ToString(),
+                                    Value = innerValue,
+                                    NMSType = aType.ToString(),
+                                    TemplateType = t
                                 };
                                 //Obviously we need to add it to the list we created
                                 v.Add(f);                               
@@ -129,7 +146,8 @@ namespace NoMansGUI.ViewModels
                             MBINField mBINField = new MBINField()
                             {
                                 Name = fieldInfo.Name,
-                                NMSType = "array"
+                                NMSType = fieldInfo.FieldType.Name,
+                                TemplateType = "array"
                             };
                             //We build a list of MBINFields, which will hold the elements of this list.
                             List<MBINField> v = new List<MBINField>();
@@ -149,11 +167,26 @@ namespace NoMansGUI.ViewModels
                                     i++;
                                 }
 
+                                dynamic innerValue = null;
+                                string t = "";
+                                if (aType.IsClass == true)
+                                {
+                                    innerValue = IterateFields(arrayentry, aType);
+                                    t = "list";
+                                }
+                                else
+                                {
+                                    innerValue = Convert.ChangeType(arrayentry, aType);
+                                    t = arrayentry.GetType().ToString();
+                                }
+                                 
+
                                 MBINField f = new MBINField()
                                 {
-                                    Name = name,
-                                    Value = Convert.ChangeType(arrayentry, aType),
-                                    NMSType = arrayentry.GetType().ToString() //Once again we use list to avoid the stupidly long string.
+                                    Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
+                                    Value = innerValue,
+                                    NMSType = string.IsNullOrEmpty(name) ? aType.ToString() : name,
+                                    TemplateType = t
                                 };
                                 //Obviously we need to add it to the list we created
                                 v.Add(f);
@@ -170,20 +203,40 @@ namespace NoMansGUI.ViewModels
                             {
                                 Name = fieldInfo.Name,
                                 Value = IterateFields((NMSTemplate)fieldInfo.GetValue(data), fieldInfo.GetValue(data).GetType()),
-                                NMSType = "list"
+                                NMSType = fieldInfo.FieldType.Name,
+                                TemplateType = "list"
                             });
+                        }
+                        //We sometimes get a field of type NMSTemplate that can be any kind of struct, so we need to handle it right.
+                        else if(fieldInfo.FieldType == typeof(NMSTemplate))
+                        {
+                            NMSTemplate template = (NMSTemplate)fieldInfo.GetValue(data);
+                            if (template != null)
+                            {
+                                Type templateType = template.GetType();
+                                List<MBINField> value = IterateFields(template, templateType);
+                                mbinContents.Add(new MBINField
+                                {
+                                    Name = fieldInfo.Name,
+                                    Value = value,
+                                    NMSType = templateType.ToString(),
+                                    TemplateType = "list"
+                                });
+                            }
                         }
                         else
                         {
                             //We have a nice simple normal object, no fuss
-                            mbinContents.Add(new MBINField                                                                                  //
-                            {                                                                                                               //
-                                Name = fieldInfo.Name,                                                                                      //
-                                Value = fieldInfo.GetValue(data).ToString(),                                                                //
-                                NMSType = fieldInfo.FieldType.ToString()                                                                    //
+                            mbinContents.Add(new MBINField
+                            {
+                                Name = fieldInfo.Name,
+                                //Notice the ? after GetValue(Data) this ensure we actually have a return before tying to ToString() as some elements are null.
+                                Value = fieldInfo.GetValue(data)?.ToString(),
+                                NMSType = fieldInfo.FieldType.ToString(),
+                                TemplateType = fieldInfo.FieldType.ToString()
                             });
                         }//
-                    }                                                                                                                   //
+                    }                                                                                                                  
                 }
             }
             else
@@ -202,6 +255,18 @@ namespace NoMansGUI.ViewModels
                 elementType = Type.GetType(string.Format("{0},{1}", fullName, field.FieldType.Assembly.GetName().Name));
                 return true;
             }
+            elementType = null;
+            return false;
+        }
+
+        private bool GetListElementType<T>(IList<T> list, out Type elementType)
+        {
+            if(list != null)
+            {
+                elementType = typeof(T);
+                return true;
+            }
+
             elementType = null;
             return false;
         }

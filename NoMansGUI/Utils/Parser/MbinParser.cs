@@ -73,17 +73,23 @@ namespace NoMansGUI.Utils.Parser
                             {
                                 //We create a new MBINField for each element, as these elements are often Classes we need to recusivly call
                                 //IterateFields so we build up a list of the class fields again.                              
-
+                                
                                 dynamic innerValue = null;
                                 string t = "";
+
+                                if(aType.Name == "NMSTemplate")
+                                {
+                                    aType = listentry.GetType();
+                                }
+
                                 if (aType.IsClass == true)
                                 {
-                                    innerValue = IterateFields(listentry, aType);
+                                    innerValue = IterateFields(listentry, listentry.GetType());
                                     t = "list";
                                 }
                                 else
                                 {
-                                    innerValue = Convert.ChangeType(listentry, aType);
+                                    innerValue = Convert.ChangeType(listentry, listentry.GetType());
                                     t = listentry.GetType().ToString();
                                 }
 
@@ -92,7 +98,7 @@ namespace NoMansGUI.Utils.Parser
                                 {
                                     Name = fieldInfo.Name, //aType.ToString(),
                                     Value = innerValue,
-                                    NMSType = aType.ToString(),
+                                    NMSType = listentry.GetType().ToString(),
                                     TemplateType = t
                                 };
                                 //Obviously we need to add it to the list we created

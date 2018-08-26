@@ -109,8 +109,10 @@
     <Compile Include="Utils\Converters\DebugDataBindingConverter.cs" />
     <Compile Include="Utils\Converters\NMSColourConverter.cs" />
     <Compile Include="Utils\Converters\NMSString0x10Converter.cs" />
+    <Compile Include="Utils\Debug\NMSTemplateTypeList.cs" />
     <Compile Include="Utils\Events\LoadingEvents.cs" />
     <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
+    <Compile Include="Utils\Parser\MbinParser.cs" />
     <Compile Include="Utils\TemplateBuilder\TemplateBuilder.cs" />
     <Compile Include="Utils\TemplateLogHelper.cs" />
     <Compile Include="Utils\TemplateSelectors\MBINTemplateSelector.cs" />

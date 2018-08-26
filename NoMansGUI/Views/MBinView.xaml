@@ -24,6 +24,9 @@
                 </ListView>
             </Expander>
         </DataTemplate>
+        <DataTemplate x:Key="EnumDataTemplate">
+            <ComboBox ItemsSource="{Binding EnumValues}" SelectedItem="{Binding Value}" />
+        </DataTemplate>
         <DataTemplate x:Key="GcBaseBuildingPaletteDataTemplate">
             <Grid DataContext="{Binding Value}">
                 <Grid.RowDefinitions>

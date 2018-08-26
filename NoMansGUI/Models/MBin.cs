@@ -17,6 +17,7 @@ namespace NoMansGUI.Models
     public class MBINField
     {
         public string Name { get; set; }
+        public Array EnumValues { get; set; }
         public dynamic Value { get; set; }
         public string TemplateType { get; set; }
         public string NMSType { get; set; }

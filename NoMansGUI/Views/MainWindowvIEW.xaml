@@ -21,6 +21,7 @@
                 </Menu.ItemsPanel>
                 <MenuItem Header="_File">
                     <MenuItem Header="_Load MBIN" x:Name="LoadMbin" />
+                    <MenuItem Header="Load MBINS" x:Name="LoadMBINs"/>
                     <Separator/>
                     <MenuItem Header="_Save MBIN" x:Name="SaveMbin" />
                     <MenuItem Header="_Close MBIN" x:Name="CloseMbin" />
@@ -31,6 +32,7 @@
                 </MenuItem>
                 <MenuItem Header="_Admin">
                     <MenuItem Header="_Show Missing Templates" x:Name="ShowMissingTemplates"/>
+                    <MenuItem Header="_print Template Types" x:Name="PrintDebugList"/>
                 </MenuItem>
                 <MenuItem Header="_Help" HorizontalAlignment="Right">
                     <MenuItem Header="Check for _Updates" x:Name="CheckUpdates"/>

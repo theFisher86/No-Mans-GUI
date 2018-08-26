@@ -43,6 +43,8 @@ namespace NoMansGUI.Utils.TemplateSelectors
                         return element.FindResource("IntDataTemplate") as DataTemplate;
                     case "boolean":
                         return element.FindResource("BoolDataTemplate") as DataTemplate;
+                    case "enum":
+                        return element.FindResource("EnumDataTemplate") as DataTemplate;
                     default:
                         //We don't yet have a match for these, for now we return the standard string template and log it as missing.
                         m_log.Error("No Template found for item of type " + switchCase);

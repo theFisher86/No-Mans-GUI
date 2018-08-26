@@ -2,18 +2,23 @@
 using libMBIN;
 using libMBIN.Models;
 using NoMansGUI.Models;
+using NoMansGUI.Properties;
+using NoMansGUI.Utils.Debug;
 using NoMansGUI.Utils.Events;
+using NoMansGUI.Utils.Parser;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 
 namespace NoMansGUI.ViewModels
 {
@@ -21,7 +26,7 @@ namespace NoMansGUI.ViewModels
     /// ViewModel for the main window, needs to be exported so the MEF container can find it.
     /// </summary>
     [Export(typeof(MainWindowViewModel))]
-    public class MainWindowViewModel : Screen
+    public class MainWindowViewModel : Caliburn.Micro.Screen
     {
         /* Wannabeuk : Please note i'm doing this following my standard coding styles. I'm aware this might not be ideal
          * everyone, so perhaps we should knock out some guidelines for coding styles? */
@@ -87,18 +92,18 @@ namespace NoMansGUI.ViewModels
             // Here's the documentation: http://octokitnet.readthedocs.io/en/latest/releases/
             //var client = new GitHubClient(new ProductHeaderValue("NoMansGUI"));
 
-            string onlineVersion = "1.0";
-            //Need to add code to check GitHub version here
-            Debug.WriteLine("Current Version as Double: " + Double.TryParse(AppVersionString, out _appVersion) + "Current Version as String: " + AppVersionString);
+            //string onlineVersion = "1.0";
+            ////Need to add code to check GitHub version here
+            //Debug.WriteLine("Current Version as Double: " + Double.TryParse(AppVersionString, out _appVersion) + "Current Version as String: " + AppVersionString);
 
-            MessageBoxResult updateCheckBox = MessageBox.Show("You currently have version " + AppVersion + " of this app.  The latest version is " + onlineVersion + ".  Would you like to update?", "Update Available", MessageBoxButton.YesNo);
-            if (updateCheckBox == MessageBoxResult.Yes)
-            {
-                // Open update webpage
-            }
+            ////MessageBoxResult updateCheckBox = MessageBox.Show("You currently have version " + AppVersion + " of this app.  The latest version is " + onlineVersion + ".  Would you like to update?", "Update Available", MessageBoxButton.YesNo);
+            //if (updateCheckBox == MessageBoxResult.Yes)
+            //{
+            //    // Open update webpage
+            //}
 
-            string mbinVersion = libMBIN.Version.GetString();
-            MessageBoxResult mbinVersionBox = MessageBox.Show("MBINCompiler DLL is currently using version " + mbinVersion + ".", "libMBIN.dll Version", MessageBoxButton.OK);
+            //string mbinVersion = libMBIN.Version.GetString();
+            ////MessageBoxResult mbinVersionBox = MessageBox.Show("MBINCompiler DLL is currently using version " + mbinVersion + ".", "libMBIN.dll Version", MessageBoxButton.OK);
         }
 
         public string GetFolder()
@@ -109,15 +114,63 @@ namespace NoMansGUI.ViewModels
             return fileDialog.ToString();
         }
 
+        public void LoadMBINs()
+        {
+            List<string> files = null;
+            MbinParser parser = new MbinParser();
+            using (var fbd = new FolderBrowserDialog())
+            {
+                fbd.SelectedPath = Settings.Default.RecentFolder;
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    Settings.Default.RecentFolder = fbd.SelectedPath;
+                    Settings.Default.Save();
+                    var ext = new List<string> { ".mbin", ".MBIN" };
+                    files = Directory.GetFiles(fbd.SelectedPath, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s))).ToList(); 
+                }
+            }
+
+            if(files != null)
+            {
+                for (int i = 0; i < files.Count; i++)
+                {
+                    NMSTemplate template = null;
+                    try
+                    {
+                        using (MBINFile mbin = new MBINFile(files[i]))
+                        {
+                            mbin.Load();
+                            template = mbin.GetData();
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine("Unable to parse mbin " + files[i]);
+                    }
+
+                    if (template != null)
+                    {
+                        parser.IterateFields(template, template.GetType());
+                        Console.WriteLine("Parsed : " + Path.GetFileName(files[i]));
+                    }
+                    NMSTemplateTypeList.PrintToFile(Path.GetFileName(files[i]));
+                }
+            }
+        }
+
         //This is the function called when we click the loadMBIN button.
         public void LoadMBIN()
         {
-            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            openFileDialog.Filter = "MBIN Files | *.mbin; *.MBIN";
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "MBIN Files | *.mbin; *.MBIN"
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 _mbinPath = openFileDialog.FileName;
-                Debug.WriteLine(_mbinPath.ToString());
 
                 NMSTemplate template = null;
                 using (MBINFile mbin = new MBINFile(_mbinPath))
@@ -131,6 +184,7 @@ namespace NoMansGUI.ViewModels
                     //We now handle the formatting in this custom control, which is loaded into the MainWindowView when done.
                     MBinViewer = new MBinViewModel(template);
                 }
+                //NMSTemplateTypeList.PrintToFile(Path.GetFileName(_mbinPath));
             }
             else
             {
@@ -138,45 +192,14 @@ namespace NoMansGUI.ViewModels
             }
         }
 
-        public static List<MBINField> IterateFields(NMSTemplate data, Type type)
-        {
-            List<MBINField> mbinContents = new List<MBINField>();
-
-            IOrderedEnumerable<FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
-            if (fields != null)
-            {
-                foreach (FieldInfo fieldInfo in fields)
-                {
-                    Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");      //write all fields to debug
-                                                                                                                                        //Check for NMSAttribute ignore -code by @GaticusHax
-                    var attributes = (NMSAttribute[])fieldInfo.GetCustomAttributes(typeof(NMSAttribute), false);                        //
-                    libMBIN.Models.NMSAttribute attrib = null;                                                                          //
-                    if (attributes.Length > 0) attrib = attributes[0];                                                                  //
-                    bool ignore = false;                                                                                                //
-                    if (attrib != null) ignore = attrib.Ignore;                                                                         //
-
-                    if (!ignore)                                                                                                        // Add the field to the mbinContents list
-                    {                                                                                                                   //
-                        mbinContents.Add(new MBINField                                                                                  //
-                        {                                                                                                               //
-                            Name = fieldInfo.Name,                                                                                      //
-                            Value = fieldInfo.GetValue(data).ToString(),                                                                //
-                            NMSType = fieldInfo.FieldType.ToString()                                                                    //
-                        });                                                                                                             //
-                    }                                                                                                                   //
-                }
-            }
-            else
-            {
-                // Helpers.BasicDialogBox("Error Getting Fields...", "Couldn't get the fields for some reason.\n Data: " + data.ToString() + "\n Will return blank List");
-                mbinContents = null;
-            }
-            return mbinContents;
-        } 
-
         public void ShowMissingTemplates()
         {
             IoC.Get<IWindowManager>().ShowDialog(new MissingTemplatesViewModel());
+        }
+
+        public void PrintDebugList()
+        {
+           //Defunct
         }
 
         public void SaveMbin()
@@ -207,19 +230,18 @@ namespace NoMansGUI.ViewModels
 
         public void About()
         {
-            MessageBoxResult aboutResult = MessageBox.Show("This GUI was made by Aaron Fisher aka theFisher86 on the NMS Modding Discord.  Would you like to visit us?", "About", MessageBoxButton.YesNo);
-            if (aboutResult == MessageBoxResult.Yes)
-            {
-                System.Diagnostics.Process.Start("https://discord.gg/9QBKg6Z");
-            }
-
+            //MessageBoxResult aboutResult = MessageBox.Show("This GUI was made by Aaron Fisher aka theFisher86 on the NMS Modding Discord.  Would you like to visit us?", "About", MessageBoxButton.YesNo);
+            //if (aboutResult == MessageBoxResult.Yes)
+            //{
+            //    System.Diagnostics.Process.Start("https://discord.gg/9QBKg6Z");
+            //}
         }
 
         public void DontClickk()
         {
             //I... I'm just going to leave this commented out for now i think :/
             //System.Diagnostics.Process.Start("https://www.google.com/search?q=horse+sex&rlz=1C1GCEA_enUS801US801&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiE1quLtcXcAhXEm-AKHeTEDnkQ_AUICygC&biw=1680&bih=868");
-            MessageBoxResult toldYou = MessageBox.Show("I warned you", "Told You Not To Click That", MessageBoxButton.OK);
+            //MessageBoxResult toldYou = MessageBox.Show("I warned you", "Told You Not To Click That", MessageBoxButton.OK);
         }
         #endregion
     }

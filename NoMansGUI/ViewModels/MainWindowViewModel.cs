@@ -3,7 +3,6 @@ using libMBIN;
 using libMBIN.Models;
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
-using NoMansGUI.Utils.Debug;
 using NoMansGUI.Utils.Events;
 using NoMansGUI.Utils.Parser;
 using System;

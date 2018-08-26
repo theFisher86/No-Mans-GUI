@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using NoMansGUI.Utils.TemplateBuilder;
+using libMBIN.Models.Structs;
+using System.Drawing;
 
 namespace NoMansGUI.Utils.TemplateSelectors
 {
@@ -33,6 +35,10 @@ namespace NoMansGUI.Utils.TemplateSelectors
                 {
                     case "list":
                     case "array":
+                        if(field.NMSType == "Colour")
+                        {
+                            return element.FindResource("ColourPickerDataTemplate") as DataTemplate;
+                        }
                         return element.FindResource("ListDataTemplate") as DataTemplate;
                     case "string":
                         return element.FindResource("StringDataTemplate") as DataTemplate;

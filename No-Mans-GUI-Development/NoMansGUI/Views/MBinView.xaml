@@ -27,18 +27,8 @@
         <DataTemplate x:Key="EnumDataTemplate">
             <ComboBox ItemsSource="{Binding EnumValues}" SelectedItem="{Binding Value}" />
         </DataTemplate>
-        <DataTemplate x:Key="GcBaseBuildingPaletteDataTemplate">
-            <Grid DataContext="{Binding Value}">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBox Grid.Row="0" Text="{Binding Path=Name}"/>
-                <xctk:ColorPicker Grid.Row="1" SelectedColor="{Binding PrimaryColour}" />
-                <xctk:ColorPicker Grid.Row="2" SelectedColor="{Binding SecondaryColour}" />
-                    
-            </Grid>
+        <DataTemplate x:Key="ColourPickerDataTemplate">
+            <xctk:ColorPicker ColorMode="ColorCanvas" SelectedColor="{Binding Value, Converter={StaticResource NMSColourConverter}}"/>
         </DataTemplate>
         <DataTemplate x:Key="NMSString0x10DataTemplate">
             <Grid>

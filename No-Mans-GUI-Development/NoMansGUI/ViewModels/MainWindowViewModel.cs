@@ -3,7 +3,7 @@ using libMBIN;
 using libMBIN.Models;
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
-using NoMansGUI.Utils.Debug;
+using NoMansGUI.Utils.AdminTools;
 using NoMansGUI.Utils.Events;
 using NoMansGUI.Utils.Parser;
 using System;
@@ -148,6 +148,7 @@ namespace NoMansGUI.ViewModels
                     catch(Exception ex)
                     {
                         Console.WriteLine("Unable to parse mbin " + files[i]);
+                        Console.WriteLine("Exception: " + ex.ToString());
                     }
 
                     if (template != null)

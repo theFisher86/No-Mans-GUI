@@ -1,8 +1,9 @@
 ﻿using libMBIN.Models;
 using NoMansGUI.Models;
-using NoMansGUI.Utils.Debug;
+using NoMansGUI.Utils.AdminTools;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -30,7 +31,7 @@ namespace NoMansGUI.Utils.Parser
                 //We then loop over all those fields.
                 foreach (FieldInfo fieldInfo in fields)
                 {
-                    //Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");      //write all fields to debug
+                    Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");      //write all fields to debug
                     //Check for NMSAttribute ignore -code by @GaticusHax
                     var attributes = (NMSAttribute[])fieldInfo.GetCustomAttributes(typeof(NMSAttribute), false);                        //
                     libMBIN.Models.NMSAttribute attrib = null;                                                                          //

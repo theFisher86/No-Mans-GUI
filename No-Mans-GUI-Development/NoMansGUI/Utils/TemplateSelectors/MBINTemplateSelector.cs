@@ -38,8 +38,13 @@ namespace NoMansGUI.Utils.TemplateSelectors
                     case "nmsstring0x10":
                         return element.FindResource("NMSString0x10DataTemplate") as DataTemplate;
                     case "int":
+                    case "int16":
                     case "int32":
                     case "int64":
+                    case "uint":
+                    case "uint16":
+                    case "uint32":
+                    case "uint64":
                         return element.FindResource("IntDataTemplate") as DataTemplate;
                     case "boolean":
                         return element.FindResource("BoolDataTemplate") as DataTemplate;

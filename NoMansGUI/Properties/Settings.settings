@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NoMansGUI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="pathUnpakdFiles" Type="System.String" Scope="User">
+      <Value Profile="(Default)">X:\Modding\NMS\UnPakd\</Value>
+    </Setting>
+    <Setting Name="pathPCBanks" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Games\SteamLibrary\steamapps\common\No Man's Sky\GAMEDATA\PCBANKS</Value>
+    </Setting>
+    <Setting Name="pathModelViewer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="currentTheme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">default</Value>
+    </Setting>
+    <Setting Name="allThemes" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;Default&lt;/string&gt;
+  &lt;string&gt;Gek&lt;/string&gt;
+  &lt;string&gt;Korvax&lt;/string&gt;
+  &lt;string&gt;Vykeen&lt;/string&gt;
+  &lt;string&gt;Fourthrace&lt;/string&gt;
+  &lt;string&gt;Light&lt;/string&gt;
+  &lt;string&gt;Dark&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="RecentFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -31,7 +31,7 @@ namespace NoMansGUI.Utils.Parser
                 //We then loop over all those fields.
                 foreach (FieldInfo fieldInfo in fields)
                 {
-                    Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");      //write all fields to debug
+                    //Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");      //write all fields to debug
                     //Check for NMSAttribute ignore -code by @GaticusHax
                     var attributes = (NMSAttribute[])fieldInfo.GetCustomAttributes(typeof(NMSAttribute), false);                        //
                     libMBIN.Models.NMSAttribute attrib = null;                                                                          //
@@ -60,7 +60,7 @@ namespace NoMansGUI.Utils.Parser
                             {
                                 Name = fieldInfo.Name,
                                 NMSType = fieldInfo.FieldType.Name,
-                                TemplateType = "list"
+                                TemplateType = "nmsstruct"
                             };
                             //We build a list of MBINFields, which will hold the elements of this list.
                             List<MBINField> v = new List<MBINField>();
@@ -86,7 +86,7 @@ namespace NoMansGUI.Utils.Parser
                                 if (aType.IsClass == true)
                                 {
                                     innerValue = IterateFields(listentry, listentry.GetType());
-                                    t = "list";
+                                    t = "nmsstruct";
                                 }
                                 else
                                 {
@@ -152,7 +152,7 @@ namespace NoMansGUI.Utils.Parser
                                 if (aType.IsClass == true)
                                 {
                                     innerValue = IterateFields(arrayentry, aType);
-                                    t = "list";
+                                    t = "nmsstruct";
                                 }
                                 else
                                 {
@@ -184,7 +184,7 @@ namespace NoMansGUI.Utils.Parser
                                 Name = fieldInfo.Name,
                                 Value = IterateFields((NMSTemplate)fieldInfo.GetValue(data), fieldInfo.GetValue(data).GetType()),
                                 NMSType = fieldInfo.FieldType.Name,
-                                TemplateType = "list"
+                                TemplateType = "nmsstruct"
                             });
                         }
                         //We sometimes get a field of type NMSTemplate that can be any kind of struct, so we need to handle it right.
@@ -201,7 +201,7 @@ namespace NoMansGUI.Utils.Parser
                                     Name = fieldInfo.Name,
                                     Value = value,
                                     NMSType = templateType.ToString(),
-                                    TemplateType = "list"
+                                    TemplateType = "nmsstruct"
                                 };
                                 mbinContents.Add(field);
 

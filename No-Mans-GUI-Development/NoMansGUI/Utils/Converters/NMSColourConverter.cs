@@ -2,7 +2,8 @@
 using NoMansGUI.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+//using System.Drawing;
+using System.Windows.Media;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -15,43 +16,46 @@ namespace NoMansGUI.Utils.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            Console.WriteLine("color found!" + value.ToString());
             int a = 1, r = 1, g = 1, b = 1;
             foreach(var f in value as List<MBINField>)
             {
+                Console.WriteLine(f.Name + ": " + f.Value + "NMSType " + f.NMSType + "TemplateType " + f.TemplateType);
                 switch(f.Name)
                 {
                     case "A":
-                        a = (int)(float.Parse(f.Value) * 255);
+                        a = (int)(float.Parse(f.Value.ToString()) * 255);
                         break;
                     case "R":
-                        r = (int)(float.Parse(f.Value) * 255);
+                        r = (int)(float.Parse(f.Value.ToString()) * 255);
                         break;
                     case "G":
-                        g = (int)(float.Parse(f.Value) * 255);
+                        g = (int)(float.Parse(f.Value.ToString()) * 255);
                         break;
                     case "B":
-                        b = (int)(float.Parse(f.Value) * 255);
+                        b = (int)(float.Parse(f.Value.ToString()) * 255);
                         break;
                 }
             }
-            Color newc = Color.FromArgb(a, r, g, b);
-            return new SolidBrush(newc);        
+            Console.WriteLine("color Values :" + a.ToString() + "," + r.ToString() + "," + g.ToString() + "," + b.ToString());
+            
+            Color newc = Color.FromArgb((byte)a, (byte)r, (byte)g, (byte)b);
+            Console.WriteLine("Completed Color: " + newc.ToString());
+            //return new SolidBrush(newc);        
+            return newc;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Color c = (Color)value;
+            Color nmsColor = (Color)value;
 
-            Colour newc = new Colour
-            {
-                A = c.A / 255,
-                R = c.R / 255,
-                G = c.G / 255,
-                B = c.B / 255
-            };
+            List<MBINField> colorField = new List<MBINField>();
+            colorField.Add(new MBINField { Name = "R", Value = nmsColor.R / 255, NMSType = "System.Single", TemplateType = "System.Single" });
+            colorField.Add(new MBINField { Name = "B", Value = nmsColor.B / 255, NMSType = "CoSystem.Singlelour", TemplateType = "System.Single" });
+            colorField.Add(new MBINField { Name = "A", Value = nmsColor.A / 255, NMSType = "System.Single", TemplateType = "System.Single" });
+            colorField.Add(new MBINField { Name = "G", Value = nmsColor.G / 255, NMSType = "System.Single", TemplateType = "System.Single" });
 
-            return newc;
-
+            return colorField;
         }
     }
 }

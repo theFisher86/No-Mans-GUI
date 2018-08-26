@@ -10,7 +10,6 @@ using System.Windows;
 using System.Windows.Controls;
 using NoMansGUI.Utils.TemplateBuilder;
 using libMBIN.Models.Structs;
-using System.Drawing;
 
 namespace NoMansGUI.Utils.TemplateSelectors
 {
@@ -35,15 +34,23 @@ namespace NoMansGUI.Utils.TemplateSelectors
                 {
                     case "list":
                     case "array":
+                    case "nmsstruct":
                         if(field.NMSType == "Colour")
                         {
                             return element.FindResource("ColourPickerDataTemplate") as DataTemplate;
+                        }
+                        else if(field.NMSType == "Vector2f" || field.NMSType == "Vector4f" || field.NMSType == "Vector6f"){
+                            return element.FindResource("VectorDataTemplate") as DataTemplate;
                         }
                         return element.FindResource("ListDataTemplate") as DataTemplate;
                     case "string":
                         return element.FindResource("StringDataTemplate") as DataTemplate;
                     case "nmsstring0x10":
                         return element.FindResource("NMSString0x10DataTemplate") as DataTemplate;
+                    case "vector2f":
+                    case "vector4f":
+                    case "vector6f":
+                        return element.FindResource("VectorDataTemplate") as DataTemplate;
                     case "int":
                     case "int16":
                     case "int32":

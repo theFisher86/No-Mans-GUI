@@ -24,12 +24,66 @@
                 </ListView>
             </Expander>
         </DataTemplate>
+        
         <DataTemplate x:Key="EnumDataTemplate">
             <ComboBox ItemsSource="{Binding EnumValues}" SelectedItem="{Binding Value}" />
         </DataTemplate>
+        
         <DataTemplate x:Key="ColourPickerDataTemplate">
-            <xctk:ColorPicker ColorMode="ColorCanvas" SelectedColor="{Binding Value, Converter={StaticResource NMSColourConverter}}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="{Binding Name}"/>
+                <xctk:ColorPicker Grid.Column="1" ColorMode="ColorCanvas" SelectedColor="{Binding Value, Converter={StaticResource NMSColourConverter}}" />
+                <ItemsControl Grid.Column="2" ItemsSource="{Binding Value}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="{Binding Name}" Margin="5,0,1,0"/>
+                                <TextBox Text="{Binding Value}" Margin="0,0,0,0" MinWidth="50"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </DataTemplate>
+
+        <DataTemplate x:Key="VectorDataTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="{Binding Name}"/>
+                <ItemsControl Grid.Column="2" ItemsSource="{Binding Value}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="{Binding Name}" Margin="5,0,1,0"/>
+                                <TextBox Text="{Binding Value}" Margin="0,0,0,0" MinWidth="50"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate x:Key="NMSString0x10DataTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -44,6 +98,7 @@
                 <Button Grid.Column="4" Width="50" Height="25" Content="Reset" x:Name="Reset"/>
             </Grid>
         </DataTemplate>
+        
         <DataTemplate x:Key="StringDataTemplate">
             <Grid>
                 <Grid.RowDefinitions>
@@ -61,18 +116,21 @@
                 <Button Grid.Row="1" Grid.Column="2" Width="50" Height="25" Content="Reset" x:Name="Reset"/>
             </Grid>
         </DataTemplate>
+        
         <DataTemplate x:Key="IntDataTemplate">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Name}"/>
                 <TextBox Text="{Binding Value}" />
             </StackPanel>
         </DataTemplate>
+        
         <DataTemplate x:Key="BoolDataTemplate">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Name}"/>
                 <CheckBox IsChecked="{Binding Value}"/>
             </StackPanel>
         </DataTemplate>
+        
     </UserControl.Resources>
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="400" MaxHeight="800">

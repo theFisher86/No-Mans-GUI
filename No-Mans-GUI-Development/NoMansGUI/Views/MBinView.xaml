@@ -133,7 +133,7 @@
         
     </UserControl.Resources>
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="400" MaxHeight="800">
+        <ScrollViewer x:Name="ScrollView"  VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="400" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
             <ListView HorizontalAlignment="Stretch" ItemsSource="{Binding Fields}" ItemTemplateSelector="{StaticResource MbinTemplateSelector}" >
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">

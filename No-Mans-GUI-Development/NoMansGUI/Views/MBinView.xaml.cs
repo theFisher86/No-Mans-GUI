@@ -28,15 +28,14 @@ namespace NoMansGUI.Views
 
         private void Stringx10_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TextBlock tb = (sender as TextBlock);
-            MBINField field = (tb.DataContext as MBINField);
-            libMBIN.Models.Structs.NMSString0x10 c = field.Value as libMBIN.Models.Structs.NMSString0x10;
-            tb.Text = c.Value;
+
         }
 
-        private void TextBlock_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-           
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            e.Handled = true;
         }
     }
 }

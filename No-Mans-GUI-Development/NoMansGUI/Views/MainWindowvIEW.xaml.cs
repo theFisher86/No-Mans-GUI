@@ -24,7 +24,7 @@ namespace NoMansGUI.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindowView : Window, IHandle<TreeCreatedEvent>
+    public partial class MainWindowView : Window
     {
         //
         //  Stopping Point Notes:
@@ -43,11 +43,6 @@ namespace NoMansGUI.Views
             //appVersion = Convert.ToDouble(appVersionString);
             //checkFilePaths();
 
-        }
-
-        public void Handle(TreeCreatedEvent message)
-        {
-            ControlEditor.Children.Add(message.TreeView);
         }
     }
 }

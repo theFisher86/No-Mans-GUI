@@ -120,7 +120,7 @@
         <DataTemplate x:Key="IntDataTemplate">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Name}"/>
-                <TextBox Text="{Binding Value}" />
+                <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </DataTemplate>
         

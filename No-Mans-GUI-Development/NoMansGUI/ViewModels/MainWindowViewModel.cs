@@ -200,7 +200,7 @@ namespace NoMansGUI.ViewModels
 
         public void SaveMbin()
         {
-            Debug.WriteLine("SaveMbin Clicked");
+            MBinViewer.Save();
         }
 
         public void CloseMbin()

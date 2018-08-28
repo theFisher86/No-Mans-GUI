@@ -198,11 +198,6 @@ namespace NoMansGUI.ViewModels
             IoC.Get<IWindowManager>().ShowDialog(new MissingTemplatesViewModel());
         }
 
-        public void PrintDebugList()
-        {
-           //Defunct
-        }
-
         public void SaveMbin()
         {
             Debug.WriteLine("SaveMbin Clicked");
@@ -210,12 +205,13 @@ namespace NoMansGUI.ViewModels
 
         public void CloseMbin()
         {
-            Debug.WriteLine("CloseMbin Clicked");
+            MBinViewer.TryClose();
+            MBinViewer = null;
         }
 
         public void Exit()
         {
-            Debug.WriteLine("Exit Clicked");
+            TryClose();
         }
 
         public void SettingsMenu()
@@ -231,18 +227,12 @@ namespace NoMansGUI.ViewModels
 
         public void About()
         {
-            //MessageBoxResult aboutResult = MessageBox.Show("This GUI was made by Aaron Fisher aka theFisher86 on the NMS Modding Discord.  Would you like to visit us?", "About", MessageBoxButton.YesNo);
-            //if (aboutResult == MessageBoxResult.Yes)
-            //{
-            //    System.Diagnostics.Process.Start("https://discord.gg/9QBKg6Z");
-            //}
-        }
-
-        public void DontClickk()
-        {
-            //I... I'm just going to leave this commented out for now i think :/
-            //System.Diagnostics.Process.Start("https://www.google.com/search?q=horse+sex&rlz=1C1GCEA_enUS801US801&source=lnms&tbm=isch&sa=X&ved=0ahUKEwiE1quLtcXcAhXEm-AKHeTEDnkQ_AUICygC&biw=1680&bih=868");
-            //MessageBoxResult toldYou = MessageBox.Show("I warned you", "Told You Not To Click That", MessageBoxButton.OK);
+            MessageViewModel vm = new MessageViewModel("About", "", "This GUI was made by Aaron Fisher aka theFisher86 & Ben Murray aka Wannbeuk on the NMS Modding Discord. Would you like to visit us?", CustomDialogButtons.YesNo, CustomDialogIcons.Information);
+            CustomDialogResults result = vm.Show();
+            if (result == CustomDialogResults.Yes)
+            {
+                System.Diagnostics.Process.Start("https://discord.gg/9QBKg6Z");
+            }
         }
         #endregion
     }

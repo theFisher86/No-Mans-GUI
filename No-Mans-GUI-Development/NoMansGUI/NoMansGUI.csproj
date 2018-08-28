@@ -119,11 +119,15 @@
     <Compile Include="Utils\TemplateLogHelper.cs" />
     <Compile Include="Utils\TemplateSelectors\MBINTemplateSelector.cs" />
     <Compile Include="ViewModels\MBinViewModel.cs" />
+    <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\MissingTemplatesViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SplashWindowViewModel.cs" />
     <Compile Include="Views\MBinView.xaml.cs">
       <DependentUpon>MBinView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MessageView.xaml.cs">
+      <DependentUpon>MessageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MissingTemplatesView.xaml.cs">
       <DependentUpon>MissingTemplatesView.xaml</DependentUpon>
@@ -152,6 +156,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\MBinView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MessageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -204,6 +212,11 @@
     <Content Include="lib\libMBIN.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\status_icons\status_01_ok.png" />
+    <Resource Include="Resources\status_icons\status_02_warning_a.png" />
+    <Resource Include="Resources\status_icons\status_03_warning_b.png" />
+    <Resource Include="Resources\status_icons\status_04_error.png" />
+    <Resource Include="Resources\status_icons\status_05_info.png" />
     <Resource Include="Resources\status_icons\loading.gif" />
   </ItemGroup>
   <ItemGroup>

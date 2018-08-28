@@ -26,157 +26,26 @@ namespace NoMansGUI.Utils.Parser
 
             //It starts pretty much the same as usual, we get a collection of all the fields in the NMSTemplate.
             IOrderedEnumerable<FieldInfo> fields = type.GetFields().OrderBy(field => field.MetadataToken);
-            if (fields != null)
+            if (fields == null)
             {
+                Console.WriteLine("Error Getting Fields...", "Couldn't get the fields for some reason.\n Data: " + data.ToString() + "\n Will return blank List");
+                mbinContents = null;
+            } else {
                 //We then loop over all those fields.
                 foreach (FieldInfo fieldInfo in fields)
                 {
-                    //Debug.WriteLine($"type = {fieldInfo.FieldType}, name = {fieldInfo.Name}, value = {fieldInfo.GetValue(data)}");      //write all fields to debug
                     //Check for NMSAttribute ignore -code by @GaticusHax
-                    var attributes = (NMSAttribute[])fieldInfo.GetCustomAttributes(typeof(NMSAttribute), false);                        //
-                    libMBIN.Models.NMSAttribute attrib = null;                                                                          //
-                    if (attributes.Length > 0) attrib = attributes[0];                                                                  //
-                    bool ignore = false;                                                                                                //
-                    if (attrib != null) ignore = attrib.Ignore;                                                                         //
-                    if (!ignore)                                                                                                        // Add the field to the mbinContents list
+                    var attributes = (NMSAttribute[])fieldInfo.GetCustomAttributes(typeof(NMSAttribute), false);                        
+                    var attrib = (attributes.Length > 0) ? attributes[0] : new NMSAttribute();
+                    if ((attrib?.Ignore ?? false) == false)                                                                         
                     {
                         //This is where things get fun, we need to check if this is a generic type. AFAIK only the collections are.
                         //so we should be ok with this.
                         var isGeneric = fieldInfo.FieldType.IsGenericType;
                         var isArray = fieldInfo.FieldType.IsArray;
-                        if (isGeneric)
-                        {
-                            //We've found a generic field, we assume it's a collection and get to work.
-                            //We grab the value from the field
-                            var value = fieldInfo.GetValue(data);
-                            //We then create a dynamic variable to hold our list, Dynamic allow us to avoid typing and let .net work out
-                            //what the object is, as at compile time we have no realistic way of know what the type actually is.
-                            dynamic list = value;
 
-                            // build the basic MBINField to hold the list, we use NMSType because otherwise NMSType becomes something like
-                            // System.Collections.Generic.List`1[[libMBIN.Models.Structs.GcDiscoveryRewardLookup, libMBIN, Version=1.57.0.0, Culture=neutral, PublicKeyToken=null]]
-                            // which is just a little annoying to work with.
-                            MBINField mBINField = new MBINField()
-                            {
-                                Name = fieldInfo.Name,
-                                NMSType = fieldInfo.FieldType.Name,
-                                TemplateType = "nmsstruct"
-                            };
-                            //We build a list of MBINFields, which will hold the elements of this list.
-                            List<MBINField> v = new List<MBINField>();
-
-                            //The type of objects in the array
-                            Type aType;
-                            GetListElementType((dynamic)fieldInfo.GetValue(data), out aType);
-
-                            //Loop all the elements in the original list.
-                            foreach (dynamic listentry in list)
-                            {
-                                //We create a new MBINField for each element, as these elements are often Classes we need to recusivly call
-                                //IterateFields so we build up a list of the class fields again.                              
-                                
-                                dynamic innerValue = null;
-                                string t = "";
-
-                                if(aType.Name == "NMSTemplate")
-                                {
-                                    aType = listentry.GetType();
-                                }
-
-                                if (aType.IsClass == true)
-                                {
-                                    innerValue = IterateFields(listentry, listentry.GetType());
-                                    t = "nmsstruct";
-                                }
-                                else
-                                {
-                                    innerValue = Convert.ChangeType(listentry, listentry.GetType());
-                                    t = listentry.GetType().ToString();
-                                }
-
-
-                                MBINField f = new MBINField()
-                                {
-                                    Name = fieldInfo.Name, //aType.ToString(),
-                                    Value = innerValue,
-                                    NMSType = listentry.GetType().ToString(),
-                                    TemplateType = t
-                                };
-                                //Obviously we need to add it to the list we created
-                                v.Add(f);
-                            }
-                            //And then we set the value of the orignal MBINField to the list.
-                            mBINField.Value = v;
-
-                            //And finally we all the parent.
-                            mbinContents.Add(mBINField);
-                        }
-                        else if (isArray)
-                        {
-                            //We've found a generic field, we assume it's a collection and get to work.
-                            //We grab the value from the field
-                            var value = fieldInfo.GetValue(data);
-                            //We then create a dynamic variable to hold our list, Dynamic allow us to avoid typing and let .net work out
-                            //what the object is, as at compile time we have no realistic way of know what the type actually is.
-                            dynamic array = value;
-
-                            // build the basic MBINField to hold the list, we use NMSType because otherwise NMSType becomes something like
-                            // System.Collections.Generic.List`1[[libMBIN.Models.Structs.GcDiscoveryRewardLookup, libMBIN, Version=1.57.0.0, Culture=neutral, PublicKeyToken=null]]
-                            // which is just a little annoying to work with.
-                            MBINField mBINField = new MBINField()
-                            {
-                                Name = fieldInfo.Name,
-                                NMSType = fieldInfo.FieldType.Name,
-                                TemplateType = "array"
-                            };
-                            //We build a list of MBINFields, which will hold the elements of this list.
-                            List<MBINField> v = new List<MBINField>();
-
-                            //The type of objects in the array
-                            Type aType;
-                            GetArrayElementType(fieldInfo, out aType);
-
-                            //Loop all the elements in the original list.
-                            int i = 0;
-                            foreach (dynamic arrayentry in array)
-                            {
-                                string name = "";
-                                if (attrib?.EnumValue != null)
-                                {
-                                    name = attrib.EnumValue[i];
-                                    i++;
-                                }
-
-                                dynamic innerValue = null;
-                                string t = "";
-                                if (aType.IsClass == true)
-                                {
-                                    innerValue = IterateFields(arrayentry, aType);
-                                    t = "nmsstruct";
-                                }
-                                else
-                                {
-                                    innerValue = Convert.ChangeType(arrayentry, aType);
-                                    t = arrayentry.GetType().ToString();
-                                }
-
-
-                                MBINField f = new MBINField()
-                                {
-                                    Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
-                                    Value = innerValue,
-                                    NMSType = string.IsNullOrEmpty(name) ? aType.ToString() : name,
-                                    TemplateType = t
-                                };
-                                //Obviously we need to add it to the list we created
-                                v.Add(f);
-                            }
-                            //And then we set the value of the orignal MBINField to the list.
-                            mBINField.Value = v;
-
-                            //And finally we all the parent.
-                            mbinContents.Add(mBINField);
-                        }
+                        if (isGeneric)      { mbinContents.Add(ParseList(fieldInfo, data)); }
+                        else if (isArray)   { mbinContents.Add(ParseArray(fieldInfo, data, attrib)); }
                         else if (fieldInfo.FieldType.BaseType == typeof(NMSTemplate))
                         {
                             mbinContents.Add(new MBINField
@@ -190,28 +59,10 @@ namespace NoMansGUI.Utils.Parser
                         //We sometimes get a field of type NMSTemplate that can be any kind of struct, so we need to handle it right.
                         else if (fieldInfo.FieldType == typeof(NMSTemplate))
                         {
-                            NMSTemplate template = (NMSTemplate)fieldInfo.GetValue(data);
-                            if (template != null)
-                            {
-                                Type templateType = template.GetType();
-                                List<MBINField> value = IterateFields(template, templateType);
-
-                                MBINField field = new MBINField
-                                {
-                                    Name = fieldInfo.Name,
-                                    Value = value,
-                                    NMSType = templateType.ToString(),
-                                    TemplateType = "nmsstruct"
-                                };
-                                mbinContents.Add(field);
-
-                                //Debug stuff for GaticusHax
-                                NMSTemplateTypeList.AddToDebugList(fieldInfo.Name, field);
-                            }
+                            mbinContents.Add(ParseStruct(fieldInfo, data));
                         }
                         else if(fieldInfo.FieldType.BaseType == typeof(Enum))
                         {
-                           
                             mbinContents.Add(new MBINField
                             {
                                 Name = fieldInfo.Name,
@@ -220,9 +71,7 @@ namespace NoMansGUI.Utils.Parser
                                 NMSType = fieldInfo.FieldType.ToString(),
                                 TemplateType = "enum"
                             });
-                        }
-                        else
-                        {
+                        } else {
                             //We have a nice simple normal object, no fuss
                             mbinContents.Add(new MBINField
                             {
@@ -232,23 +81,174 @@ namespace NoMansGUI.Utils.Parser
                                 NMSType = fieldInfo.FieldType.ToString(),
                                 TemplateType = fieldInfo.FieldType.ToString()
                             });
-                        }//
+                        }
                     }
                 }
-            }
-            else
-            {
-                Console.WriteLine("Error Getting Fields...", "Couldn't get the fields for some reason.\n Data: " + data.ToString() + "\n Will return blank List");
-                mbinContents = null;
             }
             return mbinContents;
         }
 
+        private MBINField ParseList(FieldInfo fieldInfo, NMSTemplate data)
+        {
+            //We've found a generic field, we assume it's a collection and get to work.
+            //We grab the value from the field
+            var value = fieldInfo.GetValue(data);
+            //We then create a dynamic variable to hold our list, Dynamic allow us to avoid typing and let .net work out
+            //what the object is, as at compile time we have no realistic way of know what the type actually is.
+            dynamic list = value;
 
+            // build the basic MBINField to hold the list, we use NMSType because otherwise NMSType becomes something like
+            // System.Collections.Generic.List`1[[libMBIN.Models.Structs.GcDiscoveryRewardLookup, libMBIN, Version=1.57.0.0, Culture=neutral, PublicKeyToken=null]]
+            // which is just a little annoying to work with.
+            MBINField mBINField = new MBINField()
+            {
+                Name = fieldInfo.Name,
+                NMSType = fieldInfo.FieldType.Name,
+                TemplateType = "nmsstruct"
+            };
+            //We build a list of MBINFields, which will hold the elements of this list.
+            List<MBINField> v = new List<MBINField>();
+
+            //The type of objects in the array
+            Type aType;
+            GetListElementType((dynamic)fieldInfo.GetValue(data), out aType);
+
+            //Loop all the elements in the original list.
+            foreach (object listentry in list)
+            {
+                //We create a new MBINField for each element, as these elements are often Classes we need to recusivly call
+                //IterateFields so we build up a list of the class fields again.                              
+
+                object innerValue = null;
+                string t = "";
+
+                if (aType == typeof(NMSTemplate))
+                {
+                    aType = listentry.GetType();
+                }
+
+                if (aType.IsClass == true)
+                {
+                    innerValue = IterateFields((NMSTemplate)listentry, listentry.GetType());
+                    t = "nmsstruct";
+                }
+                else
+                {
+                    innerValue = Convert.ChangeType(listentry, listentry.GetType());
+                    t = listentry.GetType().ToString();
+                }
+
+
+                MBINField f = new MBINField()
+                {
+                    Name = fieldInfo.Name, //aType.ToString(),
+                    Value = innerValue,
+                    NMSType = listentry.GetType().ToString(),
+                    TemplateType = t
+                };
+                //Obviously we need to add it to the list we created
+                v.Add(f);
+            }
+            //And then we set the value of the orignal MBINField to the list.
+            mBINField.Value = v;
+
+            //And finally return the parent.
+            return mBINField;
+        }
+
+        private MBINField ParseArray(FieldInfo fieldInfo, NMSTemplate data, NMSAttribute attrib)
+        {
+            //We've found a generic field, we assume it's a collection and get to work.
+            //We grab the value from the field
+            var value = fieldInfo.GetValue(data);
+            //We then create a dynamic variable to hold our list, Dynamic allow us to avoid typing and let .net work out
+            //what the object is, as at compile time we have no realistic way of know what the type actually is.
+            dynamic array = value;
+
+            // build the basic MBINField to hold the list, we use NMSType because otherwise NMSType becomes something like
+            // System.Collections.Generic.List`1[[libMBIN.Models.Structs.GcDiscoveryRewardLookup, libMBIN, Version=1.57.0.0, Culture=neutral, PublicKeyToken=null]]
+            // which is just a little annoying to work with.
+            MBINField mBINField = new MBINField()
+            {
+                Name = fieldInfo.Name,
+                NMSType = fieldInfo.FieldType.Name,
+                TemplateType = "array"
+            };
+            //We build a list of MBINFields, which will hold the elements of this list.
+            List<MBINField> v = new List<MBINField>();
+
+            //The type of objects in the array
+            Type aType;
+            GetArrayElementType(fieldInfo, out aType);
+
+            //Loop all the elements in the original list.
+            int i = 0;
+            foreach (object arrayentry in array)
+            {
+                string name = "";
+                if (attrib?.EnumValue != null)
+                {
+                    name = attrib.EnumValue[i];
+                    i++;
+                }
+
+                object innerValue = null;
+                string t = "";
+                if (aType.IsClass == true)
+                {
+                    innerValue = IterateFields((NMSTemplate)arrayentry, arrayentry.GetType());
+                    t = "nmsstruct";
+                }
+                else
+                {
+                    innerValue = Convert.ChangeType(arrayentry, aType);
+                    t = arrayentry.GetType().ToString();
+                }
+
+
+                MBINField f = new MBINField()
+                {
+                    Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
+                    Value = innerValue,
+                    NMSType = string.IsNullOrEmpty(name) ? aType.ToString() : name,
+                    TemplateType = t
+                };
+                //Obviously we need to add it to the list we created
+                v.Add(f);
+            }
+            //And then we set the value of the orignal MBINField to the list.
+            mBINField.Value = v;
+
+            //And finally we all the parent.
+            return mBINField;
+        }
+
+        private MBINField ParseStruct(FieldInfo fieldInfo, NMSTemplate data)
+        {
+            NMSTemplate template = (NMSTemplate)fieldInfo.GetValue(data);
+            if (template != null)
+            {
+                Type templateType = template.GetType();
+                List<MBINField> value = IterateFields(template, templateType);
+
+                MBINField field = new MBINField
+                {
+                    Name = fieldInfo.Name,
+                    Value = value,
+                    NMSType = templateType.ToString(),
+                    TemplateType = "nmsstruct"
+                };
+
+                //Debug stuff for GaticusHax
+                NMSTemplateTypeList.AddToDebugList(fieldInfo.Name, field);
+                return field;
+            }
+            return null;
+        }
 
         private bool GetArrayElementType(FieldInfo field, out Type elementType)
         {
-            if (field.FieldType.IsArray && field.FieldType.FullName.EndsWith("[]"))
+            if (field.FieldType.IsArray)
             {
                 string fullName = field.FieldType.FullName.Substring(0, field.FieldType.FullName.Length - 2);
                 elementType = Type.GetType(string.Format("{0},{1}", fullName, field.FieldType.Assembly.GetName().Name));
@@ -260,14 +260,8 @@ namespace NoMansGUI.Utils.Parser
 
         private bool GetListElementType<T>(IList<T> list, out Type elementType)
         {
-            if (list != null)
-            {
-                elementType = typeof(T);
-                return true;
-            }
-
-            elementType = null;
-            return false;
+            elementType = (list != null) ? typeof(T) : null;
+            return (elementType != null);
         }
     }
 }

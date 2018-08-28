@@ -35,11 +35,12 @@ namespace NoMansGUI.Utils.TemplateSelectors
                     case "list":
                     case "array":
                     case "nmsstruct":
-                        if(field.NMSType == "Colour")
+                        if(field.NMSType == typeof(Colour))
                         {
                             return element.FindResource("ColourPickerDataTemplate") as DataTemplate;
                         }
-                        else if(field.NMSType == "Vector2f" || field.NMSType == "Vector4f" || field.NMSType == "Vector6f"){
+                        else if(field.NMSType == typeof(Vector2f) || field.NMSType == typeof(Vector4f))
+                        {
                             return element.FindResource("VectorDataTemplate") as DataTemplate;
                         }
                         return element.FindResource("ListDataTemplate") as DataTemplate;

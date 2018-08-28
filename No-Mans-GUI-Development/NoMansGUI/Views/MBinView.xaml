@@ -76,7 +76,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="{Binding Name}" Margin="5,0,1,0"/>
-                                <TextBox Text="{Binding Value}" Margin="0,0,0,0" MinWidth="50"/>
+                                <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,0" MinWidth="50"/>
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

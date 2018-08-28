@@ -20,7 +20,7 @@ namespace NoMansGUI.Models
         public Array EnumValues { get; set; }
         public object Value { get; set; }
         public string TemplateType { get; set; }
-        public string NMSType { get; set; }
+        public Type NMSType { get; set; }
     }
 
     public class MBINField<T>

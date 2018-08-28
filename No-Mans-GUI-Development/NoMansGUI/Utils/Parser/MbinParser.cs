@@ -52,7 +52,7 @@ namespace NoMansGUI.Utils.Parser
                             {
                                 Name = fieldInfo.Name,
                                 Value = IterateFields((NMSTemplate)fieldInfo.GetValue(data), fieldInfo.GetValue(data).GetType()),
-                                NMSType = fieldInfo.FieldType.Name,
+                                NMSType = fieldInfo.FieldType,
                                 TemplateType = "nmsstruct"
                             });
                         }
@@ -68,7 +68,7 @@ namespace NoMansGUI.Utils.Parser
                                 Name = fieldInfo.Name,
                                 EnumValues = fieldInfo.FieldType.GetEnumValues(),
                                 Value = fieldInfo.GetValue(data),
-                                NMSType = fieldInfo.FieldType.ToString(),
+                                NMSType = fieldInfo.FieldType,
                                 TemplateType = "enum"
                             });
                         } else {
@@ -78,7 +78,7 @@ namespace NoMansGUI.Utils.Parser
                                 Name = fieldInfo.Name,
                                 //Notice the ? after GetValue(Data) this ensure we actually have a return before tying to ToString() as some elements are null.
                                 Value = fieldInfo.GetValue(data)?.ToString(),
-                                NMSType = fieldInfo.FieldType.ToString(),
+                                NMSType = fieldInfo.FieldType,
                                 TemplateType = fieldInfo.FieldType.ToString()
                             });
                         }
@@ -103,7 +103,7 @@ namespace NoMansGUI.Utils.Parser
             MBINField mBINField = new MBINField()
             {
                 Name = fieldInfo.Name,
-                NMSType = fieldInfo.FieldType.Name,
+                NMSType = fieldInfo.FieldType,
                 TemplateType = "nmsstruct"
             };
             //We build a list of MBINFields, which will hold the elements of this list.
@@ -143,7 +143,7 @@ namespace NoMansGUI.Utils.Parser
                 {
                     Name = fieldInfo.Name, //aType.ToString(),
                     Value = innerValue,
-                    NMSType = listentry.GetType().ToString(),
+                    NMSType = listentry.GetType(),
                     TemplateType = t
                 };
                 //Obviously we need to add it to the list we created
@@ -171,7 +171,7 @@ namespace NoMansGUI.Utils.Parser
             MBINField mBINField = new MBINField()
             {
                 Name = fieldInfo.Name,
-                NMSType = fieldInfo.FieldType.Name,
+                NMSType = fieldInfo.FieldType,
                 TemplateType = "array"
             };
             //We build a list of MBINFields, which will hold the elements of this list.
@@ -210,7 +210,7 @@ namespace NoMansGUI.Utils.Parser
                 {
                     Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
                     Value = innerValue,
-                    NMSType = string.IsNullOrEmpty(name) ? aType.ToString() : name,
+                    NMSType = aType,
                     TemplateType = t
                 };
                 //Obviously we need to add it to the list we created
@@ -235,7 +235,7 @@ namespace NoMansGUI.Utils.Parser
                 {
                     Name = fieldInfo.Name,
                     Value = value,
-                    NMSType = templateType.ToString(),
+                    NMSType = templateType,
                     TemplateType = "nmsstruct"
                 };
 

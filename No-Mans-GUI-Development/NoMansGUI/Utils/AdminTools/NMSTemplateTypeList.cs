@@ -9,8 +9,8 @@ namespace NoMansGUI.Utils.AdminTools
 {
     public static class NMSTemplateTypeList
     {
-        private static Dictionary<string, List<string>> _fieldTypes;
-        public static Dictionary<string, List<string>> GetList()
+        private static Dictionary<string, List<Type>> _fieldTypes;
+        public static Dictionary<string, List<Type>> GetList()
         {
             return _fieldTypes;
         }
@@ -18,7 +18,7 @@ namespace NoMansGUI.Utils.AdminTools
         {
             if (_fieldTypes == null)
             {
-                _fieldTypes = new Dictionary<string, List<string>>();
+                _fieldTypes = new Dictionary<string, List<Type>>();
             }
             if (_fieldTypes.ContainsKey(name))
             {
@@ -29,7 +29,7 @@ namespace NoMansGUI.Utils.AdminTools
             }
             else
             {
-                _fieldTypes.Add(name, new List<string>() { field.NMSType });
+                _fieldTypes.Add(name, new List<Type>() { field.NMSType });
             }
         }
         public static void PrintToFile(string mbinName)
@@ -44,13 +44,13 @@ namespace NoMansGUI.Utils.AdminTools
             {
                 foreach (var entry in _fieldTypes)
                 {
-                    foreach (string field in entry.Value)
+                    foreach (Type field in entry.Value)
                     {
                         file.WriteLine("[{0} {1}]", entry.Key, field);
                     }
                 }
             }
-            _fieldTypes = new Dictionary<string, List<string>>();
+            _fieldTypes = new Dictionary<string, List<Type>>();
         }
     }
 }

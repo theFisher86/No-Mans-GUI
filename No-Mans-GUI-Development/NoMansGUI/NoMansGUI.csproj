@@ -114,6 +114,7 @@
     <Compile Include="Utils\AdminTools\NMSTemplateTypeList.cs" />
     <Compile Include="Utils\Events\LoadingEvents.cs" />
     <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
+    <Compile Include="Utils\Parser\MBINFieldParser.cs" />
     <Compile Include="Utils\Parser\MbinParser.cs" />
     <Compile Include="Utils\TemplateBuilder\TemplateBuilder.cs" />
     <Compile Include="Utils\TemplateLogHelper.cs" />

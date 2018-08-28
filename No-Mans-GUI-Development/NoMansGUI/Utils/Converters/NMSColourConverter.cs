@@ -49,11 +49,12 @@ namespace NoMansGUI.Utils.Converters
         {
             Color nmsColor = (Color)value;
 
+            //TODO: We already have this, we shouldn't need to create a new one?
             List<MBINField> colorField = new List<MBINField>();
-            colorField.Add(new MBINField { Name = "R", Value = nmsColor.R / 255, NMSType = "System.Single", TemplateType = "System.Single" });
-            colorField.Add(new MBINField { Name = "B", Value = nmsColor.B / 255, NMSType = "CoSystem.Singlelour", TemplateType = "System.Single" });
-            colorField.Add(new MBINField { Name = "A", Value = nmsColor.A / 255, NMSType = "System.Single", TemplateType = "System.Single" });
-            colorField.Add(new MBINField { Name = "G", Value = nmsColor.G / 255, NMSType = "System.Single", TemplateType = "System.Single" });
+            colorField.Add(new MBINField { Name = "R", Value = nmsColor.R / 255, NMSType = typeof(System.Single), TemplateType = "System.Single" });
+            colorField.Add(new MBINField { Name = "B", Value = nmsColor.B / 255, NMSType = typeof(System.Single), TemplateType = "System.Single" });
+            colorField.Add(new MBINField { Name = "A", Value = nmsColor.A / 255, NMSType = typeof(System.Single), TemplateType = "System.Single" });
+            colorField.Add(new MBINField { Name = "G", Value = nmsColor.G / 255, NMSType = typeof(System.Single), TemplateType = "System.Single" });
 
             return colorField;
         }

@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -42,10 +43,13 @@ namespace NoMansGUI.ViewModels
 
         public void Save()
         {
-            MBINFieldParser parser = new MBINFieldParser();
+            //MBINFieldParser parser = new MBINFieldParser();
 
-            NMSTemplate template = parser.ParseTemplateFromMBINFields(_template, _fields.ToList());
-            template.WriteToExml(@"C:\Users\wannabeuk\Desktop\Ouput Test\test.exml");
+            //NMSTemplate template = parser.ParseTemplateFromMBINFields(_template, _fields.ToList());
+
+            // string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            // _template.WriteToExml(Path.Combine(path, @"Ouput Test\test.exml"));
+            _template.WriteToExml(@"C:\Users\xfxma\Desktop\Output Test\test.exml");
         }
     }
 }

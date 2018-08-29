@@ -48,7 +48,7 @@ namespace NoMansGUI.Utils.Parser
                         else if (isArray)   { mbinContents.Add(ParseArray(fieldInfo, data, attrib)); }
                         else if (fieldInfo.FieldType.BaseType == typeof(NMSTemplate))
                         {
-                            mbinContents.Add(new MBINField
+                            mbinContents.Add(new MBINStructField
                             {
                                 Name = fieldInfo.Name,
                                 Value = IterateFields((NMSTemplate)fieldInfo.GetValue(data), fieldInfo.GetValue(data).GetType()),
@@ -67,6 +67,8 @@ namespace NoMansGUI.Utils.Parser
                             {
                                 Name = fieldInfo.Name,
                                 EnumValues = fieldInfo.FieldType.GetEnumValues(),
+                                fieldInfo = fieldInfo,
+                                dataOwner = data,
                                 Value = fieldInfo.GetValue(data),
                                 NMSType = fieldInfo.FieldType,
                                 TemplateType = "enum"
@@ -78,6 +80,8 @@ namespace NoMansGUI.Utils.Parser
                                 Name = fieldInfo.Name,
                                 //Notice the ? after GetValue(Data) this ensure we actually have a return before tying to ToString() as some elements are null.
                                 Value = fieldInfo.GetValue(data)?.ToString(),
+                                fieldInfo = fieldInfo,
+                                dataOwner = data,
                                 NMSType = fieldInfo.FieldType,
                                 TemplateType = fieldInfo.FieldType.ToString()
                             });
@@ -100,10 +104,12 @@ namespace NoMansGUI.Utils.Parser
             // build the basic MBINField to hold the list, we use NMSType because otherwise NMSType becomes something like
             // System.Collections.Generic.List`1[[libMBIN.Models.Structs.GcDiscoveryRewardLookup, libMBIN, Version=1.57.0.0, Culture=neutral, PublicKeyToken=null]]
             // which is just a little annoying to work with.
-            MBINField mBINField = new MBINField()
+            MBINStructField mBINField = new MBINStructField()
             {
                 Name = fieldInfo.Name,
                 NMSType = fieldInfo.FieldType,
+                fieldInfo = fieldInfo,
+                dataOwner = data,
                 TemplateType = "nmsstruct"
             };
             //We build a list of MBINFields, which will hold the elements of this list.
@@ -138,14 +144,19 @@ namespace NoMansGUI.Utils.Parser
                     t = listentry.GetType().ToString();
                 }
 
-
-                MBINField f = new MBINField()
+                var f = new MBINField();
+                if (t == "nmsstruct")
                 {
-                    Name = fieldInfo.Name, //aType.ToString(),
-                    Value = innerValue,
-                    NMSType = listentry.GetType(),
-                    TemplateType = t
-                };
+                    f = new MBINStructField();
+                }
+
+                f.Name = fieldInfo.Name; //aType.ToString(),
+                f.Value = innerValue;
+                f.NMSType = listentry.GetType();
+                f.fieldInfo = fieldInfo;
+                f.dataOwner = data;
+                f.TemplateType = t;
+
                 //Obviously we need to add it to the list we created
                 v.Add(f);
             }
@@ -168,10 +179,12 @@ namespace NoMansGUI.Utils.Parser
             // build the basic MBINField to hold the list, we use NMSType because otherwise NMSType becomes something like
             // System.Collections.Generic.List`1[[libMBIN.Models.Structs.GcDiscoveryRewardLookup, libMBIN, Version=1.57.0.0, Culture=neutral, PublicKeyToken=null]]
             // which is just a little annoying to work with.
-            MBINField mBINField = new MBINField()
+            MBINStructField mBINField = new MBINStructField()
             {
                 Name = fieldInfo.Name,
                 NMSType = fieldInfo.FieldType,
+                fieldInfo = fieldInfo,
+                dataOwner = data,
                 TemplateType = "array"
             };
             //We build a list of MBINFields, which will hold the elements of this list.
@@ -206,14 +219,16 @@ namespace NoMansGUI.Utils.Parser
                 }
 
 
-                MBINField f = new MBINField()
+                MBINStructField f = new MBINStructField
                 {
                     Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
                     Value = innerValue,
                     NMSType = aType,
+                    fieldInfo = fieldInfo,
+                    dataOwner = data,
                     TemplateType = t
                 };
-                //Obviously we need to add it to the list we created
+
                 v.Add(f);
             }
             //And then we set the value of the orignal MBINField to the list.
@@ -236,6 +251,8 @@ namespace NoMansGUI.Utils.Parser
                     Name = fieldInfo.Name,
                     Value = value,
                     NMSType = templateType,
+                    fieldInfo = fieldInfo,
+                    dataOwner = data,
                     TemplateType = "nmsstruct"
                 };
 

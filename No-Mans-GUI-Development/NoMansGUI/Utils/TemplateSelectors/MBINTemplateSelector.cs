@@ -21,7 +21,7 @@ namespace NoMansGUI.Utils.TemplateSelectors
     {
         private static readonly log4net.ILog m_log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-
+        //TODO: This shouldn't a string, find some way to compare actual type.
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             FrameworkElement element = container as FrameworkElement;
@@ -29,7 +29,6 @@ namespace NoMansGUI.Utils.TemplateSelectors
             {
                 //Get just the last part of the string
                 string switchCase = field.TemplateType.Split('.').Last();
-                Console.WriteLine("name: " + field.Name.ToString() + " value: " + field.Value.ToString() + " NMStype: " + field.NMSType.ToString() + " TemplateType: " + field.TemplateType.ToString());
                 switch (switchCase.ToLower())
                 {
                     case "list":
@@ -52,6 +51,8 @@ namespace NoMansGUI.Utils.TemplateSelectors
                     case "vector4f":
                     case "vector6f":
                         return element.FindResource("VectorDataTemplate") as DataTemplate;
+                    case "single":
+                        return element.FindResource("SingleDataTemplate") as DataTemplate;
                     case "int":
                     case "int16":
                     case "int32":
@@ -67,6 +68,7 @@ namespace NoMansGUI.Utils.TemplateSelectors
                         return element.FindResource("EnumDataTemplate") as DataTemplate;
                     default:
                         //We don't yet have a match for these, for now we return the standard string template and log it as missing.
+                        Console.WriteLine("No Template Found for " + switchCase);
                         m_log.Error("No Template found for item of type " + switchCase);
                         TemplateLogHelper.AddMissingTemplate(switchCase);
                         return element.FindResource("StringDataTemplate") as DataTemplate;

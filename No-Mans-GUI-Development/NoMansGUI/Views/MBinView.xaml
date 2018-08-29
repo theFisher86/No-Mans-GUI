@@ -123,6 +123,13 @@
                 <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </DataTemplate>
+
+        <DataTemplate x:Key="SingleDataTemplate">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding Name}"/>
+                <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </DataTemplate>
         
         <DataTemplate x:Key="BoolDataTemplate">
             <StackPanel Orientation="Vertical">

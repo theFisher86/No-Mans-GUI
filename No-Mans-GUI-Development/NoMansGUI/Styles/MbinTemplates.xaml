@@ -1,0 +1,148 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:NoMansGUI.Utils.Converters"
+                    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+                    xmlns:templateselector="clr-namespace:NoMansGUI.Utils.TemplateSelectors"
+                    xmlns:Utils="clr-namespace:NoMansGUI.Utils"
+                    xmlns:local="clr-namespace:NoMansGUI">
+    <converters:DebugDataBindingConverter x:Key="DebugConverter" />
+    <converters:NMSColourConverter x:Key="NMSColourConverter" />
+    <converters:NMSString0x10Converter x:Key="NMSString0x10Converter"/>
+    <templateselector:MBINTemplateSelector x:Key="MbinTemplateSelector"/>
+    <DataTemplate x:Key="ListDataTemplate">
+        <Expander Header="{Binding Name}" ToolTip="{Binding NMSType}" Template="{StaticResource SimpleExpanderTemp}" >
+            <ListView ItemTemplateSelector="{StaticResource MbinTemplateSelector}" ItemsSource="{Binding Value}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Expander>
+    </DataTemplate>
+
+    <DataTemplate x:Key="EnumDataTemplate">
+        <ComboBox ItemsSource="{Binding EnumValues}" SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="ColourPickerDataTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="{Binding Name}"/>
+            <!--SelectedColor="{Binding Value, Converter={StaticResource NMSColourConverter}}"-->
+            <xctk:ColorPicker x:Name="ColorPicker" Grid.Column="1" ColorMode="ColorCanvas">
+                <xctk:ColorPicker.Resources>
+                    <Utils:DataContextSpy x:Key="spy"/>
+                </xctk:ColorPicker.Resources>
+                <xctk:ColorPicker.SelectedColor>
+                    <Binding Path="Value" Mode="TwoWay">
+                        <Binding.Converter>
+                            <converters:NMSColourConverter SourceValue="{Binding Source={StaticResource spy},Path=DataContext.Value}"/>
+                        </Binding.Converter>
+                    </Binding>
+                </xctk:ColorPicker.SelectedColor>
+            </xctk:ColorPicker>
+            <ItemsControl Grid.Column="2" ItemsSource="{Binding Value}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding Name}" Margin="5,0,1,0"/>
+                            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0,0,0,0" MinWidth="50"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="VectorDataTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="{Binding Name}"/>
+            <ItemsControl Grid.Column="2" ItemsSource="{Binding Value}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding Name}" Margin="5,0,1,0"/>
+                            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0,0,0,0" MinWidth="50"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="NMSString0x10DataTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding Name}" />
+            <TextBox Grid.Column="2" DataContext="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Text="{Binding Path=., Mode=TwoWay, Converter={StaticResource NMSString0x10Converter}}"/>
+            <Button Grid.Column="4" Width="50" Height="25" Content="Reset" x:Name="Reset"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="StringDataTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Padding="0" Grid.Column="0" Height="25" Text="{Binding Name}"/>
+            <TextBox Grid.Row="1" Padding="0" Grid.Column="0" Height="20" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+            <!--Not Yet Implemented-->
+            <Button Grid.Row="1" Grid.Column="2" Width="50" Height="25" Content="Reset" x:Name="Reset"/>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="IntDataTemplate">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="{Binding Name}"/>
+            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SingleDataTemplate">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="{Binding Name}"/>
+            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BoolDataTemplate">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="{Binding Name}"/>
+            <CheckBox IsChecked="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

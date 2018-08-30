@@ -108,10 +108,12 @@
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Models\MBin.cs" />
+    <Compile Include="Utils\BindableParameter.cs" />
     <Compile Include="Utils\Converters\DebugDataBindingConverter.cs" />
     <Compile Include="Utils\Converters\NMSColourConverter.cs" />
     <Compile Include="Utils\Converters\NMSString0x10Converter.cs" />
     <Compile Include="Utils\AdminTools\NMSTemplateTypeList.cs" />
+    <Compile Include="Utils\DataContextSpy.cs" />
     <Compile Include="Utils\Events\LoadingEvents.cs" />
     <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
     <Compile Include="Utils\Parser\MBINFieldParser.cs" />
@@ -140,6 +142,10 @@
       <DependentUpon>SplashWindowView.xaml</DependentUpon>
     </Compile>
     <Page Include="Styles\basic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\MbinTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

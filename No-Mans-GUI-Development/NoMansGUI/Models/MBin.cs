@@ -17,7 +17,7 @@ namespace NoMansGUI.Models
         public string vanillaName { get; set; }         // Used when creating new files that are based on vanilla (custom models, etc)
     }
 
-    public class MBINField
+    public class MBINField : PropertyChangedBase
     {
         //Boxed Struct - The actual NMSTemplate
         public object dataOwner;
@@ -38,6 +38,7 @@ namespace NoMansGUI.Models
                     return;
                 }
                 fieldInfo.SetValue(dataOwner, Convert.ChangeType(value, fieldInfo.FieldType));
+                NotifyOfPropertyChange(() => Value);
             }
         }
         public string TemplateType { get; set; }

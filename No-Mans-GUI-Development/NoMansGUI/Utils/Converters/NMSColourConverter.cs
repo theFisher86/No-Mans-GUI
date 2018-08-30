@@ -2,18 +2,27 @@
 using NoMansGUI.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
 //using System.Drawing;
 using System.Windows.Media;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 
 namespace NoMansGUI.Utils.Converters
 {
-    public class NMSColourConverter : IValueConverter
+    public class NMSColourConverter : DependencyObject, IValueConverter
     {
+
+        public static DependencyProperty SourceValueProperty =
+         DependencyProperty.Register("SourceValue",
+                                     typeof(object),
+                                     typeof(NMSColourConverter));
+        public object SourceValue
+        {
+            get { return (object)GetValue(SourceValueProperty); }
+            set { SetValue(SourceValueProperty, value); }
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Console.WriteLine("color found!" + value.ToString());
@@ -48,15 +57,27 @@ namespace NoMansGUI.Utils.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Color nmsColor = (Color)value;
+            List<MBINField> original = (List<MBINField>)SourceValue;
 
-            //TODO: We already have this, we shouldn't need to create a new one?
-            List<MBINField> colorField = new List<MBINField>();
-            colorField.Add(new MBINField { Name = "R", Value = nmsColor.R / 255, NMSType = typeof(System.Single), TemplateType = "System.Single" });
-            colorField.Add(new MBINField { Name = "B", Value = nmsColor.B / 255, NMSType = typeof(System.Single), TemplateType = "System.Single" });
-            colorField.Add(new MBINField { Name = "A", Value = nmsColor.A / 255, NMSType = typeof(System.Single), TemplateType = "System.Single" });
-            colorField.Add(new MBINField { Name = "G", Value = nmsColor.G / 255, NMSType = typeof(System.Single), TemplateType = "System.Single" });
-
-            return colorField;
+            foreach(MBINField field in original)
+            {
+                switch(field.Name)
+                {
+                    case "A":
+                        field.Value = (float)nmsColor.A / 255;
+                        break;
+                    case "R":
+                        field.Value = (float)nmsColor.R / 255;
+                        break;
+                    case "G":
+                        field.Value = (float)nmsColor.G / 255;
+                        break;
+                    case "B":
+                        field.Value = (float)nmsColor.B / 255;
+                        break;
+                }
+            }
+            return original;
         }
     }
 }

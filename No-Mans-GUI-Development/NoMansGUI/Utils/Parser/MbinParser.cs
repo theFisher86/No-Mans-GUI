@@ -144,19 +144,15 @@ namespace NoMansGUI.Utils.Parser
                     t = listentry.GetType().ToString();
                 }
 
-                var f = new MBINField();
-                if (t == "nmsstruct")
-                {
-                    f = new MBINStructField();
-                }
-
-                f.Name = fieldInfo.Name; //aType.ToString(),
-                f.Value = innerValue;
-                f.NMSType = listentry.GetType();
-                f.fieldInfo = fieldInfo;
-                f.dataOwner = data;
-                f.TemplateType = t;
-
+                MBINStructField f = new MBINStructField();
+              
+                    f = new MBINStructField
+                    {
+                        Value = innerValue,
+                        Name = fieldInfo.Name, //aType.ToString(),
+                        NMSType = innerValue.GetType(),
+                        TemplateType = t
+                    };
                 //Obviously we need to add it to the list we created
                 v.Add(f);
             }

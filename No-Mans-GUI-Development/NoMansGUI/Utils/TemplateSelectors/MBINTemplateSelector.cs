@@ -34,7 +34,8 @@ namespace NoMansGUI.Utils.TemplateSelectors
                     case "list":
                     case "array":
                     case "nmsstruct":
-                        if(field.NMSType == typeof(Colour))
+                        Console.WriteLine("Found TemplateType nmsstruct:");
+                        if (field.NMSType == typeof(Colour))
                         {
                             return element.FindResource("ColourPickerDataTemplate") as DataTemplate;
                         }
@@ -42,6 +43,9 @@ namespace NoMansGUI.Utils.TemplateSelectors
                         {
                             return element.FindResource("VectorDataTemplate") as DataTemplate;
                         }
+                        Console.WriteLine("nmsstruct didn't match any special rules, using default ListDataTemplate.");
+                        Console.WriteLine(string.Format("nmsstruct data is : NMSType {0} - Value {1}", field.NMSType, field.Value));
+
                         return element.FindResource("ListDataTemplate") as DataTemplate;
                     case "string":
                         return element.FindResource("StringDataTemplate") as DataTemplate;
@@ -52,6 +56,8 @@ namespace NoMansGUI.Utils.TemplateSelectors
                     case "vector6f":
                         return element.FindResource("VectorDataTemplate") as DataTemplate;
                     case "single":
+                        Console.WriteLine("Found TemplateType Single");
+                        Console.WriteLine(string.Format("Data is : NMSType {0} - Value {1} - Value Type", field.NMSType, field.Value, field.Value.GetType().Name));
                         return element.FindResource("SingleDataTemplate") as DataTemplate;
                     case "int":
                     case "int16":

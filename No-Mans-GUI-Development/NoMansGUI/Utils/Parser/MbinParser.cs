@@ -175,7 +175,7 @@ namespace NoMansGUI.Utils.Parser
             // build the basic MBINField to hold the list, we use NMSType because otherwise NMSType becomes something like
             // System.Collections.Generic.List`1[[libMBIN.Models.Structs.GcDiscoveryRewardLookup, libMBIN, Version=1.57.0.0, Culture=neutral, PublicKeyToken=null]]
             // which is just a little annoying to work with.
-            MBINStructField mBINField = new MBINStructField()
+            MBINField mBINField = new MBINField()
             {
                 Name = fieldInfo.Name,
                 NMSType = fieldInfo.FieldType,
@@ -184,7 +184,7 @@ namespace NoMansGUI.Utils.Parser
                 TemplateType = "array"
             };
             //We build a list of MBINFields, which will hold the elements of this list.
-            List<MBINField> v = new List<MBINField>();
+            List<MBINArrayElementField> arrayValues = new List<MBINArrayElementField>();
 
             //The type of objects in the array
             Type aType;
@@ -192,6 +192,7 @@ namespace NoMansGUI.Utils.Parser
 
             //Loop all the elements in the original list.
             int i = 0;
+            int index = 0;
             foreach (object arrayentry in array)
             {
                 string name = "";
@@ -201,36 +202,36 @@ namespace NoMansGUI.Utils.Parser
                     i++;
                 }
 
-                object innerValue = null;
-                string t = "";
+                //Arrays must always be a MBINStructField because you can't use reflection to set elements inside an array.
+                MBINArrayElementField innerField = null;
+                innerField = new MBINArrayElementField
+                {
+                    Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
+                    TemplateType = "nmsstruct",
+                    Index = index,
+                    Parent = mBINField
+                };
+
                 if (aType.IsClass == true)
                 {
-                    innerValue = IterateFields((NMSTemplate)arrayentry, arrayentry.GetType());
-                    t = "nmsstruct";
+                    innerField.Value = IterateFields((NMSTemplate)arrayentry, arrayentry.GetType());
+                    innerField.NMSType = aType;
+                    innerField.TemplateType = aType.ToString();
                 }
                 else
                 {
-                    innerValue = Convert.ChangeType(arrayentry, aType);
-                    t = arrayentry.GetType().ToString();
+                    innerField.Value = Convert.ChangeType(arrayentry, arrayentry.GetType());
+                    innerField.NMSType = arrayentry.GetType();
+                    innerField.TemplateType = arrayentry.GetType().ToString();
                 }
 
-
-                MBINStructField f = new MBINStructField
-                {
-                    Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
-                    Value = innerValue,
-                    NMSType = aType,
-                    fieldInfo = fieldInfo,
-                    dataOwner = data,
-                    TemplateType = t
-                };
-
-                v.Add(f);
+                arrayValues.Add(innerField);
             }
             //And then we set the value of the orignal MBINField to the list.
-            mBINField.Value = v;
+            mBINField.Value = arrayValues;
 
             //And finally we all the parent.
+            index++;
             return mBINField;
         }
 

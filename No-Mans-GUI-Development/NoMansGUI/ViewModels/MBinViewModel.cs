@@ -40,7 +40,7 @@ namespace NoMansGUI.ViewModels
 
             // string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             // _template.WriteToExml(Path.Combine(path, @"Ouput Test\test.exml"));
-            _template.WriteToExml(@"C:\Users\xfxma\Desktop\Output Test\test.exml");
+            _template.WriteToExml(@"C:\Users\wannabeuk\Desktop\Ouput Test\test.exml");
         }
     }
 }

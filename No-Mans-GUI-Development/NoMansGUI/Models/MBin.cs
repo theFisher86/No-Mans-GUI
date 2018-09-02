@@ -37,7 +37,7 @@ namespace NoMansGUI.Models
                 {
                     return;
                 }
-                fieldInfo.SetValue(dataOwner, Convert.ChangeType(value, fieldInfo.FieldType));
+                //fieldInfo.SetValue(dataOwner, Convert.ChangeType(value, fieldInfo.FieldType));
                 NotifyOfPropertyChange(() => Value);
             }
         }
@@ -46,105 +46,126 @@ namespace NoMansGUI.Models
     }
 
     /// <summary>
-    /// Struct don't get set (for now) so we
+    /// Struct don't get set (for now)
     /// </summary>
     public class MBINStructField : MBINField
     {
+        private object _value;
+
         //Boxed Struct - The actual NMSTemplate
         public override object Value
         {
-            get;
-            set;
-        }
-    }
-
-    public class DataBoundField
-    {
-        private FieldInfo _fieldInfo;
-
-        public Type FieldType;
-        public MBINStruct Parent;
-
-        public string FieldName { get; set; }
-        public object Value
-        {
-            get { return Parent.GetValue(_fieldInfo); }
+            get { return _value; }
             set
             {
-                Parent.SetValue(value, _fieldInfo);
+                _value = value;
             }
-        }
-        public Type Type
-        {
-            get { return FieldType; }
-        }
-
-        public DataBoundField(FieldInfo fieldInfo)
-        {
-            _fieldInfo = fieldInfo;
-            this.FieldName = fieldInfo.Name;
-            this.FieldType = fieldInfo.FieldType;
         }
     }
 
-    public class MBINStruct : PropertyChangedBase
+    public class MBINArrayElementField : MBINField, IConvertible
     {
-        #region Fields    
-        private ObservableCollection<DataBoundField> _fields;
-        #endregion
+        private object _value;
 
-        #region Properties
-        public Object DataObject
-        {
-            get;
-            set;
-        }
+        public MBINField Parent;
+        public int Index;
 
-        public ObservableCollection<DataBoundField> Fields
+        public override object Value
         {
-            get { return _fields; }
+            get { return _value; }
             set
             {
-                _fields = value;
-                NotifyOfPropertyChange(() => Fields);
+                _value = value;
+                var array = Parent.Value as Array;
+                array.SetValue(_value, Index);
             }
         }
-
-        internal object GetValue(FieldInfo info)
+        #region Convetable Interface
+        public TypeCode GetTypeCode()
         {
-            return info.GetValue(DataObject);
+            throw new NotImplementedException();
         }
 
-        internal void SetValue(object value, FieldInfo info)
+        public bool ToBoolean(IFormatProvider provider)
         {
-            info.SetValue(DataObject, value);
+            return (bool)Value;
         }
-        #endregion
 
-        #region Constructor
-        public MBINStruct(object dataObject, IOrderedEnumerable<FieldInfo> fields)
+        public char ToChar(IFormatProvider provider)
         {
-            this.DataObject = dataObject;
-            CreateFields(fields);
+            return (char)Value;
         }
-        #endregion
 
-        #region Methods
-        private void CreateFields(IOrderedEnumerable<FieldInfo> fields)
+        public sbyte ToSByte(IFormatProvider provider)
         {
-            Fields = new ObservableCollection<DataBoundField>();
-            foreach(FieldInfo fieldInfo in fields)
-            {
-                Fields.Add(new DataBoundField(fieldInfo));
-            }
+            return (SByte)Value;
+        }
+
+        public byte ToByte(IFormatProvider provider)
+        {
+            return (Byte)Value;
+        }
+
+        public short ToInt16(IFormatProvider provider)
+        {
+            return (Int16)Value;
+        }
+
+        public ushort ToUInt16(IFormatProvider provider)
+        {
+            return (UInt16)Value;
+        }
+
+        public int ToInt32(IFormatProvider provider)
+        {
+           return (Int32)Value;
+        }
+
+        public uint ToUInt32(IFormatProvider provider)
+        {
+            return (UInt32)Value;
+        }
+
+        public long ToInt64(IFormatProvider provider)
+        {
+            return (Int64)Value;
+        }
+
+        public ulong ToUInt64(IFormatProvider provider)
+        {
+            return (UInt64)Value;
+        }
+
+        public float ToSingle(IFormatProvider provider)
+        {
+            return (Single)Value;
+        }
+
+        public double ToDouble(IFormatProvider provider)
+        {
+            return (Double)Value;
+        }
+
+        public decimal ToDecimal(IFormatProvider provider)
+        {
+            return (Decimal)Value;
+        }
+
+        public DateTime ToDateTime(IFormatProvider provider)
+        {
+            return (DateTime)Value;
+        }
+
+        public string ToString(IFormatProvider provider)
+        {
+            return (String)Value;
+        }
+
+        public object ToType(Type conversionType, IFormatProvider provider)
+        {
+            return Convert.ChangeType(Value, conversionType);
         }
         #endregion
     }
 
-    public class MBINField<T>
-    {
-        public string Name { get; set; }
-        public T Value { get; set; }
-        public string NMSType { get; set; }
-    }
 }

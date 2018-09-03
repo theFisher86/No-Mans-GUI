@@ -1,14 +1,17 @@
 ﻿using Caliburn.Micro;
+using libMBIN;
 using libMBIN.Models;
 using NoMansGUI.Models;
 using NoMansGUI.Utils.Parser;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace NoMansGUI.ViewModels
 {
     public class MBinViewModel : Screen
     {
+        private MBin _mbin;
         private NMSTemplate _template;
         private ObservableCollection<MBINField> _fields;
 
@@ -32,15 +35,25 @@ namespace NoMansGUI.ViewModels
             Fields = new ObservableCollection<MBINField>(fields);
         }
 
+        public MBinViewModel(MBin mbin)
+        {
+            _mbin = mbin;
+            using (MBINFile mbinFile = new MBINFile(_mbin.Filepath))
+            {
+                mbinFile.Load();
+                _template = mbinFile.GetData();
+            }
+
+            MbinParser parser = new MbinParser();
+            List<MBINField> fields = parser.IterateFields(_template, _template.GetType());
+            Fields = new ObservableCollection<MBINField>(fields);
+        }
+
         public void Save()
         {
-            //MBINFieldParser parser = new MBINFieldParser();
-
-            //NMSTemplate template = parser.ParseTemplateFromMBINFields(_template, _fields.ToList());
-
-            // string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            // _template.WriteToExml(Path.Combine(path, @"Ouput Test\test.exml"));
-            _template.WriteToExml(@"C:\Users\wannabeuk\Desktop\Ouput Test\test.exml");
+            string path = @"C:\Users\xfxma\Desktop\Output Test\";
+            string file = string.Format("{0}.exml", _mbin.Name);
+            _template.WriteToExml(Path.Combine(path, file));
         }
     }
 }

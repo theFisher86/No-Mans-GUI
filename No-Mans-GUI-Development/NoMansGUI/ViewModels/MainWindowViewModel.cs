@@ -173,6 +173,12 @@ namespace NoMansGUI.ViewModels
             {
                 _mbinPath = openFileDialog.FileName;
 
+                MBin mBin = new MBin()
+                {
+                    Name = Path.GetFileNameWithoutExtension(_mbinPath),
+                    Filepath = _mbinPath,
+                };
+
                 NMSTemplate template = null;
                 using (MBINFile mbin = new MBINFile(_mbinPath))
                 {
@@ -183,7 +189,7 @@ namespace NoMansGUI.ViewModels
                 if (template != null)
                 {
                     //We now handle the formatting in this custom control, which is loaded into the MainWindowView when done.
-                    MBinViewer = new MBinViewModel(template);
+                    MBinViewer = new MBinViewModel(mBin);
                 }
                 //NMSTemplateTypeList.PrintToFile(Path.GetFileName(_mbinPath));
             }

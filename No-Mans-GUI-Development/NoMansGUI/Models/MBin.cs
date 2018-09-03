@@ -37,7 +37,7 @@ namespace NoMansGUI.Models
                 {
                     return;
                 }
-                //fieldInfo.SetValue(dataOwner, Convert.ChangeType(value, fieldInfo.FieldType));
+                fieldInfo.SetValue(dataOwner, Convert.ChangeType(value, fieldInfo.FieldType));
                 NotifyOfPropertyChange(() => Value);
             }
         }
@@ -63,7 +63,59 @@ namespace NoMansGUI.Models
         }
     }
 
-    public class MBINArrayElementField : MBINField, IConvertible
+    public class MBINArrayField : MBINField
+    {
+        private ObservableCollection<MBINArrayElementField> _value;
+
+        public override object Value
+        {
+            get
+            {
+                return _value;
+            }
+            set
+            {
+                
+                if (value is List<MBINArrayElementField>)
+                {
+                    _value = new ObservableCollection<MBINArrayElementField>(value as List<MBINArrayElementField>);
+                    BindUp();
+                }
+            }
+        }
+
+        private void BindUp()
+        {
+            foreach(MBINArrayElementField field in _value)
+            {
+                field.PropertyChanged += Field_PropertyChanged;
+            }
+        }
+
+        private void Field_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            UpdatOrigin();
+
+        }
+
+        void UpdatOrigin()
+        {
+            //Get Origin Type.
+            Type elementType = fieldInfo.FieldType.GetElementType();
+            //Convert the list into origin type array.
+            var origin = Array.CreateInstance(elementType, _value.Count);
+
+            for(int i = 0; i < _value.Count; i++)
+            {
+                origin.SetValue(Convert.ChangeType(_value[i].Value, elementType), _value[i].Index);
+            }
+
+            //Save back to origin
+            fieldInfo.SetValue(dataOwner, origin);
+        }
+    }
+
+    public class MBINArrayElementField : MBINField
     {
         private object _value;
 
@@ -76,96 +128,9 @@ namespace NoMansGUI.Models
             set
             {
                 _value = value;
-                var array = Parent.Value as Array;
-                array.SetValue(_value, Index);
+                NotifyOfPropertyChange(() => Value);
             }
         }
-        #region Convetable Interface
-        public TypeCode GetTypeCode()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ToBoolean(IFormatProvider provider)
-        {
-            return (bool)Value;
-        }
-
-        public char ToChar(IFormatProvider provider)
-        {
-            return (char)Value;
-        }
-
-        public sbyte ToSByte(IFormatProvider provider)
-        {
-            return (SByte)Value;
-        }
-
-        public byte ToByte(IFormatProvider provider)
-        {
-            return (Byte)Value;
-        }
-
-        public short ToInt16(IFormatProvider provider)
-        {
-            return (Int16)Value;
-        }
-
-        public ushort ToUInt16(IFormatProvider provider)
-        {
-            return (UInt16)Value;
-        }
-
-        public int ToInt32(IFormatProvider provider)
-        {
-           return (Int32)Value;
-        }
-
-        public uint ToUInt32(IFormatProvider provider)
-        {
-            return (UInt32)Value;
-        }
-
-        public long ToInt64(IFormatProvider provider)
-        {
-            return (Int64)Value;
-        }
-
-        public ulong ToUInt64(IFormatProvider provider)
-        {
-            return (UInt64)Value;
-        }
-
-        public float ToSingle(IFormatProvider provider)
-        {
-            return (Single)Value;
-        }
-
-        public double ToDouble(IFormatProvider provider)
-        {
-            return (Double)Value;
-        }
-
-        public decimal ToDecimal(IFormatProvider provider)
-        {
-            return (Decimal)Value;
-        }
-
-        public DateTime ToDateTime(IFormatProvider provider)
-        {
-            return (DateTime)Value;
-        }
-
-        public string ToString(IFormatProvider provider)
-        {
-            return (String)Value;
-        }
-
-        public object ToType(Type conversionType, IFormatProvider provider)
-        {
-            return Convert.ChangeType(Value, conversionType);
-        }
-        #endregion
     }
 
 }

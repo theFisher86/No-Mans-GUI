@@ -175,7 +175,7 @@ namespace NoMansGUI.Utils.Parser
             // build the basic MBINField to hold the list, we use NMSType because otherwise NMSType becomes something like
             // System.Collections.Generic.List`1[[libMBIN.Models.Structs.GcDiscoveryRewardLookup, libMBIN, Version=1.57.0.0, Culture=neutral, PublicKeyToken=null]]
             // which is just a little annoying to work with.
-            MBINField mBINField = new MBINField()
+            MBINArrayField mBINField = new MBINArrayField()
             {
                 Name = fieldInfo.Name,
                 NMSType = fieldInfo.FieldType,
@@ -226,12 +226,13 @@ namespace NoMansGUI.Utils.Parser
                 }
 
                 arrayValues.Add(innerField);
+                index++;
             }
             //And then we set the value of the orignal MBINField to the list.
             mBINField.Value = arrayValues;
 
             //And finally we all the parent.
-            index++;
+            
             return mBINField;
         }
 

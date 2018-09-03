@@ -16,6 +16,7 @@ namespace NoMansGUI.ViewModels
         private string _unpakdFiles;
         private string _pcbanks;
         private string _modelViewer;
+        private string _outputPath;
         private string _selectedTheme;
         #endregion
 
@@ -53,6 +54,17 @@ namespace NoMansGUI.ViewModels
             }
         }
 
+        public string OutputPath
+        {
+            get { return _outputPath; }
+            set
+            {
+                _outputPath = value;
+                Settings.Default.OutputFolder = _outputPath;
+                NotifyOfPropertyChange(() => OutputPath);
+            }
+        }
+
         public string SelectedTheme
         {
             get { return _selectedTheme; }
@@ -82,6 +94,7 @@ namespace NoMansGUI.ViewModels
             _unpakdFiles = Settings.Default.pathUnpakdFiles;
             _pcbanks = Settings.Default.pathPCBanks;
             _modelViewer = Settings.Default.pathModelViewer;
+            _outputPath = Settings.Default.OutputFolder;
             _selectedTheme = Settings.Default.currentTheme;
         }
 
@@ -92,7 +105,6 @@ namespace NoMansGUI.ViewModels
             {
                 UnpakdFiles = browseUnpakdFilesDialog.SelectedPath;
             }
-
         }
 
         public void BrowsePcbanks()
@@ -110,6 +122,15 @@ namespace NoMansGUI.ViewModels
             if (browseModelViewerDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 ModelViewer = browseModelViewerDialog.SelectedPath;
+            }
+        }
+
+        public void BrowseOutputFolder()
+        {
+            System.Windows.Forms.FolderBrowserDialog browseOutputFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            if(browseOutputFolderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                OutputPath = browseOutputFolderDialog.SelectedPath;
             }
         }
 

@@ -9,6 +9,7 @@
     <converters:NMSColourConverter x:Key="NMSColourConverter" />
     <converters:NMSString0x10Converter x:Key="NMSString0x10Converter"/>
     <templateselector:MBINTemplateSelector x:Key="MbinTemplateSelector"/>
+  
     <DataTemplate x:Key="ListDataTemplate">
         <Expander Header="{Binding Name}" ToolTip="{Binding NMSType}" Template="{StaticResource SimpleExpanderTemp}" >
             <ListView ItemTemplateSelector="{StaticResource MbinTemplateSelector}" ItemsSource="{Binding Value}">

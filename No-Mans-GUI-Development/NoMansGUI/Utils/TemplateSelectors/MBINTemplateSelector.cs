@@ -34,6 +34,7 @@ namespace NoMansGUI.Utils.TemplateSelectors
                     case "list":
                     case "array":
                     case "nmsstruct":
+                    case "nmsstring0x10":
                         Console.WriteLine("Found TemplateType nmsstruct:");
                         if (field.NMSType == typeof(Colour))
                         {
@@ -49,8 +50,6 @@ namespace NoMansGUI.Utils.TemplateSelectors
                         return Application.Current.FindResource("ListDataTemplate") as DataTemplate;
                     case "string":
                         return Application.Current.FindResource("StringDataTemplate") as DataTemplate;
-                    case "nmsstring0x10":
-                        return Application.Current.FindResource("NMSString0x10DataTemplate") as DataTemplate;
                     case "vector2f":
                     case "vector4f":
                     case "vector6f":

@@ -2,6 +2,7 @@
 using NoMansGUI.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -27,7 +28,8 @@ namespace NoMansGUI.Utils.Converters
         {
             Console.WriteLine("color found!" + value.ToString());
             int a = 1, r = 1, g = 1, b = 1;
-            foreach(var f in value as List<MBINField>)
+            Type t = value.GetType();
+            foreach(var f in value as ObservableCollection<MBINField>)
             {
                 Console.WriteLine(f.Name + ": " + f.Value + "NMSType " + f.NMSType + "TemplateType " + f.TemplateType);
                 switch(f.Name)

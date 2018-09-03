@@ -151,6 +151,7 @@ namespace NoMansGUI.Utils.Parser
                         Value = innerValue,
                         Name = fieldInfo.Name, //aType.ToString(),
                         NMSType = innerValue.GetType(),
+                        dataOwner = listentry,
                         TemplateType = t
                     };
                 //Obviously we need to add it to the list we created
@@ -204,27 +205,30 @@ namespace NoMansGUI.Utils.Parser
 
                 //Arrays must always be a MBINStructField because you can't use reflection to set elements inside an array.
                 MBINArrayElementField innerField = null;
-                innerField = new MBINArrayElementField
-                {
-                    Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
-                    TemplateType = "nmsstruct",
-                    Index = index,
-                    Parent = mBINField
-                };
 
                 if (aType.IsClass == true)
                 {
-                    innerField.Value = IterateFields((NMSTemplate)arrayentry, arrayentry.GetType());
-                    innerField.NMSType = aType;
-                    innerField.TemplateType = aType.ToString();
+                    innerField = new MBINArrayStructElementField
+                    {
+                        Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
+                        Index = index,
+                        dataOwner = arrayentry,
+                        Parent = mBINField,
+                        Value = IterateFields((NMSTemplate)arrayentry, arrayentry.GetType()),
+                        NMSType = aType,
+                        TemplateType = aType.ToString(),
+                    };
+                } else {
+                    innerField = new MBINArrayElementField
+                    {
+                        Name = string.IsNullOrEmpty(name) ? aType.ToString() : name,
+                        Index = index,
+                        Parent = mBINField,
+                        Value = Convert.ChangeType(arrayentry, arrayentry.GetType()),
+                        NMSType = arrayentry.GetType(),
+                        TemplateType = arrayentry.GetType().ToString()
+                    };
                 }
-                else
-                {
-                    innerField.Value = Convert.ChangeType(arrayentry, arrayentry.GetType());
-                    innerField.NMSType = arrayentry.GetType();
-                    innerField.TemplateType = arrayentry.GetType().ToString();
-                }
-
                 arrayValues.Add(innerField);
                 index++;
             }

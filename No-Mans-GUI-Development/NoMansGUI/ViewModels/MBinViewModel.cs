@@ -2,6 +2,7 @@
 using libMBIN;
 using libMBIN.Models;
 using NoMansGUI.Models;
+using NoMansGUI.Properties;
 using NoMansGUI.Utils.Parser;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -51,7 +52,12 @@ namespace NoMansGUI.ViewModels
 
         public void Save()
         {
-            string path = @"C:\Users\xfxma\Desktop\Output Test\";
+            string path = Settings.Default.OutputFolder;
+            if(string.IsNullOrEmpty(path))
+            {
+                //Show error?
+                return;
+            }
             string file = string.Format("{0}.exml", _mbin.Name);
             _template.WriteToExml(Path.Combine(path, file));
         }

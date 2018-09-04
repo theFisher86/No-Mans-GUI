@@ -121,6 +121,7 @@
     <Compile Include="Utils\TemplateBuilder\TemplateBuilder.cs" />
     <Compile Include="Utils\TemplateLogHelper.cs" />
     <Compile Include="Utils\TemplateSelectors\MBINTemplateSelector.cs" />
+    <Compile Include="Utils\Validation\TypeValidationRule.cs" />
     <Compile Include="ViewModels\MBinViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\MissingTemplatesViewModel.cs" />

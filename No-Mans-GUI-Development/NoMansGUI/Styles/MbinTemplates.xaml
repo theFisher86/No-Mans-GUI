@@ -4,6 +4,7 @@
                     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
                     xmlns:templateselector="clr-namespace:NoMansGUI.Utils.TemplateSelectors"
                     xmlns:Utils="clr-namespace:NoMansGUI.Utils"
+                    xmlns:Validation="clr-namespace:NoMansGUI.Utils.Validation"
                     xmlns:local="clr-namespace:NoMansGUI">
     <converters:DebugDataBindingConverter x:Key="DebugConverter" />
     <converters:NMSColourConverter x:Key="NMSColourConverter" />
@@ -136,7 +137,16 @@
     <DataTemplate x:Key="SingleDataTemplate">
         <StackPanel Orientation="Vertical">
             <TextBlock Text="{Binding Name}"/>
-            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox>
+                <TextBox.Text>
+                    <Binding Path="Value" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <!--https://docs.microsoft.com/en-us/dotnet/framework/wpf/data/how-to-implement-binding-validation-->
+                            <Validation:TypeValidationRule Type="{Binding NMSType}"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </StackPanel>
     </DataTemplate>
 

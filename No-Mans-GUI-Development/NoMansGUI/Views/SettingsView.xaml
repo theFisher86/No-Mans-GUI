@@ -30,17 +30,20 @@
                         <StackPanel Grid.Column="0" Height="auto">
                             <Label Content="Path to Unpakd Files :" Height="25"/>
                             <Label Content="Path to PCBANKS :" Height="25"/>
-                            <Label Content="Path to  NMS Model Viewer :" Height="25"/>
+                            <Label Content="Path to NMS Model Viewer :" Height="25"/>
+                            <Label Content="Path To Output Folder:" Height="25"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Height="auto">
                             <TextBox x:Name="UnpakdFiles" Height="20" Margin="5,5,5,0" Text="{Binding UnpakdFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBox x:Name="PcBanks" Height="20" Margin="5,5,5,0" Text="{Binding PcBanks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBox x:Name="ModelViewer" Height="20" Margin="5,5,5,0" Text="{Binding ModelViewer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox x:Name="OutputPath" Height="20" Margin="5,5,5,0" Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2" Height="auto">
                             <Button x:Name="BrowseUnpakdFiles" Height="20" Margin="5,5,5,0" Content="_Browse"/>
                             <Button x:Name="BrowsePcbanks"  Height="20" Margin="5,5,5,0" Content="_Browse"/>
                             <Button x:Name="BrowseModelViewer" Height="20" Margin="5,5,5,0" Content="_Browse"/>
+                            <Button x:Name="BrowseOutputFolder" Height="20" Margin="5,5,5,0" Content="_Browse"/>
                         </StackPanel>
                     </Grid>
                 </GroupBox>

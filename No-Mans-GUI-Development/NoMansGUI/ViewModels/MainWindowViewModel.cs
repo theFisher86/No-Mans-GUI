@@ -35,6 +35,7 @@ namespace NoMansGUI.ViewModels
         private double _appVersion;
         private string _appVersionString;
         private string _mbinPath;
+        private string _savePath;
         private MBinViewModel _mbinViewer;
         #endregion
 
@@ -173,6 +174,12 @@ namespace NoMansGUI.ViewModels
             {
                 _mbinPath = openFileDialog.FileName;
 
+                MBin mBin = new MBin()
+                {
+                    Name = Path.GetFileNameWithoutExtension(_mbinPath),
+                    Filepath = _mbinPath,
+                };
+
                 NMSTemplate template = null;
                 using (MBINFile mbin = new MBINFile(_mbinPath))
                 {
@@ -183,7 +190,7 @@ namespace NoMansGUI.ViewModels
                 if (template != null)
                 {
                     //We now handle the formatting in this custom control, which is loaded into the MainWindowView when done.
-                    MBinViewer = new MBinViewModel(template);
+                    MBinViewer = new MBinViewModel(mBin);
                 }
                 //NMSTemplateTypeList.PrintToFile(Path.GetFileName(_mbinPath));
             }
@@ -200,7 +207,17 @@ namespace NoMansGUI.ViewModels
 
         public void SaveMbin()
         {
-            Debug.WriteLine("SaveMbin Clicked");
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "MBIN Files | *.mbin; *.MBIN| EXML Files | *.exml; *.EXML"
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _savePath = saveFileDialog.FileName;
+
+                MBinViewer.Save(_savePath);
+            }
         }
 
         public void CloseMbin()

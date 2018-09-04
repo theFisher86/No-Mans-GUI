@@ -1,9 +1,11 @@
 ﻿using Caliburn.Micro;
 using libMBIN.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -84,7 +86,8 @@ namespace NoMansGUI.Models
 
         void UpdateOrigin()
         {
-            fieldInfo.SetValue(dataOwner, _value);
+            NotifyOfPropertyChange(() => Value);
+            // fieldInfo.SetValue(dataOwner, _value);
         }
     }
 
@@ -127,8 +130,6 @@ namespace NoMansGUI.Models
             Type elementType = fieldInfo.FieldType.GetElementType();
             //Convert the list into origin type array.
             var origin = Array.CreateInstance(elementType, _value.Count);
-
-          
 
             for(int i = 0; i < _value.Count; i++)
             {
@@ -205,4 +206,116 @@ namespace NoMansGUI.Models
         }
     }
 
+    public class MBINListStructElementField : MBINListElementField
+    {
+        private ObservableCollection<MBINField> _value;
+
+        //Boxed Struct - The actual NMSTemplate
+        public override object Value
+        {
+            get { return _value; }
+            set
+            {
+                if (value is List<MBINField>)
+                {
+                    _value = new ObservableCollection<MBINField>(value as List<MBINField>);
+                    BindUp();
+                    NotifyOfPropertyChange(() => Value);
+                }
+            }
+        }
+
+        private void BindUp()
+        {
+            foreach (MBINField field in _value)
+            {
+                field.PropertyChanged += Field_PropertyChanged;
+            }
+        }
+
+        private void Field_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            UpdateOrigin();
+        }
+
+        void UpdateOrigin()
+        {
+            NotifyOfPropertyChange(() => Value);
+        }
+    }
+
+    public class MBINListElementField : MBINField
+    {
+        private object _value;
+
+        public override object Value
+        {
+            get { return _value; }
+            set
+            {
+                _value = value;
+                NotifyOfPropertyChange(() => Value);
+            }
+        }
+    }
+
+    public class MBINListField : MBINField
+    {
+        private ObservableCollection<MBINListElementField> _value;
+
+        public override object Value
+        {
+            get { return _value; }
+            set
+            {
+                if (value is List<MBINListElementField>)
+                {
+                    _value = new ObservableCollection<MBINListElementField>(value as List<MBINListElementField>);
+                    BindUp();
+                    NotifyOfPropertyChange(() => Value);
+                }
+            }
+        }
+
+        private void BindUp()
+        {
+            foreach (MBINListElementField field in _value)
+            {
+                field.PropertyChanged += Field_PropertyChanged;
+            }
+        }
+
+        private void Field_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            UpdateOrigin();
+
+        }
+
+        void UpdateOrigin()
+        {
+            //Get Origin Type.
+            Type elementType = fieldInfo.FieldType.GetGenericArguments()[0];
+            //Convert the list into origin type array.
+            var listType = typeof(List<>);
+            var constructedListType = listType.MakeGenericType(elementType);
+            var origin = (IList)Activator.CreateInstance(constructedListType);
+            //var origin =  //List.CreateInstance(elementType, _value.Count);
+
+            for (int i = 0; i < _value.Count; i++)
+            {
+                if (elementType.BaseType == typeof(NMSTemplate))
+                {
+                    //No error no save. 
+                    origin.Add(_value[i].dataOwner);
+                }
+                else
+                {
+                    origin.Add(Convert.ChangeType(_value[i].Value, elementType));
+                }
+            }
+
+            //Save back to origin
+            fieldInfo.SetValue(dataOwner, origin);
+        }
+    }
 }

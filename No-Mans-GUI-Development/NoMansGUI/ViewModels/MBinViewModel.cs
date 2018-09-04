@@ -7,6 +7,7 @@ using NoMansGUI.Utils.Parser;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
 
 namespace NoMansGUI.ViewModels
 {
@@ -55,7 +56,7 @@ namespace NoMansGUI.ViewModels
             string path = Settings.Default.OutputFolder;
             if(string.IsNullOrEmpty(path))
             {
-                //Show error?
+                MessageBox.Show("Output Folder is not set, cannot save.");
                 return;
             }
             string file = string.Format("{0}.exml", _mbin.Name);

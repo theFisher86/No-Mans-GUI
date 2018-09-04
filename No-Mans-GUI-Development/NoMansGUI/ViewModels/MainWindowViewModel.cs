@@ -35,6 +35,7 @@ namespace NoMansGUI.ViewModels
         private double _appVersion;
         private string _appVersionString;
         private string _mbinPath;
+        private string _savePath;
         private MBinViewModel _mbinViewer;
         #endregion
 
@@ -206,7 +207,17 @@ namespace NoMansGUI.ViewModels
 
         public void SaveMbin()
         {
-            MBinViewer.Save();
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "MBIN Files | *.mbin; *.MBIN| EXML Files | *.exml; *.EXML"
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _savePath = saveFileDialog.FileName;
+
+                MBinViewer.Save(_savePath);
+            }
         }
 
         public void CloseMbin()

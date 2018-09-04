@@ -58,7 +58,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="{Binding Name}" Margin="5,0,1,0"/>
-                            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0,0,0,0" MinWidth="50"/>
+                            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,0" MinWidth="50"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -85,7 +85,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="{Binding Name}" Margin="5,0,1,0"/>
-                            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0,0,0,0" MinWidth="50"/>
+                            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,0" MinWidth="50"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -103,7 +103,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="{Binding Name}" />
-            <TextBox Grid.Column="2" DataContext="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Text="{Binding Path=., Mode=TwoWay, Converter={StaticResource NMSString0x10Converter}}"/>
+            <TextBox Grid.Column="2" DataContext="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Path=., Mode=TwoWay, Converter={StaticResource NMSString0x10Converter}}"/>
             <Button Grid.Column="4" Width="50" Height="25" Content="Reset" x:Name="Reset"/>
         </Grid>
     </DataTemplate>
@@ -120,7 +120,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Padding="0" Grid.Column="0" Height="25" Text="{Binding Name}"/>
-            <TextBox Grid.Row="1" Padding="0" Grid.Column="0" Height="20" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+            <TextBox Grid.Row="1" Padding="0" Grid.Column="0" Height="20" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <!--Not Yet Implemented-->
             <Button Grid.Row="1" Grid.Column="2" Width="50" Height="25" Content="Reset" x:Name="Reset"/>
         </Grid>
@@ -129,14 +129,14 @@
     <DataTemplate x:Key="IntDataTemplate">
         <StackPanel Orientation="Vertical">
             <TextBlock Text="{Binding Name}"/>
-            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="SingleDataTemplate">
         <StackPanel Orientation="Vertical">
             <TextBlock Text="{Binding Name}"/>
-            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+            <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
     </DataTemplate>
 

@@ -51,16 +51,33 @@ namespace NoMansGUI.ViewModels
             Fields = new ObservableCollection<MBINField>(fields);
         }
 
-        public void Save()
+        public void Save(string path)
         {
-            string path = Settings.Default.OutputFolder;
-            if(string.IsNullOrEmpty(path))
+            if (path == null)
             {
-                MessageBox.Show("Output Folder is not set, cannot save.");
-                return;
+                path = Settings.Default.OutputFolder;
             }
-            string file = string.Format("{0}.exml", _mbin.Name);
-            _template.WriteToExml(Path.Combine(path, file));
+
+            switch (Path.GetExtension(path).ToLower())
+            {
+                case ".mbin":
+                    _template.WriteToMbin(path);
+                    break;
+                case ".exml":
+                    _template.WriteToExml(path);
+                    break;
+                default:
+                    MessageBox.Show("Invalid extension.  Must convert to MBIN or EXML");
+                    break;
+            }
+
+            //if(string.IsNullOrEmpty(path))
+            //{
+            //    MessageBox.Show("Output Folder is not set, cannot save.");
+            //    return;
+            //}
+            //string file = string.Format("{0}.exml", _mbin.Name);
+            //_template.WriteToExml(Path.Combine(path, file));
         }
     }
 }

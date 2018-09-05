@@ -11,10 +11,15 @@ namespace NoMansGUI
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
+    /// 
+    public enum Skin { Light, Dark }
+
     public partial class App : Application
     {
 
         public static string[] Args;
+
+        public static Skin Skin { get; set; } = Skin.Light;
 
         protected override void OnStartup(StartupEventArgs e)
         {

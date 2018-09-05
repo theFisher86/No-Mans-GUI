@@ -108,6 +108,7 @@
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Models\MBin.cs" />
+    <Compile Include="Resources\SkinResourceDictionary.cs" />
     <Compile Include="Utils\Converters\DebugDataBindingConverter.cs" />
     <Compile Include="Utils\Converters\NMSColourConverter.cs" />
     <Compile Include="Utils\Converters\NMSString0x10Converter.cs" />
@@ -138,7 +139,23 @@
     <Compile Include="Views\SplashWindowView.xaml.cs">
       <DependentUpon>SplashWindowView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\SkinResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\basic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Skins\BaseTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Skins\DarkTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Skins\LightTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

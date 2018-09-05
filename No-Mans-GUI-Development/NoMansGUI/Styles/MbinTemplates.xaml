@@ -5,12 +5,46 @@
                     xmlns:templateselector="clr-namespace:NoMansGUI.Utils.TemplateSelectors"
                     xmlns:Utils="clr-namespace:NoMansGUI.Utils"
                     xmlns:Validation="clr-namespace:NoMansGUI.Utils.Validation"
+                    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                     xmlns:local="clr-namespace:NoMansGUI">
     <converters:DebugDataBindingConverter x:Key="DebugConverter" />
     <converters:NMSColourConverter x:Key="NMSColourConverter" />
     <converters:NMSString0x10Converter x:Key="NMSString0x10Converter"/>
     <templateselector:MBINTemplateSelector x:Key="MbinTemplateSelector"/>
-  
+    <Utils:DataContextSpy x:Key="Spy"/>
+    <Utils:BindingProxy x:Key="BindingProxy"/>
+
+    <ControlTemplate x:Key="validationTemplate">
+        <DockPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Top">
+                <Grid Width="12" Height="12">
+                    <Ellipse Width="12" Height="12" Fill="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Foreground="White" FontWeight="Heavy" 
+                        FontSize="8" HorizontalAlignment="Center" 
+                        VerticalAlignment="Center" TextAlignment="Center"
+                        ToolTip="{Binding ElementName=ErrorAdorner, 
+                        Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">X</TextBlock>
+                </Grid>
+                <TextBlock Foreground="Red" FontWeight="12" Margin="2,0,0,0" 
+                   Text="{Binding ElementName=ErrorAdorner, 
+                   Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"/>
+            </StackPanel>
+            <AdornedElementPlaceholder 
+
+        x:Name="ErrorAdorner" ></AdornedElementPlaceholder>
+        </DockPanel>
+    </ControlTemplate>
+
+    <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="true">
+                <Setter Property="ToolTip"
+        Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <DataTemplate x:Key="ListDataTemplate">
         <Expander Header="{Binding Name}" ToolTip="{Binding NMSType}" Template="{StaticResource SimpleExpanderTemp}" >
             <ListView ItemTemplateSelector="{StaticResource MbinTemplateSelector}" ItemsSource="{Binding Value}">
@@ -137,15 +171,18 @@
     <DataTemplate x:Key="SingleDataTemplate">
         <StackPanel Orientation="Vertical">
             <TextBlock Text="{Binding Name}"/>
-            <TextBox>
+            <TextBox Validation.ErrorTemplate="{StaticResource validationTemplate}">
                 <TextBox.Text>
-                    <Binding Path="Value" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding Path="Value" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Delay="100">
                         <Binding.ValidationRules>
                             <!--https://docs.microsoft.com/en-us/dotnet/framework/wpf/data/how-to-implement-binding-validation-->
-                            <Validation:TypeValidationRule Type="{Binding NMSType}"/>
+                            <Validation:TypeValidationRule TypeName="Single" />
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
+                <i:Interaction.Behaviors>
+                    <Utils:TextBoxInputBehavior InputMode="DecimalInput"/>
+                </i:Interaction.Behaviors>
             </TextBox>
         </StackPanel>
     </DataTemplate>

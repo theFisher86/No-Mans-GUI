@@ -109,6 +109,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Models\MBin.cs" />
     <Compile Include="Utils\BindableParameter.cs" />
+    <Compile Include="Utils\BindingProxy.cs" />
     <Compile Include="Utils\Converters\DebugDataBindingConverter.cs" />
     <Compile Include="Utils\Converters\NMSColourConverter.cs" />
     <Compile Include="Utils\Converters\NMSString0x10Converter.cs" />
@@ -121,7 +122,9 @@
     <Compile Include="Utils\TemplateBuilder\TemplateBuilder.cs" />
     <Compile Include="Utils\TemplateLogHelper.cs" />
     <Compile Include="Utils\TemplateSelectors\MBINTemplateSelector.cs" />
+    <Compile Include="Utils\TextBoxInputBehavior.cs" />
     <Compile Include="Utils\Validation\TypeValidationRule.cs" />
+    <Compile Include="Utils\Validation\ValidationWrapper.cs" />
     <Compile Include="ViewModels\MBinViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\MissingTemplatesViewModel.cs" />

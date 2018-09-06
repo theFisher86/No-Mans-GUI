@@ -16,10 +16,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="10" />
         </Grid.ColumnDefinitions>
         
-            <Menu Grid.Row="0" VerticalAlignment="Top" Height="20">
+        <Menu Grid.Row="0" Grid.ColumnSpan="4" VerticalAlignment="Top" Height="20">
                 <!-- Main Menu -->
                 <Menu.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -43,6 +46,7 @@
                 </MenuItem>
             </Menu>
 
-        <ContentControl Grid.Row="1" x:Name="MBinViewer" />
+        <ContentControl Grid.Row="1" Grid.Column="1" x:Name="FileView" />
+        <ContentControl Grid.Row="1" Grid.Column="2" x:Name="MBinViewer" />
     </Grid>
 </Window>

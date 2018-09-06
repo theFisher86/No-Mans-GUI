@@ -107,6 +107,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Models\FileTreeModels.cs" />
     <Compile Include="Models\MBin.cs" />
     <Compile Include="Utils\BindableParameter.cs" />
     <Compile Include="Utils\BindingProxy.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Utils\AdminTools\NMSTemplateTypeList.cs" />
     <Compile Include="Utils\DataContextSpy.cs" />
     <Compile Include="Utils\Events\LoadingEvents.cs" />
+    <Compile Include="Utils\Events\PathSetEvents.cs" />
     <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
     <Compile Include="Utils\Parser\MBINFieldParser.cs" />
     <Compile Include="Utils\Parser\MbinParser.cs" />
@@ -125,11 +127,15 @@
     <Compile Include="Utils\TextBoxInputBehavior.cs" />
     <Compile Include="Utils\Validation\TypeValidationRule.cs" />
     <Compile Include="Utils\Validation\ValidationWrapper.cs" />
+    <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\MBinViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\MissingTemplatesViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SplashWindowViewModel.cs" />
+    <Compile Include="Views\FileListView.xaml.cs">
+      <DependentUpon>FileListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MBinView.xaml.cs">
       <DependentUpon>MBinView.xaml</DependentUpon>
     </Compile>
@@ -150,6 +156,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\MbinTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FileListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -86,6 +86,12 @@ namespace NoMansGUI
                     //in this case it's handled by the splashscreenviewmodel.
                     IoC.Get<IEventAggregator>().PublishOnUIThread(new LoadingStatusMessage("Beginning Application Setup"));
 
+                    if (Properties.Settings.Default.CallUpgrade)
+                    {
+                        Properties.Settings.Default.Upgrade();
+                        Properties.Settings.Default.CallUpgrade = false;
+                    }
+
                     m_log.Info("Starting Data Processing");
                 
                 };

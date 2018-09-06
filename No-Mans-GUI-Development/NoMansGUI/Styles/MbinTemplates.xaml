@@ -14,7 +14,7 @@
     <Utils:DataContextSpy x:Key="Spy"/>
     <Utils:BindingProxy x:Key="BindingProxy"/>
 
-    <ControlTemplate x:Key="validationTemplate">
+    <!--<ControlTemplate x:Key="validationTemplate">
         <DockPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Top">
                 <Grid Width="12" Height="12">
@@ -32,6 +32,19 @@
             <AdornedElementPlaceholder 
 
         x:Name="ErrorAdorner" ></AdornedElementPlaceholder>
+        </DockPanel>
+    </ControlTemplate>-->
+
+    <ControlTemplate x:Key="validationTemplate">
+        <DockPanel>
+            <Grid DockPanel.Dock="Right" Width="16" Height="16" VerticalAlignment="Center" Margin="3 0 0 0">
+                <Ellipse Width="16" Height="16" Fill="Red"/>
+                <Ellipse Width="3" Height="8" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 2 0 0" Fill="White"/>
+                <Ellipse Width="2" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0 0 0 2" Fill="White"/>
+            </Grid>
+            <Border BorderBrush="Red" BorderThickness="2" CornerRadius="2">
+                <AdornedElementPlaceholder/>
+            </Border>
         </DockPanel>
     </ControlTemplate>
 
@@ -169,9 +182,19 @@
     </DataTemplate>
 
     <DataTemplate x:Key="SingleDataTemplate">
-        <StackPanel Orientation="Vertical">
-            <TextBlock Text="{Binding Name}"/>
-            <TextBox Validation.ErrorTemplate="{StaticResource validationTemplate}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+           
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}"/>
+            <TextBox Grid.Row="1" Grid.Column="0" Validation.ErrorTemplate="{StaticResource validationTemplate}">
                 <TextBox.Text>
                     <Binding Path="Value" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" Delay="100">
                         <Binding.ValidationRules>
@@ -183,8 +206,18 @@
                 <i:Interaction.Behaviors>
                     <Utils:TextBoxInputBehavior InputMode="DecimalInput"/>
                 </i:Interaction.Behaviors>
+                <TextBox.Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Style.Triggers>
+                            <Trigger Property="Validation.HasError" Value="true">
+                                <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
             </TextBox>
-        </StackPanel>
+            <Button Grid.Row="1" Grid.Column="2" Width="50" Height="25" Content="Reset" x:Name="Reset"/>
+        </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="BoolDataTemplate">

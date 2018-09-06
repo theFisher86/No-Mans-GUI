@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using NoMansGUI.Properties;
+using NoMansGUI.Utils.Events;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -28,6 +29,7 @@ namespace NoMansGUI.ViewModels
             {
                 _unpakdFiles = value;
                 NoMansGUI.Properties.Settings.Default.pathUnpakdFiles = _unpakdFiles;
+                IoC.Get<IEventAggregator>().PublishOnUIThread(new UnpackedPathSetEvent());
                 NotifyOfPropertyChange(() => UnpakdFiles);
             }
         }

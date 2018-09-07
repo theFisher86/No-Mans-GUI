@@ -3,11 +3,11 @@ A GUI based editor for MBINCompiler
 
 ## Planned/Completed Features ##
 This is a rough list of the features that are planned/completed to be included.  If there's a check in the box it's included in the latest release.
- * [ ] GUI based editing of MBINs.  No more exml!
+ * [x] GUI based editing of MBINs.  No more exml!
  * [ ] Sensible Input types
-   * [ ] Boolean values will be checkboxes
-   * [ ] Arrays will have all possible values in drop-down
-   * [ ] Color Pickers!
+   * [x] Boolean values will be checkboxes
+   * [x] Arrays will have all possible values in drop-down
+   * [x] Color Pickers!
    * [ ] Structs will show all possible child structs (will be super useful in `ENTITY` files and interactions) eventually
    * [ ] Paths to other MBINs will function as links to open them directly
    * [ ] Load models into NMS Model Viewer with one click (once NMS Model Viewer is updated)

@@ -29,7 +29,7 @@ namespace NoMansGUI.ViewModels
             {
                 if (value.Equals(_isVisible)) return;
                 _isVisible = value;
-                NotifyOfPropertyChange(() = IsVisible);
+                NotifyOfPropertyChange(() => IsVisible);
             }
         }
 

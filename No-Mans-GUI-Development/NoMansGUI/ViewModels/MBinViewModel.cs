@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace NoMansGUI.ViewModels
 {
-    public class MBinViewModel : Screen
+    public class MBinViewModel : DocumentBase
     {
         private MBin _mbin;
         private NMSTemplate _template;
@@ -78,6 +78,11 @@ namespace NoMansGUI.ViewModels
             //}
             //string file = string.Format("{0}.exml", _mbin.Name);
             //_template.WriteToExml(Path.Combine(path, file));
+        }
+
+        public override bool IsDirty()
+        {
+            return false;
         }
     }
 }

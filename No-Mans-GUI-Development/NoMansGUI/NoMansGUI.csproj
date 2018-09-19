@@ -111,8 +111,14 @@
     <Compile Include="IShell.cs" />
     <Compile Include="Models\FileTreeModels.cs" />
     <Compile Include="Models\MBin.cs" />
+    <Compile Include="Resources\StringResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\BindableParameter.cs" />
     <Compile Include="Utils\BindingProxy.cs" />
+    <Compile Include="Utils\Converters\AdBooleanToVisibilityConverter.cs" />
     <Compile Include="Utils\Converters\DebugDataBindingConverter.cs" />
     <Compile Include="Utils\Converters\NMSColourConverter.cs" />
     <Compile Include="Utils\Converters\NMSString0x10Converter.cs" />
@@ -121,10 +127,12 @@
     <Compile Include="Utils\Events\LoadingEvents.cs" />
     <Compile Include="Utils\Events\PathSetEvents.cs" />
     <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
+    <Compile Include="Utils\Localization\LocalizedStrings.cs" />
     <Compile Include="Utils\Parser\MBINFieldParser.cs" />
     <Compile Include="Utils\Parser\MbinParser.cs" />
     <Compile Include="Utils\TemplateBuilder\TemplateBuilder.cs" />
     <Compile Include="Utils\TemplateLogHelper.cs" />
+    <Compile Include="Utils\TemplateSelectors\AutobinderTemplateSelector.cs" />
     <Compile Include="Utils\TemplateSelectors\MBINTemplateSelector.cs" />
     <Compile Include="Utils\TextBoxInputBehavior.cs" />
     <Compile Include="Utils\Validation\TypeValidationRule.cs" />
@@ -155,6 +163,9 @@
     </Compile>
     <Compile Include="Views\SplashWindowView.xaml.cs">
       <DependentUpon>SplashWindowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WorkspaceView.xaml.cs">
+      <DependentUpon>WorkspaceView.xaml</DependentUpon>
     </Compile>
     <Page Include="Styles\basic.xaml">
       <SubType>Designer</SubType>
@@ -201,6 +212,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\WorkspaceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -219,6 +234,10 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StringResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

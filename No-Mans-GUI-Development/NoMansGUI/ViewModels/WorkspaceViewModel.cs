@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace NoMansGUI.ViewModels
 {
@@ -47,17 +44,22 @@ namespace NoMansGUI.ViewModels
         }
 
 
-        public void AddDocument(string id)
+        public void AddDocument(MBinViewModel doc)
         {
             var documents = Items.OfType<DocumentBase>();
-            DocumentBase document = documents.FirstOrDefault(e => e.ID == id);
+            DocumentBase document = documents.FirstOrDefault(e => e.ID == doc.ID);
             if(document != null)
             {
                 ActivateItem(document);
                 return;
             }
 
-            
+
+            // In this example we deal with a single document type, but you
+            // could easily add some logic to add different types.
+            Documents.Add(doc);
+            ActivateItem(doc);
+
         }
     }
 }

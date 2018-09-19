@@ -1,4 +1,6 @@
 ﻿using Caliburn.Micro;
+using NoMansGUI.Resources;
+using NoMansGUI.Utils.Localization;
 using System;
 
 namespace NoMansGUI.ViewModels
@@ -37,40 +39,34 @@ namespace NoMansGUI.ViewModels
             }
 
             // else prompt user
-            MessageBoxAction prompt = new MessageBoxAction
-            {
-                Caption = App.APP_NAME,
-                Text = LocalizedStrings.Format(StringResources.DiscardDocumentChangesPrompt,
-                    DisplayName),
-                Button = MessageBoxButton.YesNo,
-                Image = MessageBoxImage.Question
-            };
-            prompt.Completed += (sender, e) =>
-            {
-                callback(prompt.Result == MessageBoxResult.Yes);
-            };
-            prompt.Execute(null);
+
+            MessageViewModel vm = new MessageViewModel(
+                "NoMansGUI",
+                "",
+                LocalizedStrings.Format(StringResources.DiscardChangesPrompt, DisplayName), 
+                CustomDialogButtons.YesNo,
+                CustomDialogIcons.Information
+            );
+
+            CustomDialogResults result = vm.Show();
+            callback(result == CustomDialogResults.Yes);
+
         }
 
         public bool CanClose()
         {
             if (!IsDirty()) return true;
 
-            MessageBoxAction prompt = new MessageBoxAction
-            {
-                Caption = App.APP_NAME,
-                Text = LocalizedStrings.Format(StringResources.DiscardDocumentChangesPrompt,
-                    DisplayName),
-                Button = MessageBoxButton.YesNo,
-                Image = MessageBoxImage.Question
-            };
-
-            bool bResult = true;
-            prompt.Completed += (sender, e) =>
-            {
-                bResult = prompt.Result == MessageBoxResult.Yes;
-            };
-            prompt.Execute(null);
+            MessageViewModel vm = new MessageViewModel(
+               "NoMansGUI",
+               "",
+               LocalizedStrings.Format(StringResources.DiscardChangesPrompt, DisplayName),
+               CustomDialogButtons.YesNo,
+               CustomDialogIcons.Information
+            );
+            CustomDialogResults result = vm.Show();
+            bool bResult;
+            bResult = result == CustomDialogResults.Yes;
             return bResult;
         }
 

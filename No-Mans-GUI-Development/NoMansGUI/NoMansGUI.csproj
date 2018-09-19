@@ -107,6 +107,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Docking\LayoutInitializer.cs" />
+    <Compile Include="IShell.cs" />
     <Compile Include="Models\FileTreeModels.cs" />
     <Compile Include="Models\MBin.cs" />
     <Compile Include="Utils\BindableParameter.cs" />
@@ -127,12 +129,15 @@
     <Compile Include="Utils\TextBoxInputBehavior.cs" />
     <Compile Include="Utils\Validation\TypeValidationRule.cs" />
     <Compile Include="Utils\Validation\ValidationWrapper.cs" />
+    <Compile Include="ViewModels\BaseVMs\DocumentBase.cs" />
+    <Compile Include="ViewModels\BaseVMs\ToolBase.cs" />
     <Compile Include="ViewModels\FileListViewModel.cs" />
     <Compile Include="ViewModels\MBinViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\MissingTemplatesViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SplashWindowViewModel.cs" />
+    <Compile Include="ViewModels\WorkspaceViewModel.cs" />
     <Compile Include="Views\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
     </Compile>

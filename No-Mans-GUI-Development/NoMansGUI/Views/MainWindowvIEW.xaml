@@ -4,7 +4,52 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
+        xmlns:docking="clr-namespace:NoMansGUI.Docking"
+        xmlns:dock="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:dockctrl="clr-namespace:Xceed.Wpf.AvalonDock.Controls;assembly=Xceed.Wpf.AvalonDock"
         Title="No Man's GUI">
+    <dock:DockingManager x:Name="dockManager" 
+                         AnchorablesSource="{Binding Tools}" 
+                         DocumentsSource="{Binding MbinViews}" 
+                         ActiveContent="{Binding ActiveMbin, Mode=TwoWay}">
+
+        <!--<dock:DockingManager.LayoutItemContainerStyleSelector>
+            <local:PanesStyleSelector>
+                <local:PanesStyleSelector.ToolStyle>
+                    <Style TargetType="{x:Type avalonDock:LayoutAnchorableItem}">
+                        <Setter Property="Title" Value="{Binding Model.Title}"/>
+                        <Setter Property="IconSource" Value="{Binding Model.IconSource}"/>
+                        <Setter Property="Visibility" Value="{Binding Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}"/>
+                        <Setter Property="ContentId" Value="{Binding Model.ContentId}"/>
+                        <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}"/>
+                        <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}"/>
+                    </Style>
+                </local:PanesStyleSelector.ToolStyle>
+                <local:PanesStyleSelector.FileStyle>
+                    <Style TargetType="{x:Type avalonDock:LayoutItem}">
+                        <Setter Property="Title" Value="{Binding Model.Title}"/>
+                        <Setter Property="ToolTip" Value="{Binding Model.FilePath}"/>
+                        <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand}"/>
+                        <Setter Property="IconSource" Value="{Binding Model.IconSource}"/>
+                        <Setter Property="ContentId" Value="{Binding Model.ContentId}"/>
+                    </Style>
+                </local:PanesStyleSelector.FileStyle>
+            </local:PanesStyleSelector>
+        </dock:DockingManager.LayoutItemContainerStyleSelector>-->
+        
+        <dock:DockingManager.LayoutUpdateStrategy>
+            <docking:LayoutInitializer/>
+        </dock:DockingManager.LayoutUpdateStrategy>
+
+        <dock:LayoutRoot>
+            <dock:LayoutPanel Orientation="Vertical">
+                <dock:LayoutDocumentPane/>
+                <dock:LayoutAnchorablePane Name="ToolsPane" DockHeight="150">
+                </dock:LayoutAnchorablePane>
+            </dock:LayoutPanel>
+        </dock:LayoutRoot>
+    </dock:DockingManager>
+    <!--
     <Grid>
         <Grid.Resources>
             <Style TargetType="StackPanel">
@@ -23,7 +68,7 @@
         </Grid.ColumnDefinitions>
         
         <Menu Grid.Row="0" Grid.ColumnSpan="4" VerticalAlignment="Top" Height="20">
-                <!-- Main Menu -->
+                --><!-- Main Menu --><!--
                 <Menu.ItemsPanel>
                     <ItemsPanelTemplate>
                         <DockPanel HorizontalAlignment="Stretch"/>
@@ -49,4 +94,6 @@
         <ContentControl Grid.Row="1" Grid.Column="1" x:Name="FileView" />
         <ContentControl Grid.Row="1" Grid.Column="2" x:Name="MBinViewer" />
     </Grid>
+    -->
+    
 </Window>

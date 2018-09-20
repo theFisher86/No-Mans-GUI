@@ -107,7 +107,7 @@ namespace NoMansGUI
                     }
 
                     //Display the root view, in this case it's mainwindowviewmodel, the view will be found automagically.
-                    DisplayRootViewFor<MainWindowViewModel>();
+                    DisplayRootViewFor<IShell>();
                     //Close the splashscreen
                     vm.TryClose();
                     //Case base startup.
@@ -135,15 +135,22 @@ namespace NoMansGUI
 
         protected override object GetInstance(Type service, string key)
         {
-            string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(service) : key;
-            var exports = container.GetExportedValues<object>(contract);
-
-            if (exports.Count() > 0)
+            try
             {
-                return exports.First();
-            }
+                string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(service) : key;
+                var exports = container.GetExportedValues<object>(contract);
 
-            throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
+                if (exports.Count() > 0)
+                {
+                    return exports.First();
+                }
+                throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
+            }
+            catch (Exception ex)
+            {
+                string e = ex.Message;
+                return null;
+            }
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)

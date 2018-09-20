@@ -139,10 +139,10 @@
     <Compile Include="Utils\Validation\ValidationWrapper.cs" />
     <Compile Include="ViewModels\BaseVMs\DocumentBase.cs" />
     <Compile Include="ViewModels\BaseVMs\ToolBase.cs" />
-    <Compile Include="ViewModels\FileListViewModel.cs" />
+    <Compile Include="ViewModels\Tools\FileListViewModel.cs" />
     <Compile Include="ViewModels\MBinViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
-    <Compile Include="ViewModels\MissingTemplatesViewModel.cs" />
+    <Compile Include="ViewModels\Tools\MissingTemplatesViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SplashWindowViewModel.cs" />
     <Compile Include="ViewModels\WorkspaceViewModel.cs" />
@@ -236,7 +236,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\StringResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>StringResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="log4net.config">

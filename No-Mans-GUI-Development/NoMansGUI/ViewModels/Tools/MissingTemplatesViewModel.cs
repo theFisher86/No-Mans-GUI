@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NoMansGUI.ViewModels
 {
-    public class MissingTemplatesViewModel : Screen
+    public class MissingTemplatesViewModel : ToolBase
     {
         private List<string> _missingTemplates;
         public List<string> MissingTemplates
@@ -22,7 +22,7 @@ namespace NoMansGUI.ViewModels
             }
         }
 
-        public MissingTemplatesViewModel()
+        public MissingTemplatesViewModel() : base("Missing Templates")
         {
             MissingTemplates = TemplateLogHelper.GetMissingTemplates();
         }

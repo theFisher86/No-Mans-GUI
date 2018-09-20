@@ -22,27 +22,38 @@
 
         <Menu IsMainMenu="True" Grid.Row="0" Grid.ColumnSpan="4" VerticalAlignment="Top" Height="20">
             <!-- Main Menu -->
-                <Menu.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <DockPanel HorizontalAlignment="Stretch"/>
-                    </ItemsPanelTemplate>
-                </Menu.ItemsPanel>
-                <MenuItem Header="_File">
-                    <MenuItem Header="_Load MBIN" x:Name="LoadMbin" />
-                    <MenuItem Header="Load MBINS" x:Name="LoadMBINs"/>
-                    <Separator/>
-                    <MenuItem Header="_Save MBIN" x:Name="SaveMbin" />
-                    <MenuItem Header="_Close MBIN" x:Name="CloseMbin" />
-                    <MenuItem Header="E_xit" x:Name="Exit"/>
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel HorizontalAlignment="Stretch"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+            <MenuItem Header="{Binding Path=Resources.File, Source={StaticResource LocalizedStrings}}">
+                <MenuItem Header="_Load MBIN" x:Name="LoadMbin" />
+                <MenuItem Header="Load MBINS" x:Name="LoadMBINs"/>
+                <Separator/>
+                <MenuItem Header="_Save MBIN" x:Name="SaveMbin" />
+                <MenuItem Header="_Close MBIN" x:Name="CloseMbin" />
+                <MenuItem Header="E_xit" x:Name="Exit"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Settings" x:Name="SettingsMenu"/>
+            </MenuItem>
+            <MenuItem Header="{Binding Path=Resources.View,Source={StaticResource LocalizedStrings}}">
+                <MenuItem Header="{Binding Path=Resources.Tools, Source={StaticResource LocalizedStrings}}" ItemsSource="{Binding Path=Tools}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Path=Name}"/>
+                            <Setter Property="IsCheckable" Value="True"/>
+                            <Setter Property="IsChecked" Value="{Binding Path=IsVisible}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <MenuItem Header="_Edit">
-                    <MenuItem Header="_Settings" x:Name="SettingsMenu"/>
-                </MenuItem>
-                <MenuItem Header="_Help" HorizontalAlignment="Right">
-                    <MenuItem Header="Check for _Updates" x:Name="CheckUpdates"/>
-                    <MenuItem Header="About" x:Name="about"/>
-                </MenuItem>
-            </Menu>
+            </MenuItem>
+            <MenuItem Header="_Help" HorizontalAlignment="Right">
+                <MenuItem Header="Check for _Updates" x:Name="CheckUpdates"/>
+                <MenuItem Header="About" x:Name="about"/>
+            </MenuItem>
+        </Menu>
 
         <xcad:DockingManager Name="_dockMgr" Grid.Row="1"
                              AnchorablesSource="{Binding Path=Tools}"

@@ -17,7 +17,7 @@ namespace NoMansGUI.Utils.Localization
         /// <summary>
         /// String resources.
         /// </summary>
-        static public StringResources Resources
+        public static StringResources Resources
         {
             get { return _resources; }
         }

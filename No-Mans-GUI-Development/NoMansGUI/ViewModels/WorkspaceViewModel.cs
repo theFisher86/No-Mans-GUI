@@ -7,6 +7,8 @@ using System.Linq;
 
 namespace NoMansGUI.ViewModels
 {
+    [Export(typeof(IShell))]
+    //[PartCreationPolicy(CreationPolicy.Shared)]
     public class WorkspaceViewModel : Conductor<IScreen>.Collection.OneActive, IShell
     {
         private readonly IEventAggregator _eventAggregator;
@@ -16,6 +18,7 @@ namespace NoMansGUI.ViewModels
 
         public BindableCollection<DocumentBase> Documents { get; private set; }
 
+        [ImportingConstructor]
         public WorkspaceViewModel(IEventAggregator eventAggregator, IWindowManager windowManager, [ImportMany]IEnumerable<ToolBase> tools)
         {
             if (tools == null)

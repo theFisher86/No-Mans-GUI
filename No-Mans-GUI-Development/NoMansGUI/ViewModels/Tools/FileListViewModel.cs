@@ -8,7 +8,7 @@ using System.IO;
 
 namespace NoMansGUI.ViewModels
 {
-    public class FileListViewModel : PropertyChangedBase, IHandle<UnpackedPathSetEvent>
+    public class FileListViewModel : ToolBase, IHandle<UnpackedPathSetEvent>
     {
         ObservableCollection<FileViewItem> _items;
 
@@ -22,7 +22,7 @@ namespace NoMansGUI.ViewModels
             }
         }
 
-        public FileListViewModel()
+        public FileListViewModel() : base("File List")
         {
             if (!string.IsNullOrEmpty(Settings.Default.pathUnpakdFiles) && Directory.Exists(Settings.Default.pathUnpakdFiles))
             {

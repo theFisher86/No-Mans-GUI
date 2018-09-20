@@ -120,4 +120,13 @@
   <data name="DiscardChangesPrompt" xml:space="preserve">
     <value>Discard changes for mbin "{0}"?</value>
   </data>
+  <data name="File" xml:space="preserve">
+    <value>_File</value>
+  </data>
+  <data name="Tools" xml:space="preserve">
+    <value>_Tools</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>_View</value>
+  </data>
 </root>

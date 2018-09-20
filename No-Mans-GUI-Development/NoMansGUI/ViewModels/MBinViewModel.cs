@@ -40,6 +40,8 @@ namespace NoMansGUI.ViewModels
         public MBinViewModel(MBin mbin)
         {
             _mbin = mbin;
+            ID = _mbin.Filepath;
+            DisplayName = _mbin.Name;
             using (MBINFile mbinFile = new MBINFile(_mbin.Filepath))
             {
                 mbinFile.Load();

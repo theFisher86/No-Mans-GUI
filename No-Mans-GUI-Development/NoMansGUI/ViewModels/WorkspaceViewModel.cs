@@ -1,9 +1,15 @@
 ﻿using Caliburn.Micro;
+using libMBIN;
+using libMBIN.Models;
+using NoMansGUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace NoMansGUI.ViewModels
 {
@@ -57,12 +63,46 @@ namespace NoMansGUI.ViewModels
                 return;
             }
 
-
             // In this example we deal with a single document type, but you
             // could easily add some logic to add different types.
             Documents.Add(doc);
             ActivateItem(doc);
 
+        }
+
+        public void LoadMbin()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "MBIN Files | *.mbin; *.MBIN"
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string mbinPath = openFileDialog.FileName;
+
+                MBin mBin = new MBin()
+                {
+                    Name = Path.GetFileNameWithoutExtension(mbinPath),
+                    Filepath = mbinPath,
+                };
+
+                NMSTemplate template = null;
+                using (MBINFile mbin = new MBINFile(mbinPath))
+                {
+                    mbin.Load();
+                    template = mbin.GetData();
+                }
+
+                if (template != null)
+                {
+                    AddDocument(new MBinViewModel(mBin));
+                }              
+            }
+            else
+            {
+                Debug.WriteLine("No MBIN Selected");
+            }
         }
     }
 }

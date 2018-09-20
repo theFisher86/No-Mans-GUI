@@ -4,10 +4,14 @@ using NoMansGUI.Properties;
 using NoMansGUI.Utils.Events;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
 using System.IO;
 
 namespace NoMansGUI.ViewModels
 {
+    [Export(typeof(FileListViewModel))]
+    [Export(typeof(ToolBase))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
     public class FileListViewModel : ToolBase, IHandle<UnpackedPathSetEvent>
     {
         ObservableCollection<FileViewItem> _items;

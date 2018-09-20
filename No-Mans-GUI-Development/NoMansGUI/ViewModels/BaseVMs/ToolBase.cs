@@ -24,7 +24,7 @@ namespace NoMansGUI.ViewModels
 
         public bool IsVisible
         {
-            get { return _isSelected; }
+            get { return _isVisible; }
             set
             {
                 if (value.Equals(_isVisible)) return;

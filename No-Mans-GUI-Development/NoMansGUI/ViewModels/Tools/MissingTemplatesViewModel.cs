@@ -1,14 +1,14 @@
-﻿using Caliburn.Micro;
-using NoMansGUI.Utils;
+﻿using NoMansGUI.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NoMansGUI.ViewModels
 {
+    [Export(typeof(MissingTemplatesViewModel))]
+    [Export(typeof(ToolBase))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
     public class MissingTemplatesViewModel : ToolBase
     {
         private List<string> _missingTemplates;

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using NoMansGUI.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace NoMansGUI.Utils.TemplateSelectors
@@ -9,7 +10,12 @@ namespace NoMansGUI.Utils.TemplateSelectors
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            return Template;
+            if (item is DocumentBase)
+            {
+                return Template;
+            }
+
+            return base.SelectTemplate(item, container);
         }
     }
 }

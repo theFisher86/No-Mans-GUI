@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NoMansGUI.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="pathUnpakdFiles" Type="System.String" Scope="User">
+    <Setting Name="pathUnpakdFiles" Provider="NMSSettingsProvider" Type="System.String" Scope="User">
       <Value Profile="(Default)">X:\Modding\NMS\UnPakd\</Value>
     </Setting>
     <Setting Name="pathPCBanks" Type="System.String" Scope="User">

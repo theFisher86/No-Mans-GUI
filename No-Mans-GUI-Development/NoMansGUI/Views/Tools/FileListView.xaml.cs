@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using NoMansGUI.Utils.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,12 @@ namespace NoMansGUI.Views
         public FileListView()
         {
             InitializeComponent();
+        }
+
+        private void FileList_Expanded(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem tvi = (TreeViewItem)e.OriginalSource;
+            IoC.Get<IEventAggregator>().PublishOnUIThread(new ExpandedEvent(tvi));
         }
     }
 }

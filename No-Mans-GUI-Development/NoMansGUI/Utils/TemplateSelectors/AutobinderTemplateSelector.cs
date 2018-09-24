@@ -10,7 +10,7 @@ namespace NoMansGUI.Utils.TemplateSelectors
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            if (item is DocumentBase)
+            if (item is DocumentBase || item is ToolBase)
             {
                 return Template;
             }

@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NoMansGUI.Models
 {
-    public class FileViewItem
+    public class FileViewItem : PropertyChangedBase
     {
         public string Name { get; set; }
         public string Path { get; set; }
@@ -19,11 +21,21 @@ namespace NoMansGUI.Models
 
     public class DirectoryItem : FileViewItem
     {
-        public List<FileViewItem> Items { get; set; }
+        private ObservableCollection<FileViewItem> _items;
+
+        public ObservableCollection<FileViewItem> Items
+        {
+            get { return _items; }
+            set
+            {
+                _items = value;
+                NotifyOfPropertyChange(() => Items);
+            }
+        }
 
         public DirectoryItem()
         {
-            Items = new List<FileViewItem>();
+            Items = new ObservableCollection<FileViewItem>();
         }
     }
 }

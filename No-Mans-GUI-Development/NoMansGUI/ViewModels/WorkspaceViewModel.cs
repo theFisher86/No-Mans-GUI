@@ -104,5 +104,24 @@ namespace NoMansGUI.ViewModels
                 Debug.WriteLine("No MBIN Selected");
             }
         }
+
+        #region Menu
+        public void SettingsMenu()
+        {
+            //Using the IoC container we get the instance of the window manager to show the dialog.
+            IoC.Get<IWindowManager>().ShowDialog(new SettingsViewModel());
+        }
+
+        public void About()
+        {
+            MessageViewModel vm = new MessageViewModel("About", "", "This GUI was made by Aaron Fisher aka theFisher86 & Ben Murray aka Wannbeuk on the NMS Modding Discord. Would you like to visit us?", CustomDialogButtons.YesNo, CustomDialogIcons.Information);
+            CustomDialogResults result = vm.Show();
+            if (result == CustomDialogResults.Yes)
+            {
+                System.Diagnostics.Process.Start("https://discord.gg/9QBKg6Z");
+            }
+        }
+        #endregion
+
     }
 }

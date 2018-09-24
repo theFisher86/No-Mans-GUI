@@ -60,6 +60,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -116,10 +117,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Utils\BindableParameter.cs" />
     <Compile Include="Utils\BindingProxy.cs" />
     <Compile Include="Utils\Converters\AdBooleanToVisibilityConverter.cs" />
     <Compile Include="Utils\Converters\DebugDataBindingConverter.cs" />
+    <Compile Include="Utils\Converters\HeaderToImageConverter.cs" />
     <Compile Include="Utils\Converters\NMSColourConverter.cs" />
     <Compile Include="Utils\Converters\NMSString0x10Converter.cs" />
     <Compile Include="Utils\AdminTools\NMSTemplateTypeList.cs" />
@@ -127,9 +130,11 @@
     <Compile Include="Utils\Events\LoadingEvents.cs" />
     <Compile Include="Utils\Events\PathSetEvents.cs" />
     <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
+    <Compile Include="Utils\Events\TreeViewEvents.cs" />
     <Compile Include="Utils\Localization\LocalizedStrings.cs" />
     <Compile Include="Utils\Parser\MBINFieldParser.cs" />
     <Compile Include="Utils\Parser\MbinParser.cs" />
+    <Compile Include="Utils\Settings\NMSSettingsProvider.cs" />
     <Compile Include="Utils\TemplateBuilder\TemplateBuilder.cs" />
     <Compile Include="Utils\TemplateLogHelper.cs" />
     <Compile Include="Utils\TemplateSelectors\AutobinderTemplateSelector.cs" />
@@ -146,7 +151,7 @@
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SplashWindowViewModel.cs" />
     <Compile Include="ViewModels\WorkspaceViewModel.cs" />
-    <Compile Include="Views\FileListView.xaml.cs">
+    <Compile Include="Views\Tools\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MBinView.xaml.cs">
@@ -155,7 +160,7 @@
     <Compile Include="Views\MessageView.xaml.cs">
       <DependentUpon>MessageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MissingTemplatesView.xaml.cs">
+    <Compile Include="Views\Tools\MissingTemplatesView.xaml.cs">
       <DependentUpon>MissingTemplatesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
@@ -175,7 +180,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\FileListView.xaml">
+    <Page Include="Views\Tools\FileListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -200,7 +205,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MissingTemplatesView.xaml">
+    <Page Include="Views\Tools\MissingTemplatesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -257,6 +262,8 @@
     <Content Include="lib\libMBIN.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Images\nms.png" />
+    <Resource Include="Resources\Images\folder.png" />
     <Resource Include="Resources\status_icons\status_01_ok.png" />
     <Resource Include="Resources\status_icons\status_02_warning_a.png" />
     <Resource Include="Resources\status_icons\status_03_warning_b.png" />

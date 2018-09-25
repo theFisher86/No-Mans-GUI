@@ -2,6 +2,7 @@
 using libMBIN;
 using libMBIN.Models;
 using NoMansGUI.Models;
+using NoMansGUI.Utils.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,7 +16,7 @@ namespace NoMansGUI.ViewModels
 {
     [Export(typeof(IShell))]
     //[PartCreationPolicy(CreationPolicy.Shared)]
-    public class WorkspaceViewModel : Conductor<IScreen>.Collection.OneActive, IShell
+    public class WorkspaceViewModel : Conductor<IScreen>.Collection.OneActive, IShell, IHandle<OpenMBINEvent>
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IWindowManager _windowManager;
@@ -119,6 +120,27 @@ namespace NoMansGUI.ViewModels
             if (result == CustomDialogResults.Yes)
             {
                 System.Diagnostics.Process.Start("https://discord.gg/9QBKg6Z");
+            }
+        }
+
+        public void Handle(OpenMBINEvent message)
+        {
+            MBin mBin = new MBin()
+            {
+                Name = Path.GetFileNameWithoutExtension(message.Path),
+                Filepath = message.Path,
+            };
+
+            NMSTemplate template = null;
+            using (MBINFile mbin = new MBINFile(message.Path))
+            {
+                mbin.Load();
+                template = mbin.GetData();
+            }
+
+            if (template != null)
+            {
+                AddDocument(new MBinViewModel(mBin));
             }
         }
         #endregion

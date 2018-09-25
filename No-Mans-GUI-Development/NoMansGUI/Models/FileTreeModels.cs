@@ -10,13 +10,18 @@ namespace NoMansGUI.Models
 {
     public class FileViewItem : PropertyChangedBase
     {
+        public int DirType { get; set; }
+
         public string Name { get; set; }
         public string Path { get; set; }
     }
 
     public class FileItem : FileViewItem
     {
-
+        public FileItem()
+        {
+            DirType = 1;
+        }
     }
 
     public class DirectoryItem : FileViewItem
@@ -35,6 +40,7 @@ namespace NoMansGUI.Models
 
         public DirectoryItem()
         {
+            DirType = 2;
             Items = new ObservableCollection<FileViewItem>();
         }
     }

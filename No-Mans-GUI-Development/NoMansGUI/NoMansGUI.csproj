@@ -128,6 +128,7 @@
     <Compile Include="Utils\AdminTools\NMSTemplateTypeList.cs" />
     <Compile Include="Utils\DataContextSpy.cs" />
     <Compile Include="Utils\Events\LoadingEvents.cs" />
+    <Compile Include="Utils\Events\MBINEvents.cs" />
     <Compile Include="Utils\Events\PathSetEvents.cs" />
     <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
     <Compile Include="Utils\Events\TreeViewEvents.cs" />

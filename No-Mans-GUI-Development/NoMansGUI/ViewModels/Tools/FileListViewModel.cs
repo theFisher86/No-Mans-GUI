@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace NoMansGUI.ViewModels
@@ -16,7 +17,6 @@ namespace NoMansGUI.ViewModels
     public class FileListViewModel : ToolBase, IHandle<UnpackedPathSetEvent>, IHandle<ExpandedEvent>
     {
         ObservableCollection<FileViewItem> _items;
-        private object dummyNode = null;
 
         public ObservableCollection<FileViewItem> Items
         {
@@ -54,7 +54,7 @@ namespace NoMansGUI.ViewModels
                 var item = new DirectoryItem
                 {
                     Name = directory.Name,
-                    Path = directory.FullName,
+                    Path = directory.FullName
                 };
 
                 item.Items.Add(null);
@@ -62,7 +62,7 @@ namespace NoMansGUI.ViewModels
                 items.Add(item);
             }
 
-            foreach(var file in dirInfo.GetFiles())
+            foreach(var file in dirInfo.GetFiles("*.mbin"))
             {
                 var item = new FileItem
                 {
@@ -116,10 +116,16 @@ namespace NoMansGUI.ViewModels
         public void Handle(ExpandedEvent message)
         {
             TreeViewItem item = message.TreeViewItem;
-            FileViewItem header = (FileViewItem)item.Header;
+            if(item.Header is FileItem)
+            {
+                //Open the file (Messy, we shouldn't be handling this in expand.
+                FileItem i = item.Header as FileItem;
 
-            DirectoryItem i = (DirectoryItem)Items[Items.IndexOf(header)];
-            i.Items = new ObservableCollection<FileViewItem>(LoadDirectory(i.Path));
+                IoC.Get<IEventAggregator>().PublishOnUIThread(new OpenMBINEvent(i.Path));
+                return;
+            }
+            DirectoryItem header = (DirectoryItem)item.Header;
+            header.Items = new ObservableCollection<FileViewItem>(LoadDirectory(header.Path));
             NotifyOfPropertyChange(() => Items);
         }
     }

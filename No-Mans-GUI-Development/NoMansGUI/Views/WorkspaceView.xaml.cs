@@ -1,4 +1,5 @@
-﻿using NoMansGUI.ViewModels;
+﻿using NoMansGUI.Properties;
+using NoMansGUI.ViewModels;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -21,15 +22,14 @@ namespace NoMansGUI.Views
 
             _dockMgr.Loaded += (sender, e) =>
             {
-                //if (Settings.Default.IsAutoLayoutRestoreEnabled)
-                //{
-                //    Width = Settings.Default.MainWidth;
-                //    Height = Settings.Default.MainHeight;
-                //    RestoreLayout();
-                //} //eif
+                if (Settings.Default.IsAutoLayoutRestoreEnabled)
+                {
+                    Width = Settings.Default.MainWidth;
+                    Height = Settings.Default.MainHeight;
+                    RestoreLayout();
+                }
             };
         }
-
         private void OnDocumentClosing(object sender, DocumentClosingEventArgs e)
         {
             DocumentBase document = e.Document.Content as DocumentBase;
@@ -46,14 +46,17 @@ namespace NoMansGUI.Views
 
         static private string GetLayoutFilePath()
         {
-            return System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                "WpfCalavaLayout.xml");
+            string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            // Combine the base folder with your specific folder....
+            string specificFolder = System.IO.Path.Combine(folder, "NoMansGUI");
+            return System.IO.Path.Combine(specificFolder, "NoMansGUI.layout");
         }
 
         private void SaveLayout()
         {
-            //Settings.Default.MainWidth = ActualWidth;
-            //Settings.Default.MainHeight = ActualHeight;
+            Settings.Default.MainWidth = ActualWidth;
+            Settings.Default.MainHeight = ActualHeight;
 
             XmlLayoutSerializer serializer = new XmlLayoutSerializer(_dockMgr);
             string sFilePath = GetLayoutFilePath();
@@ -105,6 +108,11 @@ namespace NoMansGUI.Views
                 Debug.WriteLine(ex.ToString());
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveLayout();
         }
     }
 }

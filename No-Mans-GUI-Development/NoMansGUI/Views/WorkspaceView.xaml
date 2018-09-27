@@ -7,9 +7,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:NoMansGUI.Utils.Converters"
         xmlns:templateSelectors="clr-namespace:NoMansGUI.Utils.TemplateSelectors"
+        xmlns:docking="clr-namespace:NoMansGUI.Docking"
         xmlns:local="clr-namespace:NoMansGUI.Views"
         mc:Ignorable="d"
-        Title="WorkspaceView" Height="450" Width="800">
+        Title="WorkspaceView" Height="450" Width="800" Closing="Window_Closing">
     <Window.Resources>
         <converters:AdBooleanToVisibilityConverter x:Key="AdBooleanToVisibilityCvt" />
     </Window.Resources>
@@ -62,6 +63,14 @@
                              DocumentClosing="OnDocumentClosing"
                              DocumentClosed="OnDocumentClosed">
 
+            <xcad:DockingManager.Theme>
+                <xcad:VS2010Theme />
+            </xcad:DockingManager.Theme>
+
+            <xcad:DockingManager.LayoutUpdateStrategy>
+                <docking:LayoutInitializer />
+            </xcad:DockingManager.LayoutUpdateStrategy>
+            
             <xcad:DockingManager.LayoutItemContainerStyle>
                 <Style TargetType="{x:Type xcad:LayoutItem}">
                     <Setter Property="Title" Value="{Binding Model.DisplayName}" />

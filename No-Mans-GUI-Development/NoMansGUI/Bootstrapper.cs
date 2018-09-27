@@ -92,6 +92,17 @@ namespace NoMansGUI
                         Properties.Settings.Default.CallUpgrade = false;
                     }
 
+                    string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+                    // Combine the base folder with your specific folder....
+                    string specificFolder = Path.Combine(folder, "NoMansGUI");
+
+                    // Check if folder exists and if not, create it
+                    if (!Directory.Exists(specificFolder))
+                    {
+                        Directory.CreateDirectory(specificFolder);
+                    }
+
                     m_log.Info("Starting Data Processing");
                 
                 };

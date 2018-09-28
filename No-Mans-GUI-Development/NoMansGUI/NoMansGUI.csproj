@@ -272,9 +272,7 @@
     <Resource Include="Resources\status_icons\status_05_info.png" />
     <Resource Include="Resources\status_icons\loading.gif" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Logic\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\DirectXTexNet.1.0.0-rc2\build\DirectXTexNet.targets" Condition="Exists('..\packages\DirectXTexNet.1.0.0-rc2\build\DirectXTexNet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

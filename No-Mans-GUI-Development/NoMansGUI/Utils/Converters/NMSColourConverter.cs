@@ -1,5 +1,4 @@
-﻿using libMBIN.Models.Structs;
-using NoMansGUI.Models;
+﻿using NoMansGUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,6 +30,12 @@ namespace NoMansGUI.Utils.Converters
             Type t = value.GetType();
             foreach(var f in value as ObservableCollection<MBINField>)
             {
+                int num = -1;                                                   // This shit checks to make sure that the value is a valid number
+                if (!int.TryParse(f.Value.ToString(), out num))                    // and not null.
+                {
+                    Console.WriteLine("value not an int, setting 0");           // if it is null it'll be set to 0
+                    f.Value = (int)0;
+                }
                 Console.WriteLine(f.Name + ": " + f.Value + "NMSType " + f.NMSType + "TemplateType " + f.TemplateType);
                 switch(f.Name)
                 {
@@ -58,10 +63,14 @@ namespace NoMansGUI.Utils.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Color nmsColor = (Color)value;
+            Color nmsColor = (Color)value;                                      
             List<MBINField> original = (List<MBINField>)SourceValue;
-
-            foreach(MBINField field in original)
+            // TODO
+            // This is breaking shit
+            // System.InvalidCastException: 'Unable to cast object of type 'System.Collections.ObjectModel.ObservableCollection`1[NoMansGUI.Models.MBINField]' 
+            // to type 'System.Collections.Generic.List`1[NoMansGUI.Models.MBINField]'.'
+            // Until it's fixed the color picker drop down is disabled inside MbinTemplates.xaml
+            foreach (MBINField field in original)
             {
                 switch(field.Name)
                 {
@@ -77,6 +86,12 @@ namespace NoMansGUI.Utils.Converters
                     case "B":
                         field.Value = (float)nmsColor.B / 255;
                         break;
+                }
+                float num = -1;                                                     // Same thing as above, just checking to make sure it's a number
+                if(!float.TryParse(field.Value.ToString(),out num))                    // and setting to 0 if not.
+                {
+                    Console.WriteLine("field value not a float");
+                    field.Value = (float)0;
                 }
             }
             return original;

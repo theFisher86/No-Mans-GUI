@@ -1,15 +1,9 @@
-﻿using NoMansGUI.Models;
+﻿using libMBIN.NMS;
+using NoMansGUI.Models;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using NoMansGUI.Utils.TemplateBuilder;
-using libMBIN.Models.Structs;
 
 namespace NoMansGUI.Utils.TemplateSelectors
 {

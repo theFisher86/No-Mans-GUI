@@ -1,6 +1,5 @@
 ﻿using Caliburn.Micro;
 using libMBIN;
-using libMBIN.Models;
 using NoMansGUI.Models;
 using NoMansGUI.Utils.Events;
 using System;

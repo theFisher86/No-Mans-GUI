@@ -1,23 +1,15 @@
 ﻿using Caliburn.Micro;
 using libMBIN;
-using libMBIN.Models;
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
 using NoMansGUI.Utils.AdminTools;
-using NoMansGUI.Utils.Events;
 using NoMansGUI.Utils.Parser;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Forms;
 
 namespace NoMansGUI.ViewModels

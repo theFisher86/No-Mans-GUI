@@ -18,6 +18,7 @@
         <Border BorderThickness="1" CornerRadius="2" BorderBrush="#BFFFFFFF" SnapsToDevicePixels="True">
             <Grid x:Name="m_grid">
                 <Image Width="600" Stretch="Uniform" x:Name="LoadingImage" gif:ImageBehavior.RepeatBehavior="Forever" gif:ImageBehavior.AnimatedSource="pack://application:,,,/NoMansGUI;component/Resources/status_icons/loading.gif" />
+                <TextBlock Width="600" TextWrapping="WrapWithOverflow" TextAlignment="Center" FontSize="20" Text="Please note that this is a PRE ALPHA build and we are not looking for feedback or bug reports just yet.  If something's broke we probably know already."/>
                 <StackPanel Margin="0,0,0,50" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
                     <Label Content="Status: "/>
                     <Label HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="{Binding StatusMessage}"/>

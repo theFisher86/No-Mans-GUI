@@ -1,6 +1,4 @@
-﻿using Caliburn.Micro;
-using libMBIN;
-using libMBIN.Models;
+﻿using libMBIN;
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
 using NoMansGUI.Utils.Parser;

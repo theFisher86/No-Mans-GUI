@@ -84,7 +84,7 @@
             </Grid.ColumnDefinitions>
             <Label Grid.Column="0" Content="{Binding Name}"/>
             <!--SelectedColor="{Binding Value, Converter={StaticResource NMSColourConverter}}"-->
-            <xctk:ColorPicker x:Name="ColorPicker" Grid.Column="1" ColorMode="ColorCanvas">
+            <xctk:ColorPicker x:Name="ColorPicker" Grid.Column="1" ColorMode="ColorCanvas" IsEnabled="False"><!-- Disabled until I can fix the error -->
                 <xctk:ColorPicker.Resources>
                     <Utils:DataContextSpy x:Key="spy"/>
                 </xctk:ColorPicker.Resources>

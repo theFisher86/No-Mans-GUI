@@ -1,10 +1,6 @@
-﻿using libMBIN.Models;
-using System;
-using System.Collections.Generic;
+﻿using libMBIN;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -35,7 +31,7 @@ namespace NoMansGUI.Utils.TemplateBuilder
                 foreach (FieldInfo fieldInfo in fields)
                 {
                     var attributes = (NMSAttribute[])fieldInfo.GetCustomAttributes(typeof(NMSAttribute), false);                        //
-                    libMBIN.Models.NMSAttribute attrib = null;                                                                          //
+                    NMSAttribute attrib = null;                                                                          //
                     if (attributes.Length > 0) attrib = attributes[0];                                                                  //
                     bool ignore = false;                                                                                                //
                     if (attrib != null) ignore = attrib.Ignore;                                                                         //

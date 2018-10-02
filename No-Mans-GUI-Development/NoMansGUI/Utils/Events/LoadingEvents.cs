@@ -15,4 +15,14 @@ namespace NoMansGUI.Utils.Events
             Message = message;
         }
     }
+
+    public class LoadingCompletedEvent
+    {
+        public LoadingCompletedEvent() { }
+    }
+
+    public class SplashClickEvent
+    {
+        public SplashClickEvent() { }
+    }
 }

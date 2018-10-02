@@ -10,9 +10,10 @@ namespace NoMansGUI.ViewModels
 {
     //As you can see we use the IHandle interface here, passing the event to handle. if you look at the bottom of the class
     //you will see the required method that actually handles the event.
-    public class SplashWindowViewModel : Screen, IHandle<LoadingStatusMessage>
+    public class SplashWindowViewModel : Screen, IHandle<LoadingStatusMessage>, IHandle<LoadingCompletedEvent>
     {
         private string _status;
+        private bool _finished;
 
         public string StatusMessage
         {
@@ -30,12 +31,26 @@ namespace NoMansGUI.ViewModels
             IoC.Get<IEventAggregator>().Subscribe(this);
         }
 
+        public void OnClick()
+        {
+            if(_finished)
+            {
+                IoC.Get<IEventAggregator>().PublishOnUIThread(new SplashClickEvent());
+            }
+        }
+
         //Handles the specific event based on the class. it passes in the class(event) that was published.
         //This way it's very easy to pass around data with the event. This is a very simplistic example.
         public void Handle(LoadingStatusMessage message)
         {
             //The LoadingStatusMessage contains a string for the status message, we simply update our status message with that.
             StatusMessage = message.Message;
+        }
+
+        public void Handle(LoadingCompletedEvent message)
+        {
+            StatusMessage = "Click to continue.";
+            _finished = true;
         }
     }
 }

@@ -16,15 +16,15 @@ using System.Windows.Threading;
 
 namespace NoMansGUI
 {
-    public class Bootstrapper : BootstrapperBase
+    public class Bootstrapper : BootstrapperBase, IHandle<SplashClickEvent>
     {
         private CompositionContainer container;
         private static readonly log4net.ILog m_log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        private SplashWindowViewModel _vm;
 
         public Bootstrapper()
         {
-            Initialize();
+            Initialize(); 
         }
 
         /// <summary>
@@ -54,6 +54,7 @@ namespace NoMansGUI
 
             CompositionBatch batch = new CompositionBatch();
             IEventAggregator eventAggregator = new EventAggregator();
+            eventAggregator.Subscribe(this);
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             //As you can see from the line below, it's possible to add custom classes to the container, these can then be retrieved by using IoC.Get<ClassName>() anywhere.
             //batch.AddExportedValue<UserAccount>(m_userAccount);
@@ -72,11 +73,10 @@ namespace NoMansGUI
         {
             try
             {
-                //Create an instance of the splashscreenVM
-                SplashWindowViewModel vm = new SplashWindowViewModel();
                 //Create instance of the background worker, we only need it locally.
                 var bw = new BackgroundWorker();
 
+                _vm = new SplashWindowViewModel();
                 //Tell the background where what to actually do, we could split this into another method, but it's fine here for now.
                 bw.DoWork += (xs, args) =>
                 {
@@ -116,19 +116,15 @@ namespace NoMansGUI
                         //Log any errors we did, not exactly handled well, but it's fine for now.
                         m_log.Error(args.Error.Message);
                     }
+                    IoC.Get<IEventAggregator>().PublishOnUIThread(new LoadingCompletedEvent());
 
-                    //Display the root view, in this case it's mainwindowviewmodel, the view will be found automagically.
-                    DisplayRootViewFor<IShell>();
-                    //Close the splashscreen
-                    vm.TryClose();
-                    //Case base startup.
                     base.OnStartup(sender, ev);
                 };
 
                 //We can now actually start the background worker.
                 bw.RunWorkerAsync(); // starts the background worker
                 //And display the fancy little animated splashscreen
-                IoC.Get<IWindowManager>().ShowWindow(vm);
+                IoC.Get<IWindowManager>().ShowWindow(_vm);
             }
             catch (Exception ex)
             {
@@ -179,5 +175,13 @@ namespace NoMansGUI
             container.Dispose();
         }
 
+        public void Handle(SplashClickEvent message)
+        {
+            //Display the root view, in this case it's mainwindowviewmodel, the view will be found automagically.
+            DisplayRootViewFor<IShell>();
+            //Close the splashscreen
+            _vm.TryClose();
+            //Case base startup.
+        }
     }
 }

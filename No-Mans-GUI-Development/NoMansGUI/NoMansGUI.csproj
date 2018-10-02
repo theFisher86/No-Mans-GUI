@@ -48,9 +48,9 @@
     <Reference Include="DirectXTexNet, Version=1.0.0.2, Culture=neutral, PublicKeyToken=67e4f5ed452a4f5d, processorArchitecture=MSIL">
       <HintPath>..\packages\DirectXTexNet.1.0.0-rc2\lib\net40\DirectXTexNet.dll</HintPath>
     </Reference>
-    <Reference Include="libMBIN, Version=1.38.0.2, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="libMBIN, Version=1.61.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\libMBIN.dll</HintPath>
+      <HintPath>X:\Modding\NMS\Tools\libMBIN.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -260,9 +260,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\libMBIN.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Resources\Images\nms.png" />
     <Resource Include="Resources\Images\folder.png" />
     <Resource Include="Resources\status_icons\status_01_ok.png" />

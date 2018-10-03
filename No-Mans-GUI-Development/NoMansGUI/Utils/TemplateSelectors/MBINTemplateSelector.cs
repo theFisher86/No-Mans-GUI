@@ -1,5 +1,6 @@
 ﻿using libMBIN.NMS;
 using NoMansGUI.Models;
+using NoMansGUI.Utils.Extenders;
 using System;
 using System.Linq;
 using System.Windows;
@@ -43,13 +44,16 @@ namespace NoMansGUI.Utils.TemplateSelectors
 
                         return Application.Current.FindResource("ListDataTemplate") as DataTemplate;
                     case "string":
+                        if (IsMbinLink(field.Value.ToString()))
+                        {
+                            return Application.Current.FindResource("MBINlinkTemplate") as DataTemplate;
+                        }
                         return Application.Current.FindResource("StringDataTemplate") as DataTemplate;
                     case "vector2f":
                     case "vector4f":
                     case "vector6f":
                         return Application.Current.FindResource("VectorDataTemplate") as DataTemplate;
                     case "single":
-                        Console.WriteLine("Found TemplateType Single");
                         Console.WriteLine(string.Format("Data is : NMSType {0} - Value {1} - Value Type", field.NMSType, field.Value, field.Value.GetType().Name));
                         return Application.Current.FindResource("SingleDataTemplate") as DataTemplate;
                     case "int":
@@ -77,5 +81,19 @@ namespace NoMansGUI.Utils.TemplateSelectors
             return Application.Current.FindResource("StringDataTemplate") as DataTemplate;
         }
 
+        private bool IsMbinLink(string value)
+        {
+            if(value.ContainsAny(@"\", @"/"))
+            {
+                string[] a = value.Split('.');
+                if(a[a.Length - 1].ToLower().Contains("mbin"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        
     }
 }

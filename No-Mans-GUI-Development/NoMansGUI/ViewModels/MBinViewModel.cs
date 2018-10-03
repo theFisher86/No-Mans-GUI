@@ -1,7 +1,10 @@
-﻿using libMBIN;
+﻿using Caliburn.Micro;
+using libMBIN;
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
+using NoMansGUI.Utils.Events;
 using NoMansGUI.Utils.Parser;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -78,6 +81,25 @@ namespace NoMansGUI.ViewModels
             //}
             //string file = string.Format("{0}.exml", _mbin.Name);
             //_template.WriteToExml(Path.Combine(path, file));
+        }
+
+        public void OpenMbin(object sender, MBINField e)
+        {
+            //First check to ensure we have the right unpacked path
+            if (string.IsNullOrEmpty(Settings.Default.pathUnpakdFiles))
+            {
+                return;
+            }
+
+            string fullpath = Path.Combine(Settings.Default.pathUnpakdFiles, (string)e.Value);
+
+            if(File.Exists(fullpath))
+            {
+                IoC.Get<IEventAggregator>().PublishOnUIThread(new OpenMBINEvent(fullpath));
+            } else
+            {
+                MessageBox.Show("Unable to find file at : " + fullpath);
+            }
         }
 
         public override bool IsDirty()

@@ -6,6 +6,7 @@
                     xmlns:Utils="clr-namespace:NoMansGUI.Utils"
                     xmlns:Validation="clr-namespace:NoMansGUI.Utils.Validation"
                     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                    xmlns:cal="http://www.caliburnproject.org"
                     xmlns:local="clr-namespace:NoMansGUI">
     <converters:DebugDataBindingConverter x:Key="DebugConverter" />
     <converters:NMSColourConverter x:Key="NMSColourConverter" />
@@ -181,6 +182,32 @@
         </StackPanel>
     </DataTemplate>
 
+    <DataTemplate x:Key="MBINlinkTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Padding="0" Grid.Column="0" Height="25" Text="{Binding Name}"/>
+            <TextBox Grid.Row="1" Padding="0" Grid.Column="0" Height="20" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Content="Open MBIN" Grid.Row="1" Grid.Column="2" Width="100" Height="25">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="OpenMbin">
+                            <cal:Parameter Value="$source" />
+                            <cal:Parameter Value="$dataContext" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </Grid>
+    </DataTemplate>
+    
     <DataTemplate x:Key="SingleDataTemplate">
         <Grid>
             <Grid.RowDefinitions>

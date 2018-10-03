@@ -9,7 +9,7 @@
         xmlns:templateSelectors="clr-namespace:NoMansGUI.Utils.TemplateSelectors"
         xmlns:docking="clr-namespace:NoMansGUI.Docking"
         xmlns:local="clr-namespace:NoMansGUI.Views"
-        mc:Ignorable="d"
+        mc:Ignorable="d" WindowState="Maximized"
         Title="WorkspaceView" Height="450" Width="800" Closing="Window_Closing">
     <Window.Resources>
         <converters:AdBooleanToVisibilityConverter x:Key="AdBooleanToVisibilityCvt" />

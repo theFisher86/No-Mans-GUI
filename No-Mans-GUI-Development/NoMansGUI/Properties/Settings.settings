@@ -2,11 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NoMansGUI.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="pathUnpakdFiles" Provider="NMSSettingsProvider" Type="System.String" Scope="User">
-      <Value Profile="(Default)">X:\Modding\NMS\UnPakd\</Value>
-    </Setting>
     <Setting Name="pathPCBanks" Provider="NMSSettingsProvider" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\Games\SteamLibrary\steamapps\common\No Man's Sky\GAMEDATA\PCBANKS</Value>
+      <Value Profile="(Default)">blank</Value>
     </Setting>
     <Setting Name="pathModelViewer" Provider="NMSSettingsProvider" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -46,6 +43,9 @@
     </Setting>
     <Setting Name="MainHeight" Provider="NMSSettingsProvider" Type="System.Double" Scope="User">
       <Value Profile="(Default)">768</Value>
+    </Setting>
+    <Setting Name="pathUnpakdFiles" Provider="NMSSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">blank</Value>
     </Setting>
   </Settings>
 </SettingsFile>

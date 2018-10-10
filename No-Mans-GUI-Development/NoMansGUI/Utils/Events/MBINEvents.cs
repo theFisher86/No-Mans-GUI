@@ -15,4 +15,14 @@ namespace NoMansGUI.Utils.Events
             Path = path;
         }
     }
+
+    public class OpenDirEvent
+    {
+        public string Path { get; private set; }
+
+        public OpenDirEvent(string path)
+        {
+            Path = path;
+        }
+    }
 }

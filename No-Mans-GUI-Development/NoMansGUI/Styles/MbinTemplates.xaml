@@ -207,7 +207,33 @@
             </Button>
         </Grid>
     </DataTemplate>
-    
+
+    <DataTemplate x:Key="DirLinkTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Padding="0" Grid.Column="0" Height="25" Text="{Binding Name}"/>
+            <TextBox Grid.Row="1" Padding="0" Grid.Column="0" Height="20" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Content="Open Directory in Tree" Grid.Row="1" Grid.Column="2" Width="100" Height="25">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="OpenDir">
+                            <cal:Parameter Value="$source" />
+                            <cal:Parameter Value="$dataContext" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </Grid>
+    </DataTemplate>
+
     <DataTemplate x:Key="SingleDataTemplate">
         <Grid>
             <Grid.RowDefinitions>

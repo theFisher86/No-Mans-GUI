@@ -44,11 +44,16 @@ namespace NoMansGUI.Utils.TemplateSelectors
 
                         return Application.Current.FindResource("ListDataTemplate") as DataTemplate;
                     case "string":
-                        if (IsMbinLink(field.Value.ToString()))
+                        switch (IsMbinLink(field.Value.ToString()))
                         {
-                            return Application.Current.FindResource("MBINlinkTemplate") as DataTemplate;
+                            case 0:
+                                return Application.Current.FindResource("StringDataTemplate") as DataTemplate;
+                            case 1:
+                                return Application.Current.FindResource("MBINlinkTemplate") as DataTemplate;
+                            case 2:
+                                return Application.Current.FindResource("DirLinkTemplate") as DataTemplate;
                         }
-                        return Application.Current.FindResource("StringDataTemplate") as DataTemplate;
+                        break;
                     case "vector2f":
                     case "vector4f":
                     case "vector6f":
@@ -81,17 +86,24 @@ namespace NoMansGUI.Utils.TemplateSelectors
             return Application.Current.FindResource("StringDataTemplate") as DataTemplate;
         }
 
-        private bool IsMbinLink(string value)
+        private int IsMbinLink(string value)
         {
             if(value.ContainsAny(@"\", @"/"))
             {
-                string[] a = value.Split('.');
-                if(a[a.Length - 1].ToLower().Contains("mbin"))
+                if (value.Contains("."))                                // Check if a period exists (to determine if it's a file link or a reference to a directory)
                 {
-                    return true;
+                    string[] a = value.Split('.');
+                    if (a[a.Length - 1].ToLower().Contains("mbin"))
+                    {
+                        return 1;                                       // 1 = mbin
+                    }
+                }
+                else
+                {
+                    return 2;                                           // 2 = directory
                 }
             }
-            return false;
+            return 0;                                                   // 0 = not a link
         }
 
         

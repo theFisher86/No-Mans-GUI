@@ -14,7 +14,7 @@ namespace NoMansGUI.Models
         public string Filepath { get; set; }
         public string Name { get; set; }
         public string VanillaFilePath { get; set; }     // For comparison purposes.  Might not ever use this and end up removing it.
-        public string vanillaName { get; set; }         // Used when creating new files that are based on vanilla (custom models, etc)
+        public string VanillaName { get; set; }         // Used when creating new files that are based on vanilla (custom models, etc)
     }
 
     public class MBINField : PropertyChangedBase

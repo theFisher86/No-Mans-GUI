@@ -25,6 +25,7 @@ namespace NoMansGUI.ViewModels
             }
         }
 
+
         public SplashWindowViewModel()
         {
             //When using IHandle interfaces, we need to call this in the constructor so it knows it should be listening for events.
@@ -46,6 +47,7 @@ namespace NoMansGUI.ViewModels
             //The LoadingStatusMessage contains a string for the status message, we simply update our status message with that.
             StatusMessage = message.Message;
         }
+
 
         public void Handle(LoadingCompletedEvent message)
         {

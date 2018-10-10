@@ -28,20 +28,7 @@ namespace NoMansGUI.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsProviderAttribute(typeof(NMSSettingsProvider))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("X:\\Modding\\NMS\\UnPakd\\")]
-        public string pathUnpakdFiles {
-            get {
-                return ((string)(this["pathUnpakdFiles"]));
-            }
-            set {
-                this["pathUnpakdFiles"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsProviderAttribute(typeof(NMSSettingsProvider))]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Games\\SteamLibrary\\steamapps\\common\\No Man\'s Sky\\GAMEDATA\\PCBANKS")]
+        [global::System.Configuration.DefaultSettingValueAttribute("blank")]
         public string pathPCBanks {
             get {
                 return ((string)(this["pathPCBanks"]));
@@ -187,6 +174,19 @@ namespace NoMansGUI.Properties {
             }
             set {
                 this["MainHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(NMSSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("blank")]
+        public string pathUnpakdFiles {
+            get {
+                return ((string)(this["pathUnpakdFiles"]));
+            }
+            set {
+                this["pathUnpakdFiles"] = value;
             }
         }
     }

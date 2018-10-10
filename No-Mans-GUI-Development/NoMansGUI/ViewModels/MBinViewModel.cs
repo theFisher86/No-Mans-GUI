@@ -102,6 +102,15 @@ namespace NoMansGUI.ViewModels
             }
         }
 
+        public void OpenDir(object sender, MBINField e)
+        {
+            //string fullpath = Path.Combine(Settings.Default.pathUnpakdFiles, (string)e.Value);
+            //FileListViewModel.LoadDirectory(fullpath);
+
+            //TODO The above doesn't work.  Basically here we need to just open the directory in the file tree.  I can't figure out how to reference the existing file tree?
+            MessageBoxResult result = MessageBox.Show("This doesn't work yet.");
+        }
+
         public override bool IsDirty()
         {
             return false;

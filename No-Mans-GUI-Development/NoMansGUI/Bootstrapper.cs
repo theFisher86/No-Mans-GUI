@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace NoMansGUI
@@ -117,7 +118,7 @@ namespace NoMansGUI
                         m_log.Error(args.Error.Message);
                     }
                     IoC.Get<IEventAggregator>().PublishOnUIThread(new LoadingCompletedEvent());
-
+                    
                     base.OnStartup(sender, ev);
                 };
 
@@ -177,8 +178,15 @@ namespace NoMansGUI
 
         public void Handle(SplashClickEvent message)
         {
+            if(Properties.Settings.Default.pathUnpakdFiles == "blank")
+            {
+                MessageBoxResult box = MessageBox.Show("You'll need to add the locations of your Unpakd Files and PCBANKs directory.");
+                IoC.Get<IWindowManager>().ShowDialog(new SettingsViewModel());
+                _vm.TryClose();
+            }
             //Display the root view, in this case it's mainwindowviewmodel, the view will be found automagically.
             DisplayRootViewFor<IShell>();
+
             //Close the splashscreen
             _vm.TryClose();
             //Case base startup.

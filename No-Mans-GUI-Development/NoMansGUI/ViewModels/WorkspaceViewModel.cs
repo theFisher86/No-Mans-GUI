@@ -52,7 +52,6 @@ namespace NoMansGUI.ViewModels
             _eventAggregator.Subscribe(this);
         }
 
-
         public void AddDocument(MBinViewModel doc)
         {
             var documents = Items.OfType<DocumentBase>();

@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using libMBIN;
+using NoMansGUI.Utils.Events;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -225,6 +226,11 @@ namespace NoMansGUI.Models
         {
             foreach (MBINField field in _value)
             {
+                if(field == null)
+                {
+                    IoC.Get<IEventAggregator>().PublishOnUIThread(new OutputToConsoleEvent("Mbin contained a null field!"));
+                    continue;
+                }
                 field.PropertyChanged += Field_PropertyChanged;
             }
         }

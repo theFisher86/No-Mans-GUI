@@ -96,7 +96,8 @@ namespace NoMansGUI.ViewModels
             if(File.Exists(fullpath))
             {
                 IoC.Get<IEventAggregator>().PublishOnUIThread(new OpenMBINEvent(fullpath));
-            } else
+            }
+            else
             {
                 MessageBox.Show("Unable to find file at : " + fullpath);
             }

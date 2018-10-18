@@ -24,13 +24,20 @@ namespace NoMansGUI.Views
     {
         public FileListView()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+            }
+            catch(Exception ex)
+            {
+                string e = ex.Message;
+            }
         }
 
-        private void FileList_Expanded(object sender, RoutedEventArgs e)
-        {
-            TreeViewItem tvi = (TreeViewItem)e.OriginalSource;
-            IoC.Get<IEventAggregator>().PublishOnUIThread(new ExpandedEvent(tvi));
-        }
+        //private void FileList_Expanded(object sender, RoutedEventArgs e)
+        //{
+        //    TreeViewItem tvi = (TreeViewItem)e.OriginalSource;
+        //    IoC.Get<IEventAggregator>().PublishOnUIThread(new ExpandedEvent(tvi));
+        //}
     }
 }

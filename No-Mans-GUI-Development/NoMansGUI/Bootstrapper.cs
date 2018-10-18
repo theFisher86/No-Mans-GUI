@@ -184,8 +184,16 @@ namespace NoMansGUI
                 IoC.Get<IWindowManager>().ShowDialog(new SettingsViewModel());
                 _vm.TryClose();
             }
+
             //Display the root view, in this case it's mainwindowviewmodel, the view will be found automagically.
-            DisplayRootViewFor<IShell>();
+            try
+            {
+                DisplayRootViewFor<IShell>();
+            }
+            catch(Exception ex)
+            {
+                string e = ex.Message;
+            }
 
             //Close the splashscreen
             _vm.TryClose();

@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="NoMansGUI.Views.Tools.ConsoleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:NoMansGUI.Views.Tools"
+             mc:Ignorable="d">
+    <Grid>
+        <toolkit:RichTextBox x:Name="_richTextBox" IsReadOnly="True" Grid.Row="1" Margin="10" BorderBrush="Gray" Padding="10"
+                                     Text="{Binding Output, Mode=OneWay}" 
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <toolkit:RichTextBox.TextFormatter>
+                <toolkit:PlainTextFormatter />
+            </toolkit:RichTextBox.TextFormatter>
+        </toolkit:RichTextBox>
+    </Grid>
+</UserControl>

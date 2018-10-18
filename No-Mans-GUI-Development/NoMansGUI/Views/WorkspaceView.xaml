@@ -58,6 +58,7 @@
 
         <xcad:DockingManager Name="_dockMgr" Grid.Row="1"
                              AnchorablesSource="{Binding Path=Tools}"
+                             AllowMixedOrientation="True"
                              DocumentsSource="{Binding Path=Documents}"
                              ActiveContent="{Binding Path=ActiveItem, Mode=TwoWay}"
                              DocumentClosing="OnDocumentClosing"
@@ -93,11 +94,12 @@
 
             <xcad:LayoutRoot>
                 <xcad:LayoutPanel Orientation="Horizontal">
-                    <xcad:LayoutAnchorablePane DockHeight="150" DockMinWidth="200">
-                    </xcad:LayoutAnchorablePane>
+                    <xcad:LayoutAnchorablePane DockHeight="150" DockMinWidth="200" />
                     <xcad:LayoutDocumentPane/>
                 </xcad:LayoutPanel>
             </xcad:LayoutRoot>
+            
+         
         </xcad:DockingManager>
     </Grid>
 </Window>

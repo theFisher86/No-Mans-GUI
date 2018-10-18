@@ -1,47 +1,50 @@
-﻿using Caliburn.Micro;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace NoMansGUI.Models
 {
-    public class FileViewItem : PropertyChangedBase
-    {
-        public int DirType { get; set; }
+    public class FileStructureBase
+    { }
 
-        public string Name { get; set; }
-        public string Path { get; set; }
-    }
 
-    public class FileItem : FileViewItem
+    public class FileItem : FileStructureBase
     {
-        public FileItem()
+        public string FilePath { get; private set; }
+        public string FileName
         {
-            DirType = 1;
-        }
-    }
-
-    public class DirectoryItem : FileViewItem
-    {
-        private ObservableCollection<FileViewItem> _items;
-
-        public ObservableCollection<FileViewItem> Items
-        {
-            get { return _items; }
-            set
+            get
             {
-                _items = value;
-                NotifyOfPropertyChange(() => Items);
+                return Path.GetFileName(FilePath);
             }
         }
 
-        public DirectoryItem()
+        public FileItem(string FilePath)
         {
-            DirType = 2;
-            Items = new ObservableCollection<FileViewItem>();
+            this.FilePath = FilePath;
+        }
+    }
+
+    public class DirectoryItem : FileStructureBase
+    {
+        public string Dir { get; private set; }
+
+        public string DirName
+        {
+            get
+            {
+                return new DirectoryInfo(Dir).Name;
+            }
+        }
+
+        readonly List<FileStructureBase> _files = new List<FileStructureBase>();
+        public List<FileStructureBase> Files
+        {
+            get { return _files; }
+        }
+
+        public DirectoryItem(string dir)
+        {
+            this.Dir = dir;
         }
     }
 }

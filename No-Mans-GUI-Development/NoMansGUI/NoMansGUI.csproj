@@ -130,6 +130,7 @@
     <Compile Include="Utils\Events\LoadingEvents.cs" />
     <Compile Include="Utils\Events\MBINEvents.cs" />
     <Compile Include="Utils\Events\PathSetEvents.cs" />
+    <Compile Include="Utils\Events\Tools\ConsoleEvents.cs" />
     <Compile Include="Utils\Events\TreeCreatedEvent.cs" />
     <Compile Include="Utils\Events\TreeViewEvents.cs" />
     <Compile Include="Utils\Extenders\StringExtender.cs" />
@@ -146,13 +147,20 @@
     <Compile Include="Utils\Validation\ValidationWrapper.cs" />
     <Compile Include="ViewModels\BaseVMs\DocumentBase.cs" />
     <Compile Include="ViewModels\BaseVMs\ToolBase.cs" />
+    <Compile Include="ViewModels\Tools\ConsoleViewModel.cs" />
     <Compile Include="ViewModels\Tools\FileListViewModel.cs" />
     <Compile Include="ViewModels\MBinViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\Tools\MissingTemplatesViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SplashWindowViewModel.cs" />
+    <Compile Include="ViewModels\Tools\TreeViewItems\DirectoryItemViewModel.cs" />
+    <Compile Include="ViewModels\Tools\TreeViewItems\FileItemViewModel.cs" />
+    <Compile Include="ViewModels\Tools\TreeViewItems\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\WorkspaceViewModel.cs" />
+    <Compile Include="Views\Tools\ConsoleView.xaml.cs">
+      <DependentUpon>ConsoleView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Tools\FileListView.xaml.cs">
       <DependentUpon>FileListView.xaml</DependentUpon>
     </Compile>
@@ -179,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\MbinTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Tools\ConsoleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

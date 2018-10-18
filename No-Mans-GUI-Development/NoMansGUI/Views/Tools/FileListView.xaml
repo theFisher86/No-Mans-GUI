@@ -4,24 +4,46 @@
              xmlns:Models="clr-namespace:NoMansGUI.Models"
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:vms="clr-namespace:NoMansGUI.ViewModels.Tools.TreeViewItems"
              xmlns:converters="clr-namespace:NoMansGUI.Utils.Converters">
     <Grid>
-        <TreeView x:Name="FileList" TreeViewItem.Expanded="FileList_Expanded" ItemsSource="{Binding Items}">
+        <TreeView ItemsSource="{Binding Items}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="FontWeight" Value="Normal"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
             <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type Models:FileViewItem}" ItemsSource="{Binding Items}">
+                <HierarchicalDataTemplate 
+                    DataType="{x:Type vms:DirectoryItemViewModel}"
+                    ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="20" Height="20" Stretch="Fill" x:Name="img" />
-                        <TextBlock Text="{Binding Name}" Margin="5,0,0,0" />
+                        <Image Width="16" Height="16" Margin="3,0" Source="pack://application:,,,/Resources/Images/folder.png"/>
+                        <TextBlock Text="{Binding DirName}"/>
                     </StackPanel>
-                    <HierarchicalDataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=DirType}" Value="1">
-                            <Setter Property="Image.Source" TargetName="img" Value="pack://application:,,,/Resources/Images/nms.png"></Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=DirType}" Value="2">
-                            <Setter Property="Image.Source" TargetName="img" Value="pack://application:,,,/Resources/Images/folder.png"></Setter>
-                        </DataTrigger>
-                    </HierarchicalDataTemplate.Triggers>
                 </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type vms:FileItemViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16" Height="16" Margin="3,0" Source="pack://application:,,,/Resources/Images/nms.png" />
+                        <TextBlock Text="{Binding FileName}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseLeftButtonDown">
+                                    <cal:ActionMessage MethodName="OpenFile">
+                                        <cal:Parameter Value="$eventargs"/>
+                                        <cal:Parameter Value="{Binding FilePath}"/>
+                                    </cal:ActionMessage>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
             </TreeView.Resources>
         </TreeView>
     </Grid>

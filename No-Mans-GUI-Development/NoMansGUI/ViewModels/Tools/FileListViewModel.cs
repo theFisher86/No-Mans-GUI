@@ -2,12 +2,14 @@
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
 using NoMansGUI.Utils.Events;
+using NoMansGUI.ViewModels.Tools.TreeViewItems;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace NoMansGUI.ViewModels
 {
@@ -16,9 +18,9 @@ namespace NoMansGUI.ViewModels
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class FileListViewModel : ToolBase, IHandle<UnpackedPathSetEvent>, IHandle<ExpandedEvent>
     {
-        ObservableCollection<FileViewItem> _items;
+        ObservableCollection<TreeViewItemViewModel> _items;
 
-        public ObservableCollection<FileViewItem> Items
+        public ObservableCollection<TreeViewItemViewModel> Items
         {
             get { return _items; }
             set
@@ -40,72 +42,34 @@ namespace NoMansGUI.ViewModels
 
         public void LoadFiles()
         {
-            Items = new ObservableCollection<FileViewItem>(LoadDirectory(Settings.Default.pathUnpakdFiles));
+            Items = new ObservableCollection<TreeViewItemViewModel>(LoadDirectory(Settings.Default.pathUnpakdFiles));
         }
 
-        public List<FileViewItem> LoadDirectory(string path)
+        public List<TreeViewItemViewModel> LoadDirectory(string path)
         {
-            var items = new List<FileViewItem>();
-            var dirInfo = new DirectoryInfo(path);
+            var items = new List<TreeViewItemViewModel>();
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
 
-            //Load Directories.
-            foreach(var directory in dirInfo.GetDirectories())
+            foreach (DirectoryInfo dir in dirInfo.GetDirectories())
             {
-                var item = new DirectoryItem
-                {
-                    Name = directory.Name,
-                    Path = directory.FullName
-                };
-
-                item.Items.Add(null);
-
-                items.Add(item);
+               items.Add(new DirectoryItemViewModel(new DirectoryItem(dir.FullName), null));
             }
 
-            foreach(var file in dirInfo.GetFiles("*.mbin"))
+            foreach (FileInfo file in dirInfo.GetFiles("*.mbin"))
             {
-                var item = new FileItem
-                {
-                    Name = file.Name,
-                    Path = file.FullName
-                };
-
-                items.Add(item);
+                items.Add(new FileItemViewModel(new FileItem(file.FullName), null));
             }
 
             return items;
         }
 
-        public List<FileViewItem> GetItems(string path)
+        public void OpenFile(MouseButtonEventArgs e, string path)
         {
-            var items = new List<FileViewItem>();
-
-            var dirInfo = new DirectoryInfo(path);
-
-            foreach (var directory in dirInfo.GetDirectories())
+            if (e.ClickCount == 2)
             {
-                var item = new DirectoryItem
-                {
-                    Name = directory.Name,
-                    Path = directory.FullName,
-                    Items = new ObservableCollection<FileViewItem>(GetItems(directory.FullName)),
-                };
-
-                items.Add(item);
+                // System.Windows.MessageBox.Show("Opened : " + path);
+                IoC.Get<IEventAggregator>().PublishOnUIThread(new OpenMBINEvent(path));
             }
-
-            foreach (var file in dirInfo.GetFiles())
-            {
-                var item = new FileItem
-                {
-                    Name = file.Name,
-                    Path = file.FullName
-                };
-
-                items.Add(item);
-            }
-
-            return items;
         }
 
         public void Handle(UnpackedPathSetEvent message)
@@ -121,11 +85,11 @@ namespace NoMansGUI.ViewModels
                 //Open the file (Messy, we shouldn't be handling this in expand.
                 FileItem i = item.Header as FileItem;
 
-                IoC.Get<IEventAggregator>().PublishOnUIThread(new OpenMBINEvent(i.Path));
+                IoC.Get<IEventAggregator>().PublishOnUIThread(new OpenMBINEvent(i.FilePath));
                 return;
             }
             DirectoryItem header = (DirectoryItem)item.Header;
-            header.Items = new ObservableCollection<FileViewItem>(LoadDirectory(header.Path));
+            //header.Files = new ObservableCollection<TreeViewItemViewModel>(LoadDirectory(header.Dir));
             NotifyOfPropertyChange(() => Items);
         }
     }

@@ -18,30 +18,35 @@ namespace NoMansGUI.Views
     {
         public WorkspaceView()
         {
-            InitializeComponent();
-
-            _dockMgr.Loaded += (sender, e) =>
+            try
             {
-                if (Settings.Default.IsAutoLayoutRestoreEnabled)
+                InitializeComponent();
+
+                _dockMgr.Loaded += (sender, e) =>
                 {
-                    Width = Settings.Default.MainWidth;
-                    Height = Settings.Default.MainHeight;
-                    RestoreLayout();
-                }
-            };
+                    if (Settings.Default.IsAutoLayoutRestoreEnabled)
+                    {
+                        Width = Settings.Default.MainWidth;
+                        Height = Settings.Default.MainHeight;
+                        RestoreLayout();
+                    }
+                };
+            }
+            catch(Exception ex)
+            {
+                string m = ex.Message;
+            }
         }
         private void OnDocumentClosing(object sender, DocumentClosingEventArgs e)
         {
-            DocumentBase document = e.Document.Content as DocumentBase;
-            if (document == null) return;
+            if (!(e.Document.Content is DocumentBase document)) return;
 
             e.Cancel = !document.CanClose();
         }
 
         private void OnDocumentClosed(object sender, DocumentClosedEventArgs e)
         {
-            DocumentBase document = e.Document.Content as DocumentBase;
-            if (document != null) document.Close();
+            if (e.Document.Content is DocumentBase document) document.Close();
         }
 
         static private string GetLayoutFilePath()

@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using NoMansGUI.Docking;
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
 using NoMansGUI.Utils.Events;
@@ -16,7 +17,7 @@ namespace NoMansGUI.ViewModels
     [Export(typeof(FileListViewModel))]
     [Export(typeof(ToolBase))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class FileListViewModel : ToolBase, IHandle<UnpackedPathSetEvent>, IHandle<ExpandedEvent>
+    public class FileListViewModel : Tool, IHandle<UnpackedPathSetEvent>, IHandle<ExpandedEvent>
     {
         ObservableCollection<TreeViewItemViewModel> _items;
 
@@ -30,7 +31,7 @@ namespace NoMansGUI.ViewModels
             }
         }
 
-        public FileListViewModel() : base("File List")
+        public FileListViewModel()
         {
             DisplayName = "File List";
             if (!string.IsNullOrEmpty(Settings.Default.pathUnpakdFiles) && Directory.Exists(Settings.Default.pathUnpakdFiles))
@@ -61,6 +62,11 @@ namespace NoMansGUI.ViewModels
             }
 
             return items;
+        }
+
+        public override PaneLocation PreferredLocation
+        {
+            get { return PaneLocation.Right; }
         }
 
         public void OpenFile(MouseButtonEventArgs e, string path)

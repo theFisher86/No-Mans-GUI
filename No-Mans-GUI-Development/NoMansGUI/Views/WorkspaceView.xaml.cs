@@ -1,6 +1,8 @@
-﻿using NoMansGUI.Properties;
+﻿using NoMansGUI.Docking;
+using NoMansGUI.Properties;
 using NoMansGUI.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -14,39 +16,18 @@ namespace NoMansGUI.Views
     /// <summary>
     /// Interaction logic for WorkspaceView.xaml
     /// </summary>
-    public partial class WorkspaceView : Window
+    public partial class WorkspaceView : IShellView
     {
         public WorkspaceView()
         {
             try
             {
                 InitializeComponent();
-
-                _dockMgr.Loaded += (sender, e) =>
-                {
-                    if (Settings.Default.IsAutoLayoutRestoreEnabled)
-                    {
-                        Width = Settings.Default.MainWidth;
-                        Height = Settings.Default.MainHeight;
-                        RestoreLayout();
-                    }
-                };
             }
             catch(Exception ex)
             {
                 string m = ex.Message;
             }
-        }
-        private void OnDocumentClosing(object sender, DocumentClosingEventArgs e)
-        {
-            if (!(e.Document.Content is DocumentBase document)) return;
-
-            e.Cancel = !document.CanClose();
-        }
-
-        private void OnDocumentClosed(object sender, DocumentClosedEventArgs e)
-        {
-            if (e.Document.Content is DocumentBase document) document.Close();
         }
 
         static private string GetLayoutFilePath()
@@ -58,66 +39,31 @@ namespace NoMansGUI.Views
             return System.IO.Path.Combine(specificFolder, "NoMansGUI.layout");
         }
 
-        private void SaveLayout()
-        {
-            Settings.Default.MainWidth = ActualWidth;
-            Settings.Default.MainHeight = ActualHeight;
-
-            XmlLayoutSerializer serializer = new XmlLayoutSerializer(_dockMgr);
-            string sFilePath = GetLayoutFilePath();
-            serializer.Serialize(sFilePath);
-        }
-
-        private void OnSaveLayoutClick(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                SaveLayout();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void RestoreLayout()
-        {
-            string sFilePath = GetLayoutFilePath();
-            if (!File.Exists(sFilePath)) return;
-
-            // check for well-formedness before restoring:
-            // if not well-formed, remove it so we avoid getting stuck.
-            try
-            {
-                XDocument.Load(sFilePath);
-            }
-            catch (Exception)
-            {
-                File.Delete(sFilePath);
-                throw;
-            }
-
-            XmlLayoutSerializer serializer = new XmlLayoutSerializer(_dockMgr);
-            serializer.Deserialize(sFilePath);
-        }
-
-        private void OnRestoreLayoutClick(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                RestoreLayout();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-                MessageBox.Show(ex.Message);
-            }
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            SaveLayout();
+           
+        }
+
+        public void LoadLayout(Stream stream, Action<ITool> addToolCallback, Action<IDocument> addDocumentCallback, Dictionary<string, ILayoutItem> itemsState)
+        {
+            LayoutUtility.LoadLayout(Manager, stream, addDocumentCallback, addToolCallback, itemsState);
+        }
+
+        public void SaveLayout(Stream stream)
+        {
+            LayoutUtility.SaveLayout(Manager, stream);
+        }
+
+        public void UpdateFloatingWindows()
+        {
+            //var mainWindow = Window.GetWindow(this);
+            //var mainWindowIcon = (mainWindow != null) ? mainWindow.Icon : null;
+            //var showFloatingWindowsInTaskbar = ((WorkspaceViewModel)DataContext).ShowFloatingWindowsInTaskbar;
+            //foreach (var window in Manager.FloatingWindows)
+            //{
+            //    window.Icon = mainWindowIcon;
+            //    window.ShowInTaskbar = showFloatingWindowsInTaskbar;
+            //}
         }
     }
 }

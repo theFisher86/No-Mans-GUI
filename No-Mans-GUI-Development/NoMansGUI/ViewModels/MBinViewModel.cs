@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using libMBIN;
+using NoMansGUI.Docking;
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
 using NoMansGUI.Utils.Events;
@@ -12,7 +13,7 @@ using System.Windows;
 
 namespace NoMansGUI.ViewModels
 {
-    public class MBinViewModel : DocumentBase
+    public class MBinViewModel : Document
     {
         private MBin _mbin;
         private NMSTemplate _template;
@@ -41,7 +42,7 @@ namespace NoMansGUI.ViewModels
         public MBinViewModel(MBin mbin)
         {
             _mbin = mbin;
-            ID = _mbin.Filepath;
+            //ID = _mbin.Filepath;
             DisplayName = _mbin.Name;
             using (MBINFile mbinFile = new MBINFile(_mbin.Filepath))
             {
@@ -110,11 +111,6 @@ namespace NoMansGUI.ViewModels
 
             //TODO The above doesn't work.  Basically here we need to just open the directory in the file tree.  I can't figure out how to reference the existing file tree?
             MessageBoxResult result = MessageBox.Show("This doesn't work yet.");
-        }
-
-        public override bool IsDirty()
-        {
-            return false;
         }
     }
 }

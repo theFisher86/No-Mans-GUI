@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NoMansGUI
+namespace NoMansGUI.Docking
 {
-    public interface IShell
+    public interface IDocument : ILayoutItem
     {
+   
     }
 }

@@ -108,8 +108,21 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Docking\Document.cs" />
+    <Compile Include="Docking\IDocument.cs" />
+    <Compile Include="Docking\ILayoutItem.cs" />
+    <Compile Include="Docking\ITool.cs" />
     <Compile Include="Docking\LayoutInitializer.cs" />
-    <Compile Include="IShell.cs" />
+    <Compile Include="Docking\LayoutItemBase.cs" />
+    <Compile Include="Docking\LayoutUtility.cs" />
+    <Compile Include="Docking\PaneLocation.cs" />
+    <Compile Include="Docking\PanesTemplateSelector.cs" />
+    <Compile Include="Docking\PanesStyleSelector.cs" />
+    <Compile Include="Docking\RelayCommand.cs" />
+    <Compile Include="Docking\Tool.cs" />
+    <Compile Include="Utils\Converters\NullableValueConverter.cs" />
+    <Compile Include="ViewModels\IShell.cs" />
+    <Compile Include="Views\IShellView.cs" />
     <Compile Include="Models\FileTreeModels.cs" />
     <Compile Include="Models\MBin.cs" />
     <Compile Include="Resources\StringResources.Designer.cs">

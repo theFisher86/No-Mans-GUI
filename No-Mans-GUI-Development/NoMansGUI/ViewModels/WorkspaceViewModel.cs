@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using libMBIN;
+using NoMansGUI.Docking;
 using NoMansGUI.Models;
 using NoMansGUI.Utils.Events;
 using System;
@@ -14,59 +15,44 @@ using System.Windows.Forms;
 namespace NoMansGUI.ViewModels
 {
     [Export(typeof(IShell))]
-    //[PartCreationPolicy(CreationPolicy.Shared)]
-    public class WorkspaceViewModel : Conductor<IScreen>.Collection.OneActive, IShell, IHandle<OpenMBINEvent>
+    public class WorkspaceViewModel : Conductor<IDocument>.Collection.OneActive, IShell, IHandle<OpenMBINEvent>
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IWindowManager _windowManager;
 
-        public BindableCollection<ToolBase> Tools { get; private set; }
+        private readonly BindableCollection<ITool> _tools;
+        public IObservableCollection<ITool> Tools
+        {
+            get { return _tools; }
+        }
 
-        public BindableCollection<DocumentBase> Documents { get; private set; }
+        public IObservableCollection<IDocument> Documents
+        {
+            get { return Items; }
+        }
+
+        public ILayoutItem ActiveLayoutItem { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         [ImportingConstructor]
-        public WorkspaceViewModel(IEventAggregator eventAggregator, IWindowManager windowManager, [ImportMany]IEnumerable<ToolBase> tools)
+        public WorkspaceViewModel()
         {
-            if (tools == null)
-            {
-                throw new ArgumentNullException("tools");
-            }
 
-            _eventAggregator = eventAggregator ?? throw new ArgumentNullException("eventAggregator");
-            _windowManager = windowManager ?? throw new ArgumentNullException("windowManager");
 
-            Tools = new BindableCollection<ToolBase>(tools);
-            Documents = new BindableCollection<DocumentBase>();
+            _eventAggregator = IoC.Get<IEventAggregator>();
+            _windowManager = IoC.Get<IWindowManager>();
 
-            Items.CollectionChanged += (sender, args) =>
-            {
-                if (args.Action == NotifyCollectionChangedAction.Remove)
-                {
-                    foreach (var item in args.OldItems.OfType<DocumentBase>())
-                    {
-                        Documents.Remove(item);
-                    }
-                }
-            };
-
+            _tools = new BindableCollection<ITool>();
             _eventAggregator.Subscribe(this);
         }
 
-        public void AddDocument(MBinViewModel doc)
+        public void OpenDocument(IDocument doc)
         {
-            var documents = Items.OfType<DocumentBase>();
-            DocumentBase document = documents.FirstOrDefault(e => e.ID == doc.ID);
-            if(document != null)
-            {
-                ActivateItem(document);
-                return;
-            }
-
-            // In this example we deal with a single document type, but you
-            // could easily add some logic to add different types.
-            Documents.Add(doc);
             ActivateItem(doc);
+        }
 
+        public void CloseDocument(IDocument doc)
+        {
+            DeactivateItem(doc, true);
         }
 
         public void LoadMbin()
@@ -95,13 +81,43 @@ namespace NoMansGUI.ViewModels
 
                 if (template != null)
                 {
-                    AddDocument(new MBinViewModel(mBin));
+                    OpenDocument(new MBinViewModel(mBin));
                 }              
             }
             else
             {
                 Debug.WriteLine("No MBIN Selected");
             }
+        }
+
+        public void UpdateFloatingWindows()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowTool<TTool>()
+           where TTool : ITool
+        {
+            ShowTool(IoC.Get<TTool>());
+        }
+
+        public void ShowTool(ITool model)
+        {
+            if (Tools.Contains(model))
+            {
+                model.IsVisible = true;
+            }
+            else
+            {
+                Tools.Add(model);
+            }
+            model.IsSelected = true;
+            ActiveLayoutItem = model;
+        }
+
+        public void Close()
+        {
+            throw new NotImplementedException();
         }
 
         #region Menu
@@ -138,7 +154,7 @@ namespace NoMansGUI.ViewModels
 
             if (template != null)
             {
-                AddDocument(new MBinViewModel(mBin));
+                OpenDocument(new MBinViewModel(mBin));
             }
         }
         #endregion

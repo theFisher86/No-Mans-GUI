@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using NoMansGUI.Docking;
 using NoMansGUI.Utils.Events;
 using System.ComponentModel.Composition;
 
@@ -7,7 +8,7 @@ namespace NoMansGUI.ViewModels.Tools
     [Export(typeof(ConsoleViewModel))]
     [Export(typeof(ToolBase))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class ConsoleViewModel : ToolBase, IHandle<OutputToConsoleEvent>
+    public class ConsoleViewModel : Tool, IHandle<OutputToConsoleEvent>
     {
         #region Fields
         private string _output;
@@ -19,10 +20,15 @@ namespace NoMansGUI.ViewModels.Tools
             get { return _output; }
             private set { _output = value; }
         }
+
+        public override PaneLocation PreferredLocation
+        {
+            get { return PaneLocation.Bottom; }
+        }
         #endregion
 
         #region Constructor
-        public ConsoleViewModel() : base("Output")
+        public ConsoleViewModel()
         {
             DisplayName = "Output";
             IoC.Get<IEventAggregator>().Subscribe(this);

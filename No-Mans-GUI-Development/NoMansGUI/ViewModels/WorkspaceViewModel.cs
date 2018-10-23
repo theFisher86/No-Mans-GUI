@@ -3,6 +3,7 @@ using libMBIN;
 using NoMansGUI.Docking;
 using NoMansGUI.Models;
 using NoMansGUI.Utils.Events;
+using NoMansGUI.ViewModels.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -20,6 +21,7 @@ namespace NoMansGUI.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IWindowManager _windowManager;
 
+        [ImportMany(typeof(ITool))]
         private readonly BindableCollection<ITool> _tools;
         public IObservableCollection<ITool> Tools
         {
@@ -31,7 +33,28 @@ namespace NoMansGUI.ViewModels
             get { return Items; }
         }
 
-        public ILayoutItem ActiveLayoutItem { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        private ILayoutItem _activeLayoutItem;
+        public ILayoutItem ActiveLayoutItem
+        {
+            get
+            {
+                return _activeLayoutItem;
+            }
+            set
+            {
+                if(ReferenceEquals(_activeLayoutItem, value))
+                {
+                    return;
+                }
+                _activeLayoutItem = value;
+
+                if (value is IDocument)
+                {
+                    ActivateItem((IDocument)value);
+                }
+                NotifyOfPropertyChange(() => ActiveLayoutItem);
+            }
+        }
 
         [ImportingConstructor]
         public WorkspaceViewModel()
@@ -118,6 +141,17 @@ namespace NoMansGUI.ViewModels
         public void Close()
         {
             throw new NotImplementedException();
+        }
+
+        protected override void OnViewLoaded(object view)
+        {
+            //TODO: Work out some way to load these better.
+            //ShowTool<IFileListTool>();
+            foreach(var t in _tools)
+            {
+                Console.WriteLine("Tool : " + t.ToString());
+            }
+            base.OnViewLoaded(view);
         }
 
         #region Menu

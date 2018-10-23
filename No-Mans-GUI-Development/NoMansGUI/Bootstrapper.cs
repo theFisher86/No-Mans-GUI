@@ -57,8 +57,6 @@ namespace NoMansGUI
             IEventAggregator eventAggregator = new EventAggregator();
             eventAggregator.Subscribe(this);
             batch.AddExportedValue<IWindowManager>(new WindowManager());
-            //As you can see from the line below, it's possible to add custom classes to the container, these can then be retrieved by using IoC.Get<ClassName>() anywhere.
-            //batch.AddExportedValue<UserAccount>(m_userAccount);
             batch.AddExportedValue<IEventAggregator>(eventAggregator);
             batch.AddExportedValue(container);
             container.Compose(batch);

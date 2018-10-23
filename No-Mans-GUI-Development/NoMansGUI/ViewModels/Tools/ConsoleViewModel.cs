@@ -5,9 +5,7 @@ using System.ComponentModel.Composition;
 
 namespace NoMansGUI.ViewModels.Tools
 {
-    [Export(typeof(ConsoleViewModel))]
-    [Export(typeof(ToolBase))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
+    [Export(typeof(ITool))]
     public class ConsoleViewModel : Tool, IHandle<OutputToConsoleEvent>
     {
         #region Fields

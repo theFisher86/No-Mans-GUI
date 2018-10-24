@@ -30,15 +30,6 @@ namespace NoMansGUI.Views
             }
         }
 
-        static private string GetLayoutFilePath()
-        {
-            string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-            // Combine the base folder with your specific folder....
-            string specificFolder = System.IO.Path.Combine(folder, "NoMansGUI");
-            return System.IO.Path.Combine(specificFolder, "NoMansGUI.layout");
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
            
@@ -56,14 +47,7 @@ namespace NoMansGUI.Views
 
         public void UpdateFloatingWindows()
         {
-            //var mainWindow = Window.GetWindow(this);
-            //var mainWindowIcon = (mainWindow != null) ? mainWindow.Icon : null;
-            //var showFloatingWindowsInTaskbar = ((WorkspaceViewModel)DataContext).ShowFloatingWindowsInTaskbar;
-            //foreach (var window in Manager.FloatingWindows)
-            //{
-            //    window.Icon = mainWindowIcon;
-            //    window.ShowInTaskbar = showFloatingWindowsInTaskbar;
-            //}
+            throw new NotImplementedException();
         }
     }
 }

@@ -74,8 +74,7 @@
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                                 <!--<toolbarcontrols:ToolPaneToolBar ItemsSource="{Binding ToolBar}" />-->
-                                <ContentControl Grid.Row="1" cal:View.Model="{Binding}"
-                                                IsTabStop="False" />
+                                <ContentControl Grid.Row="1" cal:View.Model="{Binding}" IsTabStop="False" />
                             </Grid>
                         </DataTemplate>
                     </docking:PanesTemplateSelector.DocumentTemplate>
@@ -87,8 +86,7 @@
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                                 <!--<toolbarcontrols:ToolPaneToolBar ItemsSource="{Binding ToolBar}" />-->
-                                <ContentControl Grid.Row="1" cal:View.Model="{Binding}"
-                                                IsTabStop="False" />
+                                <ContentControl Grid.Row="1" cal:View.Model="{Binding}" IsTabStop="False" />
                             </Grid>
                         </DataTemplate>
                     </docking:PanesTemplateSelector.ToolTemplate>

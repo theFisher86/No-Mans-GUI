@@ -1,16 +1,13 @@
 ﻿using Caliburn.Micro;
 using libMBIN;
 using NoMansGUI.Docking;
+using NoMansGUI.Docking.Interfaces;
 using NoMansGUI.Models;
 using NoMansGUI.Utils.Events;
-using NoMansGUI.ViewModels.Tools;
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace NoMansGUI.ViewModels
@@ -18,11 +15,37 @@ namespace NoMansGUI.ViewModels
     [Export(typeof(IShell))]
     public class WorkspaceViewModel : Conductor<IDocument>.Collection.OneActive, IShell, IHandle<OpenMBINEvent>
     {
+        #region Fields
         private readonly IEventAggregator _eventAggregator;
         private readonly IWindowManager _windowManager;
+        private ILayoutItem _activeLayoutItem;
+        private IShellView _shellView;
+        private bool _closing;
+        private bool _activateItemGuard = false;
 
+        public event EventHandler ActiveDocumentChanging;
+        public event EventHandler ActiveDocumentChanged;
+
+        #region Importing
+
+        /// <summary>
+        /// This will import any classes that export with type ITool.
+        /// </summary>
         [ImportMany(typeof(ITool))]
         private readonly BindableCollection<ITool> _tools;
+
+        [Import]
+        private ILayoutItemStatePersister _layoutItemStatePersister;
+        #endregion
+
+        #endregion
+
+        #region Properties
+        public virtual string StateFile
+        {
+            get { return @".\ApplicationState.bin"; }
+        }
+
         public IObservableCollection<ITool> Tools
         {
             get { return _tools; }
@@ -33,7 +56,6 @@ namespace NoMansGUI.ViewModels
             get { return Items; }
         }
 
-        private ILayoutItem _activeLayoutItem;
         public ILayoutItem ActiveLayoutItem
         {
             get
@@ -42,7 +64,7 @@ namespace NoMansGUI.ViewModels
             }
             set
             {
-                if(ReferenceEquals(_activeLayoutItem, value))
+                if (ReferenceEquals(_activeLayoutItem, value))
                 {
                     return;
                 }
@@ -55,12 +77,11 @@ namespace NoMansGUI.ViewModels
                 NotifyOfPropertyChange(() => ActiveLayoutItem);
             }
         }
+        #endregion
 
         [ImportingConstructor]
         public WorkspaceViewModel()
         {
-
-
             _eventAggregator = IoC.Get<IEventAggregator>();
             _windowManager = IoC.Get<IWindowManager>();
 
@@ -78,6 +99,7 @@ namespace NoMansGUI.ViewModels
             DeactivateItem(doc, true);
         }
 
+        //TODO: Move this out of the shell.
         public void LoadMbin()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -145,15 +167,76 @@ namespace NoMansGUI.ViewModels
 
         protected override void OnViewLoaded(object view)
         {
-            //TODO: Work out some way to load these better.
-            //ShowTool<IFileListTool>();
-            foreach(var t in _tools)
+            _shellView = (IShellView)view;
+
+            if (!_layoutItemStatePersister.LoadState(this, _shellView, StateFile))
             {
-                Console.WriteLine("Tool : " + t.ToString());
+            }
+            foreach(ITool t in Tools)
+            {
+                IoC.Get<IEventAggregator>().PublishOnUIThread(new OutputToConsoleEvent(string.Format("Tool {0} loaded", t.DisplayName)));
             }
             base.OnViewLoaded(view);
         }
 
+        protected override void OnDeactivate(bool close)
+        {
+            _closing = true;
+
+            _layoutItemStatePersister.SaveState(this, _shellView, StateFile);
+            base.OnDeactivate(close);
+        }
+
+        protected override void OnActivationProcessed(IDocument item, bool success)
+        {
+            if(!ReferenceEquals(ActiveLayoutItem, item))
+            {
+                ActiveLayoutItem = item;
+            }
+
+            base.OnActivationProcessed(item, success);
+        }
+
+        public override void ActivateItem(IDocument item)
+        {
+            if(_closing || _activateItemGuard)
+            {
+                return;
+            }
+
+            _activateItemGuard = true;
+
+            try
+            {
+                if(ReferenceEquals(item, ActiveItem))
+                {
+                    return;
+                }
+
+                RaiseActiveDocumentChanging();
+                var currentActiveItem = ActiveItem;
+                base.ActivateItem(item);
+                RaiseActiveDocumentChanged();
+
+            }
+            finally
+            {
+                _activateItemGuard = false;
+            }
+
+        }
+
+        private void RaiseActiveDocumentChanging()
+        {
+            ActiveDocumentChanging?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void RaiseActiveDocumentChanged()
+        {
+            ActiveDocumentChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        //TODO: Move this out of the shell.
         #region Menu
         public void SettingsMenu()
         {

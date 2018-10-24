@@ -18,8 +18,7 @@ namespace NoMansGUI.Docking
             layoutSerializer.Serialize(stream);
         }
 
-        public static void LoadLayout(DockingManager manager, Stream stream, Action<IDocument> addDocumentCallback, 
-            Action<ITool> addToolCallback, Dictionary<string, ILayoutItem> items)
+        public static void LoadLayout(DockingManager manager, Stream stream, Action<IDocument> addDocumentCallback, Action<ITool> addToolCallback, Dictionary<string, ILayoutItem> items)
         {
             var layoutSerializer = new XmlLayoutSerializer(manager);
 

@@ -112,8 +112,10 @@
     <Compile Include="Docking\Interfaces\IDocument.cs" />
     <Compile Include="Docking\Interfaces\ILayoutItem.cs" />
     <Compile Include="Docking\Interfaces\ITool.cs" />
+    <Compile Include="Docking\Interfaces\ILayoutItemStatePersister.cs" />
     <Compile Include="Docking\Layout\LayoutInitializer.cs" />
     <Compile Include="Docking\Layout Items\LayoutItemBase.cs" />
+    <Compile Include="Docking\Layout\LayoutItemStatePersister.cs" />
     <Compile Include="Docking\Layout\LayoutUtility.cs" />
     <Compile Include="Docking\Layout\PaneLocation.cs" />
     <Compile Include="Docking\Layout\PanesTemplateSelector.cs" />

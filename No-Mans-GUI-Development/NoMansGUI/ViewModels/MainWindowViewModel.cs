@@ -28,8 +28,7 @@ namespace NoMansGUI.ViewModels
         private string _appVersionString;
         private string _mbinPath;
         private string _savePath;
-        private MBinViewModel _mbinViewer;
-        private FileListViewModel _fileListView;
+        private MBinViewModel _mbinViewer;   
         #endregion
 
         #region Properties
@@ -62,16 +61,6 @@ namespace NoMansGUI.ViewModels
                 NotifyOfPropertyChange(() => MBinViewer);
             }
         }
-      
-        public FileListViewModel FileView
-        {
-            get { return _fileListView; }
-            set
-            {
-                _fileListView = value;
-                NotifyOfPropertyChange(() => FileView);
-            }
-        }
         #endregion
 
         #region Constructor
@@ -86,7 +75,7 @@ namespace NoMansGUI.ViewModels
                 //Logic logic = new Logic();
                 //logic.ParseMbin(App.Args[0]);
             }
-            FileView = new FileListViewModel();
+           
         }
         #endregion
 

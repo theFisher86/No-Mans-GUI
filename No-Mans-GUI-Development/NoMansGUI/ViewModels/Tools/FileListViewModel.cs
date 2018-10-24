@@ -28,6 +28,16 @@ namespace NoMansGUI.ViewModels
             }
         }
 
+        public override PaneLocation PreferredLocation
+        {
+            get { return PaneLocation.Right; }
+        }
+
+        public override double PreferredWidth
+        {
+            get { return 200; }
+        }
+
         public FileListViewModel()
         {
             DisplayName = "File List";
@@ -59,11 +69,6 @@ namespace NoMansGUI.ViewModels
             }
 
             return items;
-        }
-
-        public override PaneLocation PreferredLocation
-        {
-            get { return PaneLocation.Right; }
         }
 
         public void OpenFile(MouseButtonEventArgs e, string path)

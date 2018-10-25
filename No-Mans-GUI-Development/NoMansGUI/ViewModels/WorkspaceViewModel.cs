@@ -1,7 +1,6 @@
 ﻿using Caliburn.Micro;
 using libMBIN;
-using NoMansGUI.Docking;
-using NoMansGUI.Docking.Interfaces;
+using NMGUIFramework.Interfaces;
 using NoMansGUI.Models;
 using NoMansGUI.Utils.Events;
 using System;

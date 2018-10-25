@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NoMansGUI.Docking
+namespace NMGUIFramework.Interfaces
 {
-    public enum PaneLocation
+    public interface IDocument : ILayoutItem
     {
-        Left,
-        Right,
-        Bottom
+
     }
 }

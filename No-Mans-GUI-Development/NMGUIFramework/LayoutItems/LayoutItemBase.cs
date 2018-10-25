@@ -1,13 +1,10 @@
 ﻿using Caliburn.Micro;
+using NMGUIFramework.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace NoMansGUI.Docking
+namespace NMGUIFramework.LayoutItems
 {
     public abstract class LayoutItemBase : Screen, ILayoutItem
     {
@@ -49,12 +46,12 @@ namespace NoMansGUI.Docking
 
         public virtual void LoadState(BinaryReader reader)
         {
-            
+
         }
 
         public virtual void SaveState(BinaryWriter writer)
         {
-            
+
         }
     }
 }

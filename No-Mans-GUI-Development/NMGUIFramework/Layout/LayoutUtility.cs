@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NMGUIFramework.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +9,7 @@ using Xceed.Wpf.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 
-namespace NoMansGUI.Docking
+namespace NMGUIFramework.Layout
 {
     public static class LayoutUtility
     {

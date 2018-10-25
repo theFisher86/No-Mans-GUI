@@ -1,13 +1,9 @@
 ﻿using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace NoMansGUI.Docking
+namespace NMGUIFramework.Interfaces
 {
     public interface ILayoutItem : IScreen
     {

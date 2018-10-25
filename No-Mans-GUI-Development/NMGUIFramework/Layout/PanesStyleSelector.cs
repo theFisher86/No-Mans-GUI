@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NMGUIFramework.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace NoMansGUI.Docking
+namespace NMGUIFramework.Layout
 {
     public class PanesStyleSelector : StyleSelector
     {

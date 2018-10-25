@@ -108,23 +108,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Docking\Layout Items\Document.cs" />
-    <Compile Include="Docking\Interfaces\IDocument.cs" />
-    <Compile Include="Docking\Interfaces\ILayoutItem.cs" />
-    <Compile Include="Docking\Interfaces\ITool.cs" />
-    <Compile Include="Docking\Interfaces\ILayoutItemStatePersister.cs" />
-    <Compile Include="Docking\Layout\LayoutInitializer.cs" />
-    <Compile Include="Docking\Layout Items\LayoutItemBase.cs" />
-    <Compile Include="Docking\Layout\LayoutItemStatePersister.cs" />
-    <Compile Include="Docking\Layout\LayoutUtility.cs" />
-    <Compile Include="Docking\Layout\PaneLocation.cs" />
-    <Compile Include="Docking\Layout\PanesTemplateSelector.cs" />
-    <Compile Include="Docking\Layout\PanesStyleSelector.cs" />
-    <Compile Include="Docking\Commands\RelayCommand.cs" />
-    <Compile Include="Docking\Layout Items\Tool.cs" />
     <Compile Include="Utils\Converters\NullableValueConverter.cs" />
-    <Compile Include="ViewModels\IShell.cs" />
-    <Compile Include="Views\IShellView.cs" />
+    <Compile Include="ViewModels\Tools\IConsoleTool.cs" />
+    <Compile Include="ViewModels\Tools\IFileListTool.cs" />
     <Compile Include="Models\FileTreeModels.cs" />
     <Compile Include="Models\MBin.cs" />
     <Compile Include="Resources\StringResources.Designer.cs">
@@ -155,18 +141,14 @@
     <Compile Include="Utils\Settings\NMSSettingsProvider.cs" />
     <Compile Include="Utils\TemplateBuilder\TemplateBuilder.cs" />
     <Compile Include="Utils\TemplateLogHelper.cs" />
-    <Compile Include="Utils\TemplateSelectors\AutobinderTemplateSelector.cs" />
     <Compile Include="Utils\TemplateSelectors\MBINTemplateSelector.cs" />
     <Compile Include="Utils\TextBoxInputBehavior.cs" />
     <Compile Include="Utils\Validation\TypeValidationRule.cs" />
     <Compile Include="Utils\Validation\ValidationWrapper.cs" />
-    <Compile Include="ViewModels\BaseVMs\DocumentBase.cs" />
-    <Compile Include="ViewModels\BaseVMs\ToolBase.cs" />
     <Compile Include="ViewModels\Tools\ConsoleViewModel.cs" />
     <Compile Include="ViewModels\Tools\FileListViewModel.cs" />
     <Compile Include="ViewModels\MBinViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
-    <Compile Include="ViewModels\Tools\MissingTemplatesViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SplashWindowViewModel.cs" />
     <Compile Include="ViewModels\Tools\TreeViewItems\DirectoryItemViewModel.cs" />
@@ -184,9 +166,6 @@
     </Compile>
     <Compile Include="Views\MessageView.xaml.cs">
       <DependentUpon>MessageView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Tools\MissingTemplatesView.xaml.cs">
-      <DependentUpon>MissingTemplatesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -213,17 +192,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindowView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="Views\MainWindowView.xaml.cs">
-      <DependentUpon>MainWindowView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\MBinView.xaml">
@@ -231,10 +201,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MessageView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Tools\MissingTemplatesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -297,7 +263,12 @@
     <Resource Include="Resources\status_icons\status_05_info.png" />
     <Resource Include="Resources\status_icons\loading.gif" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\NMGUIFramework\NMGUIFramework.csproj">
+      <Project>{1b35cb12-05d2-4bd1-b3ed-805485683b92}</Project>
+      <Name>NMGUIFramework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\DirectXTexNet.1.0.0-rc2\build\DirectXTexNet.targets" Condition="Exists('..\packages\DirectXTexNet.1.0.0-rc2\build\DirectXTexNet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

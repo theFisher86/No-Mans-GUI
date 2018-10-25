@@ -1,11 +1,10 @@
 ﻿using Caliburn.Micro;
 using libMBIN;
-using NoMansGUI.Docking;
+using NMGUIFramework.LayoutItems;
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
 using NoMansGUI.Utils.Events;
 using NoMansGUI.Utils.Parser;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;

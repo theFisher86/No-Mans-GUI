@@ -1,4 +1,6 @@
-﻿namespace NoMansGUI.Docking
+﻿using NMGUIFramework.Layout;
+
+namespace NMGUIFramework.Interfaces
 {
     public interface ITool : ILayoutItem
     {

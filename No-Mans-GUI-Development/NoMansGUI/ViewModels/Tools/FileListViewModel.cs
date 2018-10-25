@@ -1,8 +1,10 @@
 ﻿using Caliburn.Micro;
-using NoMansGUI.Docking;
+using NMGUIFramework.Layout;
+using NMGUIFramework.LayoutItems;
 using NoMansGUI.Models;
 using NoMansGUI.Properties;
 using NoMansGUI.Utils.Events;
+using NoMansGUI.ViewModels.Tools;
 using NoMansGUI.ViewModels.Tools.TreeViewItems;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,8 +15,8 @@ using System.Windows.Input;
 
 namespace NoMansGUI.ViewModels
 {
-    [Export(typeof(ITool))]
-    public class FileListViewModel : Tool, IHandle<UnpackedPathSetEvent>, IHandle<ExpandedEvent>
+    [Export(typeof(IFileListTool))]
+    public class FileListViewModel : Tool, IFileListTool, IHandle<UnpackedPathSetEvent>, IHandle<ExpandedEvent>
     {
         ObservableCollection<TreeViewItemViewModel> _items;
 

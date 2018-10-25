@@ -1,12 +1,13 @@
 ﻿using Caliburn.Micro;
-using NoMansGUI.Docking;
+using NMGUIFramework.Layout;
+using NMGUIFramework.LayoutItems;
 using NoMansGUI.Utils.Events;
 using System.ComponentModel.Composition;
 
 namespace NoMansGUI.ViewModels.Tools
 {
-    [Export(typeof(ITool))]
-    public class ConsoleViewModel : Tool, IHandle<OutputToConsoleEvent>
+    [Export(typeof(IConsoleTool))]
+    public class ConsoleViewModel : Tool, IConsoleTool, IHandle<OutputToConsoleEvent>
     {
         #region Fields
         private string _output;

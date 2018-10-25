@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoMansGUI", "NoMansGUI\NoMansGUI.csproj", "{74D35C11-B29C-4A80-88D9-B58BFB7D1752}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NMGUIFramework", "NMGUIFramework\NMGUIFramework.csproj", "{1B35CB12-05D2-4BD1-B3ED-805485683B92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{74D35C11-B29C-4A80-88D9-B58BFB7D1752}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74D35C11-B29C-4A80-88D9-B58BFB7D1752}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74D35C11-B29C-4A80-88D9-B58BFB7D1752}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B35CB12-05D2-4BD1-B3ED-805485683B92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B35CB12-05D2-4BD1-B3ED-805485683B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B35CB12-05D2-4BD1-B3ED-805485683B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B35CB12-05D2-4BD1-B3ED-805485683B92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

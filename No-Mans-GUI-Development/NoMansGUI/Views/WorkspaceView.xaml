@@ -6,8 +6,8 @@
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:NoMansGUI.Utils.Converters"
+        xmlns:Framework="clr-namespace:NMGUIFramework.Layout;assembly=NMGUIFramework"
         xmlns:templateSelectors="clr-namespace:NoMansGUI.Utils.TemplateSelectors"
-        xmlns:docking="clr-namespace:NoMansGUI.Docking"
         xmlns:local="clr-namespace:NoMansGUI.Views"
         mc:Ignorable="d" WindowState="Maximized"
         Title="WorkspaceView" Height="450" Width="800" Closing="Window_Closing">
@@ -65,8 +65,8 @@
                              ActiveContent="{Binding Path=ActiveItem, Mode=TwoWay}">
 
             <xcad:DockingManager.LayoutItemTemplateSelector>
-                <docking:PanesTemplateSelector>
-                    <docking:PanesTemplateSelector.DocumentTemplate>
+                <Framework:PanesTemplateSelector>
+                    <Framework:PanesTemplateSelector.DocumentTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -77,8 +77,8 @@
                                 <ContentControl Grid.Row="1" cal:View.Model="{Binding}" IsTabStop="False" />
                             </Grid>
                         </DataTemplate>
-                    </docking:PanesTemplateSelector.DocumentTemplate>
-                    <docking:PanesTemplateSelector.ToolTemplate>
+                    </Framework:PanesTemplateSelector.DocumentTemplate>
+                    <Framework:PanesTemplateSelector.ToolTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -89,13 +89,13 @@
                                 <ContentControl Grid.Row="1" cal:View.Model="{Binding}" IsTabStop="False" />
                             </Grid>
                         </DataTemplate>
-                    </docking:PanesTemplateSelector.ToolTemplate>
-                </docking:PanesTemplateSelector>
+                    </Framework:PanesTemplateSelector.ToolTemplate>
+                </Framework:PanesTemplateSelector>
             </xcad:DockingManager.LayoutItemTemplateSelector>
 
             <xcad:DockingManager.LayoutItemContainerStyleSelector>
-                <docking:PanesStyleSelector>
-                    <docking:PanesStyleSelector.DocumentStyle>
+                <Framework:PanesStyleSelector>
+                    <Framework:PanesStyleSelector.DocumentStyle>
                         <Style TargetType="{x:Type xcad:LayoutItem}">
                             <Setter Property="ContentId" Value="{Binding Model.ContentId}" />
                             <Setter Property="Title" Value="{Binding Model.DisplayName, Mode=OneWay}" />
@@ -103,8 +103,8 @@
                             <Setter Property="IconSource" Value="{Binding Model.IconSource, Converter={StaticResource NullableValueConverter}}" />
                             <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" />
                         </Style>
-                    </docking:PanesStyleSelector.DocumentStyle>
-                    <docking:PanesStyleSelector.ToolStyle>
+                    </Framework:PanesStyleSelector.DocumentStyle>
+                    <Framework:PanesStyleSelector.ToolStyle>
                         <Style TargetType="{x:Type xcad:LayoutAnchorableItem}">
                             <Setter Property="ContentId" Value="{Binding Model.ContentId}" />
                             <Setter Property="Title" Value="{Binding Model.DisplayName, Mode=OneWay}" />
@@ -113,12 +113,12 @@
                             <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}" />
                             <Setter Property="Visibility" Value="{Binding Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}"/>
                         </Style>
-                    </docking:PanesStyleSelector.ToolStyle>
-                </docking:PanesStyleSelector>
+                    </Framework:PanesStyleSelector.ToolStyle>
+                </Framework:PanesStyleSelector>
             </xcad:DockingManager.LayoutItemContainerStyleSelector>
 
             <xcad:DockingManager.LayoutUpdateStrategy>
-                <docking:LayoutInitializer />
+                <Framework:LayoutInitializer />
             </xcad:DockingManager.LayoutUpdateStrategy>
 
             <xcad:LayoutRoot>

@@ -1,11 +1,14 @@
-﻿using System;
+﻿using NMGUIFramework.Commands;
+using NMGUIFramework.Interfaces;
+using NMGUIFramework.Layout;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace NoMansGUI.Docking
+namespace NMGUIFramework.LayoutItems
 {
     public abstract class Tool : LayoutItemBase, ITool
     {

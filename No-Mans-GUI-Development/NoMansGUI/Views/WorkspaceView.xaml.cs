@@ -1,4 +1,5 @@
-﻿using NoMansGUI.Docking;
+﻿using NMGUIFramework.Interfaces;
+using NMGUIFramework.Layout;
 using NoMansGUI.Properties;
 using NoMansGUI.ViewModels;
 using System;

@@ -1,6 +1,5 @@
 ﻿using Caliburn.Micro;
-using NoMansGUI.Docking.Interfaces;
-using NoMansGUI.ViewModels;
+using NMGUIFramework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NoMansGUI.Docking.Layout
+namespace NMGUIFramework.Layout
 {
     [Export(typeof(ILayoutItemStatePersister))]
     public class LayoutItemStatePersister : ILayoutItemStatePersister

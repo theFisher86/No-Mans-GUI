@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NMGUIFramework.Interfaces;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Xceed.Wpf.AvalonDock.Layout;
 
-namespace NoMansGUI.Docking
+namespace NMGUIFramework.Layout
 {
-    class LayoutInitializer : ILayoutUpdateStrategy
+    public class LayoutInitializer : ILayoutUpdateStrategy
     {
         public void AfterInsertAnchorable(LayoutRoot layout, LayoutAnchorable anchorableShown)
         {

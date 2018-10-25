@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using NMGUIFramework.Interfaces;
 using NoMansGUI.Utils.Events;
 using NoMansGUI.ViewModels;
 using System;
@@ -7,6 +8,7 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
+using System.ComponentModel.Composition.ReflectionModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -51,14 +53,24 @@ namespace NoMansGUI
 
         protected override void Configure()
         {
-            container = new CompositionContainer(new AggregateCatalog(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()));
+            var catalog = new AggregateCatalog(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>());
 
+            //TODO: Move this into config to allow a dynamic folder?
+            var pluginFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
+            if (!Directory.Exists(pluginFolder))
+            {
+                Directory.CreateDirectory(pluginFolder);
+            }
+
+            catalog.Catalogs.Add(new DirectoryCatalog(pluginFolder));
+            container = new CompositionContainer(catalog);
             CompositionBatch batch = new CompositionBatch();
             IEventAggregator eventAggregator = new EventAggregator();
             eventAggregator.Subscribe(this);
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(eventAggregator);
             batch.AddExportedValue(container);
+
             container.Compose(batch);
         }
 
@@ -144,12 +156,11 @@ namespace NoMansGUI
             try
             {
                 string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(service) : key;
-                var exports = container.GetExportedValues<object>(contract);
+                var exports = container.GetExports<object>(contract);
 
-                if (exports.Count() > 0)
-                {
-                    return exports.First();
-                }
+                if (exports.Any())
+                    return exports.First().Value;
+
                 throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
             }
             catch (Exception ex)

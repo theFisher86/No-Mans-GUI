@@ -144,6 +144,18 @@ namespace NoMansGUI
         }
 
 
+        protected override IEnumerable<Assembly> SelectAssemblies()
+        {
+            string path = Path.GetDirectoryName(
+                    Assembly.GetExecutingAssembly().Location);
+            return base.SelectAssemblies().Concat(
+                  new Assembly[]
+                  {
+                      //Specifically load the NMGUIFramework.dll because i can't work out how to do it dynamically and i'm too lazy to solve it atm.
+                    Assembly.LoadFile(Path.Combine(path, "NMGUIFramework.dll"))
+                  });
+        }
+
         private static DirectoryInfo GetExecutingDirectory()
         {
             var location = new Uri(Assembly.GetEntryAssembly().GetName().CodeBase);

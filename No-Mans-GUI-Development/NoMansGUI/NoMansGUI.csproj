@@ -109,8 +109,8 @@
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Utils\Converters\NullableValueConverter.cs" />
+    <Compile Include="ViewModels\Tools\FileListViewModel.cs" />
     <Compile Include="ViewModels\Tools\IConsoleTool.cs" />
-    <Compile Include="ViewModels\Tools\IFileListTool.cs" />
     <Compile Include="Models\FileTreeModels.cs" />
     <Compile Include="Models\MBin.cs" />
     <Compile Include="Resources\StringResources.Designer.cs">
@@ -146,7 +146,6 @@
     <Compile Include="Utils\Validation\TypeValidationRule.cs" />
     <Compile Include="Utils\Validation\ValidationWrapper.cs" />
     <Compile Include="ViewModels\Tools\ConsoleViewModel.cs" />
-    <Compile Include="ViewModels\Tools\FileListViewModel.cs" />
     <Compile Include="ViewModels\MBinViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />

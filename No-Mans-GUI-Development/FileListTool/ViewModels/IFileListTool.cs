@@ -1,6 +1,6 @@
 ﻿using NMGUIFramework.Interfaces;
 
-namespace NoMansGUI.ViewModels.Tools
+namespace FileListTool.ViewModels
 {
     public interface IFileListTool : ITool
     {

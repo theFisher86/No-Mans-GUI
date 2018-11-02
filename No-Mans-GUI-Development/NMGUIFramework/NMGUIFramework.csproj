@@ -83,6 +83,8 @@
     <Compile Include="Interfaces\IDocument.cs" />
     <Compile Include="Interfaces\ILayoutItem.cs" />
     <Compile Include="Interfaces\ILayoutItemStatePersister.cs" />
+    <Compile Include="Interfaces\Settings\IReadOnlySettingsService.cs" />
+    <Compile Include="Interfaces\Settings\ISettingsService.cs" />
     <Compile Include="Interfaces\IShell.cs" />
     <Compile Include="Interfaces\IShellView.cs" />
     <Compile Include="Interfaces\ITool.cs" />
@@ -97,8 +99,7 @@
     <Compile Include="Layout\PanesTemplateSelector.cs" />
     <Compile Include="Interfaces\IModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\ISettingsManager.cs" />
-    <Compile Include="Settings\SettingsManager.cs" />
+    <Compile Include="Settings\SettingsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

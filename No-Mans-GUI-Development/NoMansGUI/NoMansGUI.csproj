@@ -50,7 +50,7 @@
     </Reference>
     <Reference Include="libMBIN, Version=1.61.0.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>X:\Modding\NMS\Tools\libMBIN.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Desktop\NoManUI\libMBIN.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -109,7 +109,6 @@
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Utils\Converters\NullableValueConverter.cs" />
-    <Compile Include="ViewModels\Tools\FileListViewModel.cs" />
     <Compile Include="ViewModels\Tools\IConsoleTool.cs" />
     <Compile Include="Models\FileTreeModels.cs" />
     <Compile Include="Models\MBin.cs" />

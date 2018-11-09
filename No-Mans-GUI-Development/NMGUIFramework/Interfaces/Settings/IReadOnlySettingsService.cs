@@ -8,8 +8,8 @@ namespace NMGUIFramework.Interfaces
 {
     public interface IReadOnlySettingsService
     {
-        Task<object> GetSettingsAsync(string key, Type type);
+        Task<object> GetSettingAsync(string key, Type type);
 
-        Task<bool> IsRegisterdAsync(string key);
+        Task<bool> IsRegisteredAsync(string key);
     }
 }

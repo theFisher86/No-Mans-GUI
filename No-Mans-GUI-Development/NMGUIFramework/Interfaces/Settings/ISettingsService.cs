@@ -5,7 +5,7 @@ namespace NMGUIFramework.Interfaces
 {
     public interface ISettingsService : IReadOnlySettingsService
     {
-        Task SetSettingsAsync(string key, object value, Type type);
+        Task SetSettingAsync(string key, object value, Type type);
 
         Task RegisterSettingAsync(string key, object defaultValue, object initalValue, Type type);
 

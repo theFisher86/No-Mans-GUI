@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using NMGUIFramework.Interfaces;
+using NMGUIFramework.Settings;
 using NoMansGUI.Utils.Events;
 using NoMansGUI.ViewModels;
 using System;
@@ -62,6 +63,8 @@ namespace NoMansGUI
                 Directory.CreateDirectory(pluginFolder);
             }
 
+          
+
             catalog.Catalogs.Add(new DirectoryCatalog(pluginFolder));
             container = new CompositionContainer(catalog);
             CompositionBatch batch = new CompositionBatch();
@@ -70,7 +73,7 @@ namespace NoMansGUI
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(eventAggregator);
             batch.AddExportedValue(container);
-
+           
             container.Compose(batch);
         }
 
